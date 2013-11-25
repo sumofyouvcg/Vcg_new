@@ -1,0 +1,101 @@
+{% extends 'company.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+.common_left ul li.now a{
+	color:#25b513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+.menuheader
+{
+	margin: 0px;
+	padding: 10px;
+}	
+.profile{
+border: 1px solid #D0D0D0;
+border-radius: 10px 10px 10px 10px;
+color: #5B5B5B;
+font-family: 'myriad pro';
+font-size: 15px;
+height: auto !important;
+margin-bottom: 50px !important;
+margin-top: 10px;
+}
+label{
+float:left;
+}
+</style>
+
+{% endblock %} 
+{% block extrahead %}
+<script src="/static/js/jqery.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#id_sub_domain").attr("readonly", true);
+	$("#id_number_of_clients").attr("readonly", true);
+	$("#id_company_number").attr("readonly", true);
+	$('#id_from_date, #id_expiry_date').attr('readonly', true);
+	$('#id_active').val('1').parent().parent().hide();
+	
+});
+function save(){
+	$('#id_company_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="clear"></div>
+<div id="banner_left"><!--banner_left start-->
+	 <p class="left_content">{% trans "My Page" %}</p>
+</div><!--banner_left end-->
+ <div class="clear"></div>
+     
+<div class="profile"><!--therapist_content start-->
+	<form enctype='multipart/form-data' name='company_form' id='id_company_form' action='.' method='post'>{% csrf_token %}
+		<div class="tabl">
+			<table  id="tab" cellpadding="5">
+	            <tr><td class="td_add">{{ form.company_name.label }}</td><td>{{ form.company_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.company_name.errors }}</span></td></tr>
+				<tr><td class="td_add" >{{ form.address.label }}</td><td>{{ form.address }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.address.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.zip_code.label }}</td><td>{{ form.zip_code }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.zip_code.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.place_name.label }}</td><td>{{ form.place_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.place_name.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.country.label }}</td><td>{{ form.country }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.country.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.email.label }}</td><td>{{ form.email }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.non_field_errors|safe }}{{ form.email.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.phone_number.label }}</td><td>{{ form.country_code }}-{{ form.phone_number }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.country_code.errors }}{{ form.phone_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.number_of_clients.label }}</td><td>{{ form.number_of_clients }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.number_of_clients.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.from_date.label }}</td><td>{{ form.from_date }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.from_date.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.expiry_date.label }}</td><td>{{ form.expiry_date }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.expiry_date.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.sub_domain.label }}</td><td>{{ form.sub_domain }}<span class="td_add">.vzorg.nl</span></td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.sub_domain.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.company_number.label }}</td><td>{{ form.company_number }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.company_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.language.label }}</td><td class="td_add" style="text-align:left">{{ form.language }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.language.errors }}</span></td></tr>
+				<tr><td class="td_add">{{form.active.label}}</td><td>{{ form.active }}</td></tr>
+				<tr><td></td><td><div id="sav" onclick="save()"><a class="save">{% trans "Save" %}</a></div><div id="canc"><a href="{% url company_tasks domain_name %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+		   </table>
+		</div>	   
+	</form>
+</div><!--therapist_content end-->
+<div id ="clear"></div>
+{% endblock %}

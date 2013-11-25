@@ -1,0 +1,56 @@
+{% extends 'client.html' %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.list7
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list7 a
+	{
+	color:#7CC744 !important;
+	}
+	.list8 a
+	{
+	color:#fff !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div id="banner_left"><!--banner_left start-->
+     <p class="left_content">Chat</p>
+</div><!--banner_left end-->
+<div class="clear"></div>
+            
+<div id="newmessage_frm"><!--new_message_form start-->            
+<!--FORM START-->
+    <form action="#" method="post" name="newmessage_form">
+       <table cellpadding="5" align="center" width="630" > 
+  			<tr>
+   				<td width="288" height="55" align="right">Caregiver</td>
+ 				<td width="314">
+ 					<select name="select" class="common_input" style="color: #5B5B5B;font-family: 'myriad pro';font-size: 15px;">
+   						<option value="selectRecipient">Tesavan ross van</option>
+     					<option value="animate1">Tesavan ross van</option>
+     					<option value="animate2">Tesavan ross van</option>
+ 					</select>
+ 				</td>
+ 			</tr>
+ 			<tr>
+ 				<td height="67" align="right">Checkbox to make chatting possibility active</td>
+ 				<td><input type="checkbox" name="check_chat" /></td>
+ 			</tr>
+ 
+  			<tr>
+  				<td height="58"></td>
+ 				<td> <div id="sav" ><a href="#"><p class="save">ADD</p></a></div></td>
+ 			</tr> 
+		</table>
+     </form><!--FORM END-->
+</div><!--new_message_form end-->
+
+{% endblock %}

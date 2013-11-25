@@ -1,0 +1,46 @@
+{% extends 'company/configuration.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#domain a
+{
+color:#25B513 !important;
+}
+
+#imp a
+{
+color:#7CC744;
+}	
+#imp
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+</style>
+
+{% endblock %} 
+
+
+{% block extrahead %}
+<script type="text/javascript">
+ 
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block configurationcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{% trans "Domain Details" %}</p>
+	</div><!--banner_left end-->
+	
+  	<form enctype='multipart/form-data' name='client_form' id='id_client_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm" style="margin-top:0;width:715px;"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="12" style="margin-left:20px">
+	        <tbody>
+  			    	<tr><td class="td_config">{% trans "Domain Name" %} </td><td>-</td><td>{{ company.sub_domain }}</td></tr>
+			    	
+        	</tbody>
+	    </table>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->
+{% endblock %}

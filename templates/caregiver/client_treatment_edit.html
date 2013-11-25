@@ -1,0 +1,65 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+#treatment_list a
+{
+color:#25B513 !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+</style>
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$('#id_client').val('{{client_id}}').parent().parent().hide();
+	$('#id_module').attr({'disabled' : true});
+	});
+
+function save_form()
+{
+	$('#id_module').attr({'disabled' : false});
+	document.client_treatment_add_form.action ="{% url caregiver_client_treatment_edit domain_name client_id company_id %}";
+	$('#id_client_treatment_add_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left">
+     <p class="left_content">{% trans "Edit Treatment" %}</p>
+ </div>
+
+<div style="float:right; margin-top:30px; width:80%">
+	<div style="margin-top:10px; width:100%;">
+		<form enctype="multipart/form-data" id="id_client_treatment_add_form" name="client_treatment_add_form" action="." method="post">{% csrf_token %}
+			<table width="771" cellpadding="5" align="center">
+				<tr><td class="td_client" align="center">{{ form.client.label }}</td><td align="left">{{ form.client }}</td></tr>
+				<tr><td class="td_client" align="center">{{ form.title.label }}</td><td align="left">{{ form.title }}</td></tr>
+				<tr><td></td><td align="left"><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+				<tr><td class="td_client" align="center">{{ form.module.label }}</td><td align="left">{{ form.module }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{form.non_field_errors}}{{ form.module.errors }}</span></td></tr>
+				<tr><td class="td_client" align="center">{{ form.caregiver.label }}</td><td>{{ form.caregiver }}</td></tr>
+				<tr><td></td><td ><span class = "forget-errors">{{ form.caregiver.errors }}</span></td></tr>
+				<tr><td class="td_client" align="center">{{ form.guidance.label }}</td><td align="left">{{ form.guidance }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.guidance.errors }}</span></td></tr>
+				<tr><td class="td_client" align="center">{{ form.first_session_activation.label }}</td><td align="left">{{ form.first_session_activation }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.first_session_activation.errors }}</span></td></tr>
+				<tr><td class="td_client" align="center">{{ form.active.label }}</td><td align="left">{{ form.active }}</td></tr>
+				<tr><td></td><td><div id="sav" ><a href="#" onclick="save_form()" ><p class="save" id="id_save">{% trans "Save" %}</p></a></div>
+								 <div id="canc" onclick = "reset()"><a href="{% url caregiver_client_treatment_list domain_name client_id %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+			</table>
+		</form>				
+	</div>
+</div>
+{% endblock %}

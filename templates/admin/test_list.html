@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+	<style type="text/css">
+		#nav 
+		{
+		width:960px;
+		height:73px;
+		clear:both;
+		margin:0px;
+		}
+		#nav li 
+		{
+		width:192px;
+		height:73px;
+		float: left;
+		margin:0px; 
+		padding:0px;
+		list-style: none ;
+		}
+		#nav .active
+		{
+		color:#FFFFFF;
+		}
+		#nav a 
+		{ 
+		padding: 0px; 
+		display: block; 
+		border: none;
+		text-transform:uppercase;
+		float:left ;
+		font-size:11px;
+		font-family:Arial;
+		font-weight:bold;
+		color:#000000;
+		}
+		#nav li.activeSlide a { background: #88f;  }
+		#nav a:focus { outline: none; }
+		#nav img { border: none; display: block }
+		.list6
+		{
+		background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+		}
+		.list6 a
+		{
+		color:#7CC744 !important;
+		}
+		.namet{
+		color: #5B5B5B;
+    	text-align: center;
+    	}
+    	.namet a{
+    	text-decoration:none;
+    	color: #5B5B5B;
+    	}
+	</style>
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+ 
+			$(".first:even").css("background-color","#f7f7f7");
+			if ( ("{{ key }}" != '{% trans "SEARCH" %}') && ("{{ key }}" != "None") ) {
+				$("#id_search_field").val("{{ key }}");
+			}
+			$('#page_number').val({{ test_list.number }}).change(function(){
+				var number = $(this).val();
+				window.location.href = '/admin_management/test_list/?page=' + number
+			});
+
+			$("#selectall").click(function () {
+				$('.case').attr('checked', this.checked);
+	  		});
+	     	
+			$(".case").click(function(){
+	  			if($(".case").length == $(".case:checked").length) {
+	  				$("#selectall").attr("checked", "checked");
+	  			}
+	  			else {
+	  				$("#selectall").removeAttr("checked");
+	  			}
+	  		
+	  		});				
+		});
+		$(document).keypress(function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				var keyword = $("#id_search_field").val();
+				if ( keyword == '{% trans "SEARCH" %}') {
+					keyword = '';
+				}
+				if ((keyword != '')){
+					window.location.href = "/admin_management/test_list/?key=" + keyword
+				}
+				window.location.href = "/admin_management/test_list/?keyword=" + keyword
+				
+			}
+		});
+
+		function keyword(){
+			var keyword = $("#id_search_field").val();
+			if ( keyword == '{% trans "SEARCH" %}') {
+				keyword = '';
+			}
+			if (keyword != ''){
+				window.location.href = "/admin_management/test_list/?key=" + keyword
+			}
+			window.location.href = "/admin_management/test_list/?keyword=" + keyword
+			
+		}
+	    function del_question(){
+	    	var confirmed = confirm('{% trans "Are you sure want to delete this Question?" %}');
+	    	alert(confirmed)
+	    	return confirmed;
+	        alert(confirmed)	    
+	    }    
+	    
+	    function delete_form()
+	    {
+	    	if($(".case:checked").length == 0)
+	    	{
+	    	alert('{% trans "Select atleast one record to delete" %}');
+	    	return
+	    	}
+	    	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	    	if(confirmed)
+	    	{
+		    	document.test_list.action ="/admin_management/test_delete/";
+		    	$('#id_test_list').submit();
+	    	}
+	    	else
+	    		{
+	    		window.location = "/admin_management/test_list/";
+	    		}
+	    }		
+	</script>
+{% endblock %}
+
+{% block content %}
+	{% load custom_tags %}
+<form name = "test_list" id = "id_test_list" action="." method="POST" >{% csrf_token %}	
+	<div id="banner_left"><p class="left_content">Tests</p></div>
+
+    <div id="new_banner_right"><!--banner_right start-->  
+		<div id="search"><input type="text" name="place" id="id_search_field" placeholder='{% trans "SEARCH" %}' style="width:213px; height:30px; border-radius:10px; border:none; font-size:12px; color:#aeaeae; font-family:Arial;  margin:0px 0px 0px 10px;" id="sea"/></div>
+  	  	<div class="searc"><a href="#"><img src="/static/img/admin/search.png" alt="searchbox" onClick="keyword();" /></a></div>
+      	<div id="add2"><a href="/admin_management/test_add/" style="text-decoration:none;">{% trans "Add Tests" %}</a></div>
+      	<div id="sav" onclick = "delete_form()"><a href="#" class="save">{% trans "Delete" %}</a></div>
+	</div><!--banner end--> 
+
+	<div class="clear"></div>
+
+  	<div id="paginationdemo" class="demo"><!--paginationdemo start-->
+    	<div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+        	<div class="my_contact"	>
+    			<table class="features-table" width="960px"   cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+            		<thead>
+            			<tr style="border-bottom:1px solid #d0d0d0; border-top:1px solid #d0d0d0; padding:3px; " cellpadding="15" id="heading" >
+                			<th class="numb" style="width:100px;"><a href="#"><input type="checkbox" name="master"  value="head" id="selectall" /> </th>
+                			<th class="numb" style="width:269px; border-left: 1px solid #d0d0d0;">{% trans "Title" %}</th>
+                			<th class="numb" style="width:269px;border-left: 1px solid #d0d0d0;">{% trans "Status" %}</th>
+			    		</tr>
+            		</thead>
+            		{% if test_list.object_list %}
+	            		{% for each in test_list.object_list %}
+		            	    <tr class="first" style="border-left:1px solid #d0d0d0;background:#F5F2F3;height:38px; ">
+		            	    	<td class="numb" style="width:100px;text-align:center;"><input type="checkbox" name="choices" value={{each.id}} class="case"  /></td>
+		                		<td class="namet" style="border-left: 1px solid #d0d0d0;"><a href="/admin_management/test_edit/{{ each.id }}/">{{ each.title }}</a></td> 
+		                		<td class="namet" style="border-left: 1px solid #d0d0d0;">{{ each.active|active_status }}</td>
+		                	</tr>
+	                	{% endfor %}
+                	{% else %}
+                		<tr class="first" style="border-left:1px solid #d0d0d0;background:#F5F2F3;height:38px;">
+	                		<td align="center" class="name" colspan="2">{% trans "No Tests Found" %}</td>
+	                	</tr>
+                	{% endif %}
+            	</table>
+    		</div> 
+        </div> <!--Page 1 END--> 
+
+		{% if test_list.object_list %}    
+		    <div class="pagination" align="center">
+		    	<table style="border: 0px; margin-top:15px;" width="15%">
+		    		<tbody>
+		    			<tr>
+		    				<td width="10%" align="left">
+						        {% if test_list.has_previous %}
+						            <a href="?page={{ test_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    				<td width="80%" align="center">
+								<select id="page_number">
+									{% for each in num_pages %}
+										<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+									{% endfor %}
+								</select>
+		    				</td>
+		    				<td width="10%" align="right">
+						        {% if test_list.has_next %}
+						            <a href="?page={{ test_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+			</div>
+		{% endif %}	
+		<br><br>
+</div>		
+{% endblock %}

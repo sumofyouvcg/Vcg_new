@@ -1,0 +1,59 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#caregivers a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}		
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left"><!--banner_left start-->
+	<p class="left_content">{% trans "Caregiver Details" %}</p>
+</div><!--banner_left end-->
+
+  	<form enctype='multipart/form-data' name='client_form' id='id_client_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm" align="center"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="15">
+	        <tbody>
+  			    <tr><td class="td_add">{% trans "Name :" %}</td><td>{{ caregiver_details.name }}</td></tr>
+				<tr><td class="td_add">{% trans "Sur Name :" %}</td><td>{% if caregiver_details.sur_name %} {{ caregiver_details.sur_name }} {% else %} -- {% endif %}</td></tr>
+				<tr><td class="td_add">{% trans "Last Name :" %}</td><td>{{ caregiver_details.last_name }}</td></tr>
+				<tr><td class="td_add">{% trans "Address :" %}</td><td>{{ caregiver_details.address }}</td></tr>
+	            <tr><td class="td_add">{% trans "Zip Code :" %}</td><td>{{ caregiver_details.zip_code }}</td></tr>
+				<tr><td class="td_add">{% trans "Place Name :" %}</td><td>{{ caregiver_details.place_name }}</td></tr>
+				<tr><td class="td_add">{% trans "Country :" %}</td><td>{{ caregiver_details.country.name }}</td></tr>
+				<tr><td class="td_add">{% trans "Email ID :" %}</td><td>{{ caregiver_details.email }}</td></tr>
+				<tr><td class="td_add">{% trans "Phone Number :" %}</td><td>{{ caregiver_details.country_code }}-{{ caregiver_details.phone_number }}</td></tr>
+			    <tr><td class="td_add">{% trans "DOB :" %}</td><td>{{ caregiver_details.dob }}</td></tr>
+			    <tr><td class="td_add">{% trans "Gender :" %}</td><td>{{ caregiver_details.gender }}</td></tr>
+				<tr><td class="td_add">{% trans "Caregiver Number :" %}</td><td>{{ caregiver_details.caregiver_number }}</td></tr>
+				<tr><td class="td_add">{% trans "Role :" %}</td><td>{{ caregiver_details.role }}</td></tr>
+				<tr><td class="td_add">{% trans "Company :" %}</td><td>{{ caregiver_details.company }}</td></tr>
+				<tr><td class="td_add">{% trans "Photo :" %}</td><td>{% if caregiver_details.caregiver_image %}<img src="{{caregiver_details.caregiver_image.url}}" width="50px" height="50px" />{% else %} -- {% endif %}</td></tr>
+        	</tbody>
+	    </table>
+	<div id="canc" style="margin-left:300px;"><a href="{% url company_client_caregivers domain_name client_id %}" class="save1">{% trans "Back" %}</a></div>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->
+{% endblock %}

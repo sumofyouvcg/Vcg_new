@@ -1,0 +1,63 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	document.getElementById("tr_q").style.backgroundImage = 'url("/static/img/admin/hover_otp.png")';
+	document.getElementById("current4").style.color= "#fff";
+});
+function save(){
+	window.location.href="/admin_management/assignments_cluster/{{assignment_id}}/"
+}
+function form_delete(){
+	var confirmed = confirm('{% trans "You have chosen to delete this Cluster" %}');
+    return confirmed;
+}
+</script>
+
+{% endblock %}
+
+
+{% block content%}
+<div id="treat_content"><!--treat_content start-->
+	
+	{% block treatleft %}
+		{{ block.super }}
+	{% endblock %}
+	
+	<div id="right_treat_content"><!--right_treat_content start-->
+	
+		{% block righttreat %}
+			{{ block.super }}
+		{% endblock %}
+		<div id="therapist_content" style="width:687px !important; margin:0px 0px 0px 6px; border-radius:0px 0px 10px 10px; padding: 1em 1.4em;"><!--therapist_content start-->
+        	<div id="tabs-1">
+           		<form enctype='multipart/form-data' name='assign_form' id='id_assign_form' action='.' method='post'>{% csrf_token %}
+           			{% if cluster_list %}<p style="color:#25B513; font-family:Arial;font-size:20px;font-weight:bold;margin-left:5px;">{% trans "Cluster List" %}</p>
+           			<div style="max-height: 360px; overflow: auto; ">
+						<table id="tab_table" cellpadding="5" width="75%">
+	                		<tbody>
+	                		{% for cluster in cluster_list %}
+	                			<tr>
+	                				<td class="label" width="75%" style="text-transform: capitalize;"><a style=" text-decoration:none;color:#5B5B5B;" href="/admin_management/assignment_editclustername/{{cluster.id}}/">{{cluster}}</a></td>
+	                				<td><div id="sav" class="basic"><a href="/admin_management/assignment_question/{{cluster.id}}/0/" class="save">{% trans "Edit" %}</a></div></td>
+	                				<td><div id="sav"><a href="/admin_management/assignment_clusterdelete/{{cluster.id}}/" onClick="return form_delete()" class="save1">{% trans "Delete" %}</a></div></td>
+	                			</tr>
+	                		{% endfor %}
+	                		{% else %}
+	                		<tr><td colspan="3"><span class="label">{% trans "No Clusters found" %}</span><br></td></tr>
+	                		{% endif %}
+	                		</tbody>
+		                </table><br>
+		           </div>
+	               <div id="savcomp" onclick="save()" style="cursor:pointer;"><a class="save">{% trans "New Cluster" %}</a></div>
+                </form>
+            </div>
+        </div><!--therapist_content end-->
+        
+	</div>
+	
+</div>     		
+{% endblock %}

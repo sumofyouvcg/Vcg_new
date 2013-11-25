@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst2
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst2 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+function save_form(id)
+{
+	$('#id_plan_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content%}
+	<form enctype='multipart/form-data' name='plan_form' id='id_plan_form' action='.' method='post'>{% csrf_token %}
+		<div id="add_heading">
+			<p class="add_heading_content">{% trans "Add Plan" %}</p>
+		</div>
+		<div id="add_client"><!--addplan start-->
+			<div class ="tt">
+				<table id="cl_tab" style="border: none;" cellpadding="5">
+					<tbody>
+	                  <tr><td class="td_add">{{ form.title.label }}</td><td>{{ form.title }}</td></tr>
+	                  <tr><td></td><td><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+	                  <tr><td class="td_add">{{ form.description.label }}</td><td>{{ form.description }}</td></tr>
+	                  <tr><td></td><td><span class = "forget-errors">{{ form.description.errors }}</span></td></tr>
+	                  <tr><td class="td_add">{{ form.image.label }}</td><td>{{ form.image }}</td></tr>
+	                  <tr><td></td><td><span class = "forget-errors"><i style="color:#5B5B5B;">{{form.image.help_text}}</i>{{ form.image.errors }}</span></td></tr>
+	                  <tr><td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td></tr>
+	                  <tr><td></td><td><span class = "forget-errors">{{ form.active.errors }}</span></td></tr>
+	                  <tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+	                  <div id="canc" onclick = "reset()"><a href="/admin_management/plan_list/" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div><!--addplan end-->
+	</form>
+{% endblock %}

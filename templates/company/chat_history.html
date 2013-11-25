@@ -1,0 +1,100 @@
+{% extends 'company/client_home.html' %}`
+{% load i18n %}	
+
+{% block extrahead %}
+<script type="text/javascript">
+
+$(function(){
+	$('#page_number').val({{ chat_messages.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '{% url company_client_chat_history domain_name client_id date %}?page=' + number
+	});
+
+	$("#id_details").hide();
+
+});
+function call_details(){
+	$("#id_details").show();
+
+}
+</script>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+
+#Chat a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %} 
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left">
+    <p class="left_content" style="margin-top:23px;">{% trans "Chat History"%}({{date}})</p>
+</div>
+<div id="banner_right" style="margin-top:23px;"><!--banner_right start-->  
+	<div id="sav" href="#" style="float:right;"><a href="{% url company_client_chat_details domain_name client_id %}" class="save">{% trans "Back" %}</a></div>		
+</div>
+<div class="common_right"><!--common_right start-->     
+	 <div id="paginationdemo" class="demo"><!--paginationdemo start-->
+           <div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+	            <div class="my_contact"	>
+	    		<table class="features-table" width="771" height="auto" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+	    		{% if chat_messages.object_list %}
+		    		{% for message in chat_messages.object_list %}
+		                <tr class="first" style="height:24px;">
+			                <td width="10%" class="name"><p style="color:#5B5B5B;" class="feed">{{message.received_at|time}}</p></td>
+			              	<td width="70%" class="name"><p style="color:black;" class="feed"><b>{% if message.sender == request.user %}{% trans "me" %}{% else %}{{message.sender}}{% endif %} </b>:&nbsp;&nbsp;{{message.message}}</p></td>
+						</tr>		                
+					{% endfor %}
+				{% else %}
+					<tr class="first" style="height:24px;">
+						<td colspan="2" width="30%"height="44" class="name">{% trans "No Chat history available" %}</td>
+					</tr>
+				{% endif %}
+	            </table>
+	    		</div> 
+          </div> <!--Page 1 END-->
+    </div><!--paginationdemo end-->
+    <div class="clear"></div>
+	
+		{% if chat_messages.object_list %}
+			<div class="pagination" align="center" style="margin: 0 auto;width: 46px;">
+		    	<table style="border: 0px; margin-top:15px;" width="15%">
+		    		<tbody>
+		    			<tr>
+		    				<td width="10%" align="left">
+						        {% if chat_messages.has_previous %}
+						            <a href="?page={{ chat_messages.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    				<td width="80%" align="center">
+								<select id="page_number">
+									{% for each in num_pages %}
+										<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+									{% endfor %}
+								</select>
+		    				</td>
+		    				<td width="10%" align="right">
+						        {% if chat_messages.has_next %}
+						            <a href="?page={{ chat_messages.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+			</div>
+		{% endif %}
+</div>
+	{% endblock %}

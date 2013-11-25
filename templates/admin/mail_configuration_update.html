@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+	.list7
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list7 a
+	{
+	color:#7CC744 !important;
+	}
+	.list8 a
+	{
+	color:#FFFFFF !important;
+	}
+	#tabtable{
+ 	border:none !important;
+	}
+	#tabtable tr td
+	{
+	padding:10px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+function save_form(){
+	document.mail_configuration_form.action ="/admin_management/mail_configuration_update/";
+	$('#id_mail_configuration_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="add_heading">
+	<p class="add_heading_content">{% trans "Email Language Settings" %}</p>
+</div>
+
+<form enctype='multipart/form-data' name='mail_configuration_form' id='id_mail_configuration_form' action='.' method='post'>{% csrf_token %}
+    <div id="add_therapist"><!--add_caregiver start-->
+    	<div class="tabl">
+          	<table id="tab" cellpadding="5">
+				<tbody>
+		 			<tr><td class="td_add">{{ form.english.label }}</td><td>{{ form.english }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.english.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.dutch.label }}</td><td>{{ form.dutch }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.dutch.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" onclick = "save_form()"><a href="#" class="save">{% trans "SAVE" %}</a></div>
+		            	<div id="canc" onclick = "reset()"><a href="/admin_management/mail_configuration/" class="save1">{% trans "CANCEL" %}</a></div></td></tr>
+	            </tbody>
+	        </table>
+        </div>
+   </div><!--add_caregiver end-->
+</form>
+{% endblock %}

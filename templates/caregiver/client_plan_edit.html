@@ -1,0 +1,62 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#plan_list a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_client').val('{{client_id}}').parent().parent().hide();
+	$('#id_practise_plan').attr({'disabled' : true});
+});
+function save_form()
+{
+	$('#id_practise_plan').attr({'disabled' : false});
+	$('#id_client_plan_edit_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left"><!--banner_left start-->
+  	<p class="left_content">{% trans "Edit Plan" %}</p>
+</div><!--banner_left end-->
+<form enctype='multipart/form-data' name='client_plan_edit_form' id='id_client_plan_edit_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+	        <tbody>
+  			    <tr><td class="td_add">{{ form.client.label }}</td><td>{{ form.client }}</td></tr>
+				<tr><td class="td_add">{{ form.practise_plan.label }}</td><td>{{ form.practise_plan }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.non_field_errors|safe }}{{ form.practise_plan.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.caregiver.label }}</td><td>{{ form.caregiver }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.caregiver.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.goal.label }}</td><td>{{ form.goal }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.goal.errors }}</span></td></tr>
+				<tr id="marg" style="margin-top:30px;"><td class="td_add" > {{ form.description.label }}</td><td>{{ form.description }}</td></tr>
+	            <tr><td></td><td><span class = "forget-errors">{{ form.description.errors }}</span></td></tr>
+	            <tr><td class="td_add">{{ form.goal_achieved.label }}</td><td>{{ form.goal_achieved }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.goal_achieved.errors }}</span></td></tr>
+				<tr><td class="td_add">{{form.active.label}}</td><td>{{ form.active }}</td></tr>
+				<tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+                <div id="canc" onclick = "reset()"><a href="{% url caregiver_client_plan_view domain_name client_id plan_id %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+        	</tbody>
+	    </table>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->{% endblock %}

@@ -1,0 +1,331 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}	
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.theme.css" />
+<style>
+.tdclass
+{
+height:10; 
+border-bottom:2px #fff solid;
+}
+#treatment_list a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+.clear{
+clear:both;
+}
+.feed{
+padding-left:10px;
+}
+#feedback {
+    border: 1px solid #D0D0D0;
+    border-radius: 10px 10px 10px 10px;
+    color: #5B5B5B;
+    float: right;
+    font-family: 'myriad pro';
+    font-size: 15px;
+    height: auto !important;
+    margin-bottom: 59px !important;
+    xmargin-top: 10px;
+    min-height: 100%;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    position: relative;
+    width: 772px;
+}
+.question{
+border: 1px solid #D0D0D0;
+border-radius: 10px 10px 10px 10px;
+float: right;
+xmargin-bottom: -30px;
+xpadding: 11px;
+ width: 772px;max-height:300px; font-family: Arial,Helvetica,sans-serif;font-size: 15px;overflow:auto;
+ }
+ #feedtent{
+ color: #25B513;
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 19px 0 11px 17px;
+    }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$('#page_number').val({{ total_sessions.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '{% url company_client_treatment_view domain_name client_id module_id %}?page=' + number
+	});
+	
+	$('#id_client_treatment').val('{{module_id}}').parent().parent().hide();
+	$('#id_client').val('{{client.id}}').parent().parent().hide();
+	
+	'{% for val in slider_val %}'
+	var slide = $('.slider{{val.ques_id}} input#foo').val()
+	if (slide){
+		$( ".slider{{val.ques_id}}" ).slider({
+			range: "min",
+			value: {{val.min_val}},
+			min: {{val.min_val}},
+			max: {{val.max_val}},
+			slide: function( event, ui ) {
+			$( "#amount{{val.ques_id}}" ).val(  $( ".slider{{val.ques_id}}" ).slider( "value" )  );
+			return false;
+			}
+			});
+			$( "#amount{{val.ques_id}}" ).val(  $( ".slider{{val.ques_id}}" ).slider( "value" ) );
+	}
+'{% endfor %}'
+
+'{% for answer in client_questions %}'
+	$('#text{{answer.question.id}}').val('{{answer.answer}}');
+	$( "#amount{{answer.question.id}}" ).val( '{{answer.answer}}' );
+	$('.slider{{answer.question.id}}').slider('value', '{{answer.answer}}');
+'{% endfor %}'
+	
+});
+
+function remove_session(id){
+	var confirmed = confirm('{% trans "You have chosen to delete this Session" %}');
+    return confirmed;
+}
+function activation(id){
+	window.location.href="{% url company_client_treatment_view domain_name client_id module_id %}?query="+id;
+}
+function complete_status(id){
+	window.location.href="{% url company_client_treatment_view domain_name client_id module_id %}?complete="+id;
+}
+function unaccompany(id){
+	window.location.href="{% url company_client_treatment_view domain_name client_id module_id %}?make="+id;
+}
+function remove_treatment(){
+	var confirmed = confirm('{% trans "You have chosen to delete this Session" %}');
+    return confirmed;
+}
+function save_feedback(){
+	$('#id_client_question_feedback').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div style="float:right;min-height: 538px;height:auto; width:794px;">
+
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{{company_client.module|title}}</p>
+	</div><!--banner_left end-->
+	<div class="newmessage" style="padding-left:15px;"><!--newmessage start-->
+			<a href="{% url company_client_treatment_list domain_name client_id %}" >{% trans "Back" %}</a>
+	</div>
+	<div class="newmessage"><!--newmessage start-->
+		<a href="{% url company_client_treatment_custom domain_name client_id company_client.id %}" >{% trans "Customize" %}</a>
+	</div><!--newmessage end-->
+	<div class="newmessage1"><!--newmessage1 start-->
+		<a href="{% url company_client_treatment_edit domain_name client_id company_client.id %}">{% trans "Edit" %}</a>
+	</div><!--newmessage1 end-->
+	
+	<div class="clear"></div>   
+	
+	<div id="treatment_panic" ><!--treatment_panic start-->
+	    <form action="#" method="post" name="newmessage_form"><!--FORM START-->
+	    	{% if total_sessions.object_list %}
+		    	{% for treat in total_sessions.object_list %}
+		    	 <div class="panic">
+		    	 	<a href="{% url company_client_treatment_session domain_name client_id treat.id %}"><p style="text-align:left;width:350px;margin-left:10px;">{{treat.module}} : {{treat.sessions}}</p></a>
+		    	 	<p>
+		    	 	{% if treat.activate_session %}
+		    	 		<a href="#" onclick="complete_status({{treat.sessions.id}})">{% trans "Completed" %}{% if treat.completed %}<input type="checkbox" checked="checked" disabled="True">{% else %}<input type="checkbox">{% endif %}</a>
+		    	 		<a href="{% url company_client_session_delete domain_name client_id treat.id %}"  onclick="return remove_session({{treat.id}})">{% trans "Remove" %}</a>
+		    	 		{% if not treat.completed %} 
+		    	 			<a href="#" onclick="unaccompany({{treat.sessions.id}})">{% if treat.make_unaccompanied %}{% trans "Make Unaccompanied" %}{% else %}{% trans "Make Accompanied" %}{%endif %}</a>
+		    	 		{% endif %}
+		    	 	{% else %}
+		    	 		<a href="#" onclick="activation({{treat.sessions.id}})">{% trans "Activate" %}</a>
+		    	 		<a href="{% url company_client_session_delete domain_name client_id treat.id %}"  onclick="return remove_session({{treat.id}})">{% trans "Remove" %}</a> 
+		    	 		<a href="#" onclick="unaccompany({{treat.sessions.id}})">{% if treat.make_unaccompanied %}{% trans "Make Unaccompanied" %}{% else %}{% trans "Make Accompanied" %}{%endif %}</a>
+		    	 	{% endif %}
+		    	 	</p>
+		    	 </div>
+		      	 <div class="clear"></div>
+		  		{% endfor %}
+		  	{% else %}
+		  		<div><p>{% trans "No Sessions Found" %}</p></div>
+	  		{% endif %} 
+	    </form><!--FORM END-->
+	 </div><!--treatment_panic end-->
+	 
+	 <div class="clear"></div>
+	
+	 <div class="pagination" align="center" style="margin: 0 auto;margin-top:35px;width: 46px;">
+    	<table style="border: 0px; margin-top:15px;" width="15%">
+    		<tbody>
+    			<tr>
+    				<td width="10%" align="left">
+				        {% if total_sessions.has_previous %}
+				            <a href="?page={{ total_sessions.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+				        {% endif %}
+    				</td>
+    				<td width="80%" align="center">
+						<select id="page_number">
+							{% for each in num_pages %}
+								<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+							{% endfor %}
+						</select>
+    				</td>
+    				<td width="10%" align="right">
+				        {% if total_sessions.has_next %}
+				            <a href="?page={{ total_sessions.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+				        {% endif %}
+    				</td>
+    			</tr>
+    		</tbody>
+    	</table>
+	</div>
+	
+	<p class="left_content" style="margin-top:0px;">{% trans "Questions" %}</p>
+	
+	<div class="question">
+	    	<table id="tab" cellpadding="8"  style="padding-right:12px;padding-left:12px;border:0;">
+		 		<tbody>
+		 		{% if client_question_answer %}
+		 			{% for ques in client_question_answer %}
+		                <tr><td>{{forloop.counter}}.</td><td>{{ques.question_text}}</td></tr>
+		                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+		               	{% if ques.answer_type == '1' %}
+		               				<tr><td></td><td style="color:#4863A0">{{ques.exact_answer}}</td></tr>
+		               	{% endif %}
+
+		               	{% if ques.answer_type == '2' %} 
+		               		{% for full in full_choices %}
+		               			{% if full.question == ques.client_question_id %}
+		               				{% for ans in full.options %} 
+		               				<tr><td></td><td style="color:#4863A0">{% if ques.exact_answer == ans %}<input checked="checked" disabled="true" type="radio" name ="radio{{ques.id}}" id="radio{{ans}}" class="radio{{ques.id}}" value="{{ ans }}"/>{% else %}<input type="radio" name ="radio{{ques.id}}" disabled="true" id="radio{{ans}}" class="radio{{ques.id}}" value="{{ ans }}"/>{% endif %}{{ ans }}</td></tr>
+		               				{% endfor %}
+		               			{% endif %}
+		               		{% endfor %}			
+		               	{% endif %}
+		               
+		               	{% if ques.answer_type == '3' %}
+		               		{% for full in full_choices %}
+		               			{% if full.question == ques.client_question_id %}
+		               				{% for ans in full.options %} 
+		               					<tr><td></td><td style="color:#4863A0">{% if ans in ques.exact_answer %}<input checked="checked" disabled="true" type="checkbox" name ="checkbox{{ques.id}}" id="checkbox{{ans}}" class="checkbox{{ques.id}}" value="{{ ans }}"/>{% else %}<input type="checkbox" disabled="true" name ="checkbox{{ques.id}}" id="checkbox{{ans}}" class="checkbox{{ques.id}}" value="{{ ans }}"/>{% endif %}{{ ans }}</td></tr>
+		               				{% endfor %}
+		               			{% endif %}
+		               		{% endfor %}	
+		               	{% endif %}
+		               	
+		               	{% if ques.answer_type == '4' %}
+		               		<tr><td></td>
+		               			<td>
+			               		<p><label for="amount">{% trans "Range:" %}</label><input type="text" id="amount{{ques.client_question_id}}" style="border: 0; color: #f6931f; font-weight: bold;" /></p>
+								<div class="slider{{ques.client_question_id}}" id="slider-range-min" ><input type="hidden" id="foo" name="slider{{ques.client_question_id}}" value="slider{{ques.client_question_id}}" /></div>
+								</td></tr>
+			               	<tr><td></td><td width="100%"><div style="float:left;width:50%">{{ques.min_value}}</div><div style="float:right;width:50%;text-align:right">{{ques.max_value}}</div></td></tr>
+		                {% endif %}
+		            {% endfor %}
+		           
+		       {% else %}
+		       	
+		 	   {% if all_ques %}
+		 			{% for ques in all_ques %}
+		                <tr><td>{{forloop.counter}}.</td><td>{{ques.question_text}}</td></tr>
+		                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+		               	{% if ques.answer_type == '1' %}
+		               			<tr><td></td><td><input type="text" name ="text{{ques.id}}" id="text{{ques.id}}"  disabled="true"/><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+		               	{% endif %}
+
+		               	{% if ques.answer_type == '2' %} 
+		               		{% for choice in choice_val %}
+		               			{% if choice.ques_id == ques.id %}
+		               				{% for ans in choice.answer %}
+		               					<tr><td></td><td><input type="radio" name ="radio{{ques.id}}" id="radio{{ans}}" class="radio{{ques.id}}" value="{{ ans }}" disabled="true"/>{{ ans }}</td></tr>
+		                			{% endfor %}
+		                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+		                		{% endif %}
+		               		{% endfor %}			
+		               	{% endif %}
+		               
+		               	{% if ques.answer_type == '3' %}
+		               		{% for choice in choice_val %}
+		               			{% if choice.ques_id == ques.id %}
+		               				{% for ans in choice.answer %}
+		               					<tr><td></td><td><input type="checkbox" name ="checkbox{{ques.id}}" id="checkbox{{ans}}" class="checkbox{{ques.id}}" value="{{ ans }}" disabled="true"/>{{ ans }}</td></tr>
+		                			{% endfor %}
+		                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+		                		{% endif %}
+		               		{% endfor %}			
+		               	{% endif %}
+		               
+		               	{% if ques.answer_type == '4' %} 
+		               		<tr><td></td><td>
+			               		<p><label for="amount">{% trans "Range:" %}</label>
+								   <input type="text" id="amount{{ques.id}}" style="border: 0; color: #f6931f; font-weight: bold;" />
+								</p>
+								<div class="slider{{ques.id}}" id="slider-range-min" ><input type="hidden" id="foo" name="slider{{ques.id}}" value="slider{{ques.id}}" disabled="true"/></div>
+							</td></tr>
+		               		{% for slider in slider_val %}
+		                		{% if slider.ques_id == ques.id %}
+		                			<tr><td></td><td width="100%"><div style="float:left;width:50%">{{slider.min_val}}</div><div style="float:right;width:50%;text-align:right">{{slider.max_val}}</div></td></tr>
+		                		{% endif %}
+                	 		{% endfor %}
+		               	{% endif %}
+		                
+		            {% endfor %}    
+		           
+		       {% else %}
+		       		<p style="padding:15px;">{% trans "No questions for this module" %}</p>
+		       {% endif %}
+		       {% endif %}
+		        </tbody>   
+			</table>
+	</div><!--treatment_panic end-->
+	
+	 
+	{% if exist_feedback %}
+		<p class="left_content" style=" padding-top: 20px;">Comment</p>
+		<div id="feedback">
+		{% for feedback in exist_feedback %}
+				{% if feedback.created_by == request.user %}
+				<p style="color:blue;" class="feed">{% trans "me :" %} {{feedback.feedback }}</p><br>
+				{% else %}
+				<p style="color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+	
+ 	<div>
+	  	<p id="feedtent">{% trans "Feedback" %}</p>
+	</div>
+	<div id="feedback"><!--newmessage_frm start-->
+		<div style="margin-top:10px; width:100%;">
+			<form enctype="multipart/form-data" id="id_client_question_feedback" name="client_question_feedback" action="." method="post">{% csrf_token %}
+				<table style="border:none;" width="771" cellpadding="5" align="center">
+					<tr><td class="goal">{{form.client_treatment.label}}</td><td align="left" class="goal_box">{{form.client_treatment}}</td></tr>
+					<tr><td class="goal">{{form.client.label}}</td><td align="left" class="goal_box">{{form.client}}</td></tr>
+					<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" ><a href="#" onclick="save_feedback()" ><p class="save" id="id_save">{% trans "Save" %}</p></a></div></td></tr>
+				</table>
+			</form>	
+		</div>
+	</div><br>
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}	
+
+{% block extrastyle %}
+<link rel='stylesheet' type='text/css' href="/static/css/company/cupertino/theme.css" />
+<link rel='stylesheet' type='text/css' href="/static/css/company/fullcalendar.css"/>
+<link rel='stylesheet' type='text/css' href="/static/css/company/fullcalendar.print.css" media='print' />
+<style type="text/css">
+#calendar {
+		width: 500px;
+		margin: 0 auto;
+		}
+#newmessage_frm_test
+	{
+		width:730px;
+		height:580px;
+		overflow:auto;
+		float:right;
+		margin-top: 10px;
+		text-align: center;
+		font-size: 13px;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		border:1px solid #D0D0D0;
+		border-radius:10px;
+		-moz-border-radius:10px;
+		-webkit-border-radius:10px;
+		padding:20px;
+	}
+	
+#current3 a
+{
+color:#7CC744;
+}
+#test_list a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type='text/javascript'>
+$(document).ready(function(){
+	$('#id_test').val('{{test_id}}').parent().parent().hide();
+	
+	'{% for each_question in questions %}'
+		$('input:radio[name=radio{{ each_question.id }}][value={{ each_question.score }}]').attr('checked', true);
+		$('input[name=radio{{ each_question.id }}]').attr('disabled', 'disabled');
+	'{% endfor %}'
+	 
+});
+function save_form()
+{	
+	document.client_test_feedback.action ="{% url company_client_test_feedback domain_name client_id test_id %}";
+	$('#id_client_test_feedback').submit();
+	
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	 <div id="banner_left"><!--banner_left start-->
+	        <p class="left_content">{% trans "Test Details" %}</p>
+	 </div><!--banner_left end-->
+ 
+	<div id="banner_right" style="width:393px; margin: 11px -12px 0 0;"><!--banner_right start-->  
+		<div class="newmessage" style="padding-left:15px;"><!--newmessage start-->
+			<a href="{% url company_client_test_list domain_name client_id %}">{% trans "Back" %}</a>
+		</div>
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url company_client_test_edit domain_name client_id test_id %}">{% trans "Edit Test" %}</a>
+		</div><!--newmessage end-->
+	</div>  
+		
+ 	
+ 	<div id="newmessage_frm" style="margin-bottom:0!important" >
+		<div id="banner_left"><!--banner_left start-->
+        	<p class="left_content" align="left">{% trans "Test Questions with anwers" %}</p>
+ 		</div><!--banner_left end-->
+ 
+ 		<div class="clear"></div>	
+
+		<table cellpadding="5" width="98%" align="center" id="question_table" style="border:0!important">
+			<thead>
+				<tr>
+					<td class="depr-sno1" style="font-family: 'myriad pro';color:#5b5b5b;font-size:16px;">{% trans "S.No" %}</td>
+					<td align="center" class="depr-ques1"style="font-family: 'myriad pro';color:#5b5b5b;font-size:16px;width:580px!important;">{% trans "Questions" %}</td>
+					<td align="center" class="depr-ans1" style="font-family: 'myriad pro';color:#5b5b5b;font-size:16px;width:820px!important;">{% trans "Answer" %}</td>
+				</tr>
+			</thead>
+			<tbody>
+				{% for each_question in questions %}
+					<tr>
+						<td class="depr-sno" style="font-family: 'myriad pro';color:#5b5b5b;font-size:15px;">{{ forloop.counter }}</td>
+						<td align="center" class="depr-ques" style="font-family: 'myriad pro';color:#5b5b5b;font-size:15px;">{{ each_question.question }}</td>
+						{% with forloop.counter as question_no %}
+							<td align="left" class="depr-ans" id="radio_td{{ question_no }}">
+								{% for each_answer in answers %}
+									{% if each_answer.question.test.id == each_question.test.id %}
+										{% if each_answer.question.question == each_question.question %}
+											<input type="radio" id="no{{ question_no }}"  name="radio{{ each_question.id }}" value="{{ each_answer.score }}" >{{ each_answer.answer }}<br />
+										{% endif %}
+									{% endif %}
+								{% endfor %}
+							</td>
+						{% endwith %}
+					</tr>
+					<tr><td colspan="3"><hr></td></tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		<div id="banner_left"><!--banner_left start-->
+        	<p class="left_content" align="left">{% trans "Test Result" %}</p>
+ 		</div><!--banner_left end-->
+		<table cellpadding="5" width="98%" align="center" id="question_table" style="border:0!important">
+					
+			{% for result in all_actions %}
+				<tr><td colspan="3" style="font-family: 'myriad pro';color:#5b5b5b;font-size:15px;">{% trans "Score" %}</td><td colspan="4" align="center" class="depr-ques"  style="text-align:left;font-family:'myriad pro';color:#5b5b5b;font-size:15px;">{{ result.score }}</td></tr>
+				<tr><td colspan="3" style="font-family: 'myriad pro';color:#5b5b5b;font-size:15px;">{% trans "Result" %}</td><td colspan="4" align="center" class="depr-ques" style="text-align:left;font-family:'myriad pro';color:#5b5b5b;font-size:15px;">{{ result.result }}</td></tr>
+			{% endfor %}	
+		</table>	
+		
+		<div id="banner_left"><!--banner_left start-->
+	        <p class="left_content" align="left">{% trans "Score Details" %}</p>
+	 	</div><!--banner_left end-->
+ 		<div class="clear"></div>
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+			{% for range in ranges %}
+				<tr><td class="td_add" style="text-align:left;"><p>{% trans "From" %}</p></td><td class="td_add" style="text-align:left;"><p>{{ range.from_value }}</p></td><td class="td_add" style="text-align:left;"><p>To</p></td><td class="td_add" style="text-align:left;"><p>{{ range.to_value }}</p></td><td class="td_add" style="text-align:left;"><p>{% trans "Means" %}</p></td><td class="td_add" style="text-align:left;"><p>{{ range.result }}</p></td></tr>
+			{% endfor %}			
+		</table>
+		
+		{% if exist_feedback %}
+			<div>
+		    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Comments :" %} </p><br>
+				{% for feedback in exist_feedback %}
+					{% if feedback.created_by == request.user %}
+					<p style="margin-left:5px;color:blue;" class="feed">{% trans "me :" %} {{feedback.feedback }}</p><br>
+					{% else %}
+					<p style="margin-left:5px;color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+					{% endif %}
+				{% endfor %}
+			</div><br>
+		{% endif %}
+	 </div><!--newmessage_frm end-->
+	
+	{% if all_actions %}
+		<div style="float:right; width:80%;margin-top:0!important">
+			
+	  		<p class="left_content">{% trans "Feed Back" %}</p>
+		
+			<div style="margin-top:10px; width:100%;">
+				<form enctype="multipart/form-data" id="id_client_test_feedback" name="client_test_feedback" action="." method="post">{% csrf_token %}
+						<table width="771" cellpadding="5" align="center">
+							<tr><td class="td_client" align="center">{{ form.test.label }}</td><td align="left">{{ form.test }}</td></tr>
+							<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+							<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+							<tr><td></td><td><div id="sav" ><a href="#" onclick="save_form()" ><p class="save" id="id_save">{% trans "Send" %}</p></a></div></td></tr>
+						</table>
+				</form><br><br>	
+			</div>
+		</div>	
+	{% endif %}	
+{% endblock %}

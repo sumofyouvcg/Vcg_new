@@ -1,0 +1,85 @@
+{% extends 'company/client_home.html' %}`
+
+{% block extrahead %}
+<script type="text/javascript">
+$(function(){
+	$("#id_details").hide();
+
+});
+function call_details(){
+	$("#id_details").show();
+}
+</script>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#moniter_list a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %} 
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left">
+   <p class="left_content" style="margin-top:23px;">Monitoring</p>
+ </div>
+	<div id="id_details" style="float:center;width:80%;border: 1px solid black;">
+	<div style="margin-left:300px; width:100%;"><b>Chat Details</b></div><br>
+	<table width="85%"align="center" >
+			<tr><td>04:53PM</td><td>Caregiver1 :</td> <td>cccccc xxxxxxxx</td></tr>
+			<tr><td>05:12PM</td><td>FClient1 :</td> <td>bbbbbbbbbbb xxxxxxxx</td></tr>
+			<tr><td>05:15PM</td><td>Caregiver1 :</td> <td>ddddd  df sfxxxxxxxx</td></tr>
+	</table>
+</div>
+<div class="common_right"><!--common_right start-->     
+	<div id="paginationdemo" class="demo"><!--paginationdemo start-->
+          <div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+	            <div class="my_contact"	>
+		    		<table class="features-table" width="771" height="137" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+			            <thead>
+			            	<tr style="padding:3px; height:35px; background:#dcdcdc" cellpadding="15" id="heading" >
+			                	<th height="41" class="numb" style="width:191px;">Date</th>              
+							 </tr>
+			       		</thead> 
+			                 <tr class="first" style="height:24px;">
+			                    <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm<a href="{% url company_video_details domain_name client_id %}" >
+								   <img src="/static/img/company/vedio.png"  height="30" width="30"/></a></td>
+			               	 </tr>
+			                  <tr class="first" style="height:24px;">
+			                      <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm&nbsp;<a href="{% url company_video_details domain_name client_id %}" >
+								      <img src="/static/img/company/vedio.png"  height="30" width="30"/></a></td>
+			                  </tr>
+		            </table>
+	           </div> <!--my_contact end-->
+           </div> <!--Page 1 END--> 
+           <div id="p2" class="pagedemo" style="display:none;"><!--Page 2 Start-->jjj</div><!--Page 2 end-->
+           <div id="p3" class="pagedemo" style="display:none;">Page 3</div>
+           <div id="p4" class="pagedemo" style="display:none;">Page 4</div>
+		   <div id="p5" class="pagedemo" style="display:none;">Page 5</div>
+		   <div id="p6" class="pagedemo" style="display:none;">Page 6</div>
+		   <div id="p7" class="pagedemo" style="display:none;">Page 7</div>
+		   <div id="p8" class="pagedemo" style="display:none;">Page 8</div>
+		   <div id="p9" class="pagedemo" style="display:none;">Page 9</div>
+		   <div id="p10" class="pagedemo" style="display:none;">Page 10</div>
+		   <div id="demo5" style="margin-left:260px;">                   
+        </div>
+    </div><!--paginationdemo end-->
+</div><!--common_right-->
+
+{% endblock %}

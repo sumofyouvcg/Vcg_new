@@ -1,0 +1,67 @@
+{% extends 'company/client_home.html' %}`
+
+{% block extrahead %}
+<script type="text/javascript">
+$(function(){
+	$("#id_details").hide();
+});
+function call_details(){
+	$("#id_details").show();
+
+}
+</script>
+{% endblock %}
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+
+#moniter_list a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+</style>
+
+{% endblock %} 
+
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+ <div class="common_right" style="margin-top:24px;"><!--common_right start-->  
+	  <div id="banner_left">
+         <p class="left_content" style="margin-top:23px;">Video Details</p>
+      </div>
+      <table class="features-table" width="771" height="137" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+            <tr class="first" style="height:24px;">
+                <td height="44" class="name"><a href="#">04:53PM</a></td>
+              	<td style="text-align:center;border-left:1px solid #d0d0d0;"><a href="http://www.youtube.com/watch?v=Q9FP6AHj9Eo" target = "blank">http://www.youtube.com/watch?v=Q9FP6AHj9Eo</a></td>
+            </tr>
+             <tr class="first" style="height:24px;">
+                <td class="name"><a href="#">05:12PM</a></td>
+              	<td style="text-align:center;border-left:1px solid #d0d0d0;"><a href="http://www.youtube.com/watch?v=gpzmcm0QUEw" target = "blank">http://www.youtube.com/watch?v=gpzmcm0QUEw</a></td>
+             </tr>
+     </table>
+ </div><!--common_right end-->  
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

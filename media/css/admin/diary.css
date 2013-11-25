@@ -1,0 +1,29 @@
+/*POPUP BOX STLYE*/
+#basic-modal-content-1 {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000; xcursor:wait;}
+
+/* Container */
+#simplemodal-container a.modalCloseImg {
+	
+	width:25px;
+	height:29px;
+	display:inline;
+	z-index:3200;
+	position:absolute;
+	top:-15px;
+	right:-18px;
+	cursor:pointer;
+}
+
+
+#simplemodal-container {align:center; height: 500px; width:500px;  background-color:#FFFFFF; border:3px solid green; padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:12px;border-radius: 15px 10px 15px 15px / 10px 15px 10px 15px;}
+
+#simplemodal-container code {background:green; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a {}
+
+#simplemodal-container a.modalCloseImg {background: url(/static/img/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+
+#simplemodal-container h3 {color:#84b8d9;}
+#close {  width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-32px; right:-16px; cursor:pointer;}

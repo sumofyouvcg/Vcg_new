@@ -1,0 +1,100 @@
+{% extends 'admin/communication.html' %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst3
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst3 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content%}
+<div id="content"><!--content start-->    
+  
+	{% block left %}
+		{{ block.super }}
+	{% endblock %}
+	
+	{% block right %}
+	<div id="content_right"><!--content_left start-->
+		<div class="my_contact"	>
+			{% if msg == '1' %}
+				<table class="features-table" width="739px" height="120px" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+	           	 	<thead>
+	            	<tr style="padding:3px; height:35px; background:#dcdcdc" cellpadding="15" id="heading" >
+	                <th class="numb" style="width:191px;">Company</th>              
+					<th class="numb" style="width:192px;border-left:1px solid #d0d0d0;">Client</th>
+	                <th class="numb" style="width:174px;border-left:1px solid #d0d0d0;">Message</th>              
+					<th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Date</th>
+	                </tr>
+	               	</thead> 
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name"><a href="#">xxxxxxx</a></td>
+	              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/><sup><font size="2" family="myriad pro" color="blue">3</font></sup></a></span></td>
+					<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name"><a href="#">xxxxxxx</a></td>
+	              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/><sup><font size="2" family="myriad pro" color="blue">3</font></sup></a></span></td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name" ><a href="#">xxxxxxxxxxx</a></td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/><sup><font size="2" family="myriad pro" color="blue">1</font></sup></a></span></td>
+					<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+            	</table>
+				
+			{% else %}
+				<table class="features-table" width="739px" height="120px" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+	           	 	<thead>
+	            	<tr style="padding:3px; height:35px; background:#dcdcdc" cellpadding="15" id="heading" >
+	                <th class="numb" style="width:191px;">Caregiver</th>              
+					<th class="numb" style="width:192px;border-left:1px solid #d0d0d0;">Client</th>
+	                <th class="numb" style="width:174px;border-left:1px solid #d0d0d0;">Message</th>              
+					<th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Date</th>
+					</tr>
+	               	</thead> 
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name"><a href="#">xxxxxxx</a></td>
+	              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/><sup><font size="2" family="myriad pro" color="blue">5</font></sup></a></span></td>
+					<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name"><a href="#">xxxxxxx</a></td>
+	              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/><sup><font size="2" family="myriad pro" color="blue">3</font></sup></a></span></td>
+					<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+	                
+	                <tr class="first" style="height:24px;">
+	                <td class="name" ><a href="#">xxxxxxxxxxx</a></td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyy</td>
+	                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="/admin_management/message/"><img src="/static/img/admin/mail.png" height="13px" width="25px"/></a></span></td>
+					<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm</td>
+	                </tr>
+            	</table>
+			{% endif %}		
+		</div>
+	</div>
+	{% endblock %}
+</div>
+{% endblock %}

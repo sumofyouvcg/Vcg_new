@@ -1,0 +1,99 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.assi
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.assi a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<!--SCRIPT START-->
+<script type="text/javascript">
+	setTimeout( function() {
+		jQuery('#message').hide();
+	}, 2000 );
+</script>
+	
+<script>
+	$(document).ready(function(){
+		$('#id_assignment').val('{{assign_id}}').parent().parent().hide();
+	});
+
+	function save_feedback()
+	{	
+		document.client_assignment_feedback.action ="{% url client_assignment_feedback domain_name assign_id %}";
+		$('#id_client_assignment_feedback').submit();
+		
+}	
+</script>
+{% endblock %}
+
+{% block content %}
+	<div id="banner_left"><!-- banner_left start-->
+    	<p class="left_content">{% trans "Questions" %}</p>
+    </div><!-- banner_left end-->
+
+    <div class="clear"></div>
+    <div id="newmessage_frm">
+	<div id="newmessage_frm" style="margin-bottom:10px;text-align:left; width: 98%; height:350px; overflow:auto;background-color:lightgrey;"><!--newmessage_frm start-->
+		<p align="center"><b>{% trans "Summary" %}</b></p>
+		<div style="margin: 0px auto 0px auto; width: 98%; height:auto; background-color:lightgrey;">
+			<div id="form-div1" class="physical-text" text-align:left;>
+					{{ assignment_name.assignment.summary }}
+			</div><!--end of form-div-->
+		</div>
+	</div>
+		
+	<div id="newmessage_frm"><!--newmessage_frm start-->
+		<div align="center" style="height:20px;width:100%;text-align:center;"><b>{{ assignment_name }}</b></div>
+		<table cellpadding="3" cellspacing="3"  style="padding-right:12px;padding-left:12px;border:0;">
+			<th>{% trans "Clusters" %}</th>
+			<th>{% trans "Questions" %}</th>
+			<th>{% trans "Answer" %}</th>
+			{% for selected_assignment in assignments %}
+				<tr><td class="td_add">{{ selected_assignment.cluster }}</td>
+					<td class="td_add">{{ selected_assignment.question }}</td>
+					<td class="td_add">{{ selected_assignment.client_answer }}</td></tr>
+			{% endfor %}	
+		</table>
+	</div>		
+	{% if exist_feedback %}
+		<div>
+	    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Comments" %} : </p><br>
+			{% for feedback in exist_feedback %}
+				{% if feedback.created_by == request.user %}
+				<p style="color:blue;" class="feed">{% trans "me" %} : {{feedback.feedback }}</p><br>
+				{% else %}
+				<p style="color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+				{% endif %}
+			{% endfor %}
+		</div><br>
+	{% endif %}
+	</div>
+	
+	{% if all_actions %}
+		<div>
+		  	<p class="left_content">{% trans "Feed Back" %}</p>
+		</div>
+		<div id="newmessage_frm"><!--newmessage_frm start-->
+			<div style="margin-top:10px; width:100%;">
+				<form enctype="multipart/form-data" id="id_client_assignment_feedback" name="client_assignment_feedback" action="." method="post">{% csrf_token %}
+					<table width="771" cellpadding="5" align="center">
+						<tr><td class="goal">{{form1.assignment.label}}</td><td align="left" class="goal_box">{{form1.assignment}}</td></tr>
+						<tr><td class="td_client" align="center">{{ form1.feedback.label }}</td><td align="left">{{ form1.feedback }}</td></tr>
+						<tr><td></td><td><span class = "forget-errors">{{ form1.feedback.errors }}</span></td></tr>
+						<tr><td></td><td><div id="sav" ><a href="#" onclick="save_feedback()" ><p class="save" id="id_save"> {% trans "Send" %}</p></a></div></td></tr>
+					</table>
+				</form>	
+			</div>
+		</div>
+	{% endif %}	
+{% endblock %}

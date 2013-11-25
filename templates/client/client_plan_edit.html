@@ -1,0 +1,69 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst1
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst1 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+		$(document).ready(function(){
+			$('#id_plan').val('{{plan_id}}').parent().parent().hide();
+		});
+		
+		function save_form()
+		{
+			$('#id_plan_form').submit();
+		}	
+</script>
+{% endblock %}
+
+{% block content %}
+
+<form enctype='multipart/form-data' name='plan_form' id='id_plan_form' action='.' method='post'>{% csrf_token %}
+	<div id="banner_left"><!--banner_left start-->
+          <p class="left_content"><br/></p>
+    </div><!--banner_left end-->
+	<div class="clear"></div>
+
+	<div id="newmessage_frm"><!--newmessage_frm start-->
+		<table cellpadding="5" width="976">
+			<tbody>
+				<tr><td class="goal">{% trans "Plan Name" %}</td><td>{{ selected_plan.practise_plan }}</td></tr>
+				<tr><td class="goal">{% trans "Caregiver" %}</td><td>{{ selected_plan.caregiver }}</td></tr>
+				<tr><td class="goal">{% trans "Goal" %}</td><td>{{ selected_plan.goal }}</td></tr>
+				<tr id="marg" style="margin-top:30px;"><td class="goal" >{% trans "Description" %}</td><td>{{ selected_plan.description }}</td></tr>
+	            <tr><td class="goal">{% trans "When will be Goal Achieved" %}</td><td>{{ selected_plan.goal_achieved }}</td></tr>
+				
+				<tr><td class="goal">{{form.plan.label}}</td><td align="left" class="goal_box">{{form.plan}}</td></tr>
+				<tr><td class="goal">{{form.action.label}}</td><td align="left" class="goal_box">{{form.action}}</td></tr>
+				<tr><td></td><td class ="forget-errors">{{form.action.errors}}</td></tr>
+				<tr><td class="goal">{{form.description.label}}</td><td align="left" class="goal_box">{{form.description}}</td></tr>
+				<tr><td></td><td class ="forget-errors">{{form.description.errors}}</td></tr>
+				<tr><td class="goal">{{form.achieved.label}}</td><td align="left" class="goal_box">{{form.achieved}}</td></tr>
+				<tr><td></td><td class ="forget-errors">{{form.achieved.errors}}</td></tr>
+				<tr>
+	       		<td></td>
+	       		<td>
+		       		<div id="sav" >
+		       			<a href="#" ><p class="save" style="margin-left:22px;" id="id_save" class="login-button" onclick = "save_form()">{% trans "Edit" %}</p></a>
+		       		</div>
+		       		
+	       		</td>
+	       		
+	       		
+	       		</tr>
+			</tbody>
+		</table>
+	</div><!--newmessage_frm end-->
+</form>
+{% endblock %}

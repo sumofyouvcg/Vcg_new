@@ -1,0 +1,54 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	document.getElementById("tr_q").style.backgroundImage = 'url("/static/img/admin/hover_otp.png")';
+	document.getElementById("current4").style.color= "#fff";
+});
+function save(){
+	$('#id_cluster_form').submit();
+}
+</script>
+
+{% endblock %}
+
+
+{% block content%}
+<div id="treat_content"><!--treat_content start-->
+	
+	{% block treatleft %}
+		{{ block.super }}
+	{% endblock %}
+	
+	<div id="right_treat_content"><!--right_treat_content start-->
+	
+		{% block righttreat %}
+			{{ block.super }}
+		{% endblock %}
+		<div id="therapist_content" style="width:687px !important; margin:0px 0px 0px 6px; border-radius:0px 0px 10px 10px; padding: 1em 1.4em;"><!--therapist_content start-->
+        	<div id="tabs-1">
+           		<form enctype='multipart/form-data' name='cluster_form' id='id_cluster_form' action='.' method='post'>{% csrf_token %}
+					<table id="tab_table" cellpadding="5">
+                		<tbody>
+                			<tr style="display:none;"><td class="label">{{form.assignment.label}}</td><td>{{form.assignment}}</td></tr>
+                			<tr>
+                    			<td class="label" >{{form.cluster_name.label}}</td>
+                     			<td>{{form.cluster_name}}</td>
+                			</tr>
+                			<tr>
+                				<td></td><td><span class="forget-errors">{{form.non_field_errors}}{{form.cluster_name.errors}}</span></td>
+                			</tr>
+                		</tbody>
+	                </table>
+                    <div id="savcomp" onclick="save()"><a class="save">{% trans "Add Cluster" %}</a></div>
+                </form>
+            </div>
+        </div><!--therapist_content end-->
+        
+	</div>
+	
+</div>     		
+{% endblock %}

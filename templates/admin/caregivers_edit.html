@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/tabmenu.css" />
+<link rel="stylesheet" href="/static/css/admin/datepicker.css" type="text/css"/>
+<style>
+	.fst
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst a
+	{
+	color:#7CC744 !important;
+	}
+	#file_link a
+	{
+	color:#25B513 !important;
+	text-decoration: none;
+	}
+	.locate
+	{
+	padding:0px 0px 0px 5px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script src="/static/js/datepic.js" type="text/javascript"></script>
+<script src="/static/js/datepic1.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#id_caregiver_number, #id_dob").attr("readonly", true);
+	$('#id_company').attr("disabled", true);
+	if('{{read_only}}' == "readonly"){
+		$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+		$("#sav").hide();
+	}
+	document.getElementById("the").style.backgroundImage = "url(/static/img/admin/Therapistmain.png)";
+	document.getElementById("current").style.color= "#fff";
+	$(".datepicker").datepicker({"dateFormat": 'mm/dd/yy', changeMonth:true, changeYear:true, yearRange: "-65:-14", defaultDate: '+0m+0d-14y' });
+	$(".datepicker_from").datepicker({"dateFormat": 'mm/dd/yy', changeMonth:true, changeYear:true, minDate: '0',
+		onSelect: function(selected) {
+	          $(".datepicker_to").datepicker("option","minDate", selected)
+	        }});
+	$(".datepicker_to").datepicker({"dateFormat": 'mm/dd/yy', changeMonth:true, changeYear:true, minDate: '0', 
+		onSelect: function(selected) {
+	          $(".datepicker_from").datepicker("option","maxDate", selected)
+	        }});
+	
+	var image_name = $('#file_link a').text().replace('images/', '');
+	var extension = image_name.split('.')[1]
+	if (image_name.length > 30) {
+		image_name = image_name.substring(0, 30) + "..." + extension;
+		$('#file_link a').text(image_name);
+    }
+	
+	$('#file_link a').attr('target', 'blank');
+	$('#file_link a').text($('#file_link a').text().replace('images/', ''));
+	$('#file_link').html($('#file_link').html().replace('Change:', ''));
+});
+function save_form(id)
+{
+	$('#id_company').attr("disabled", false);
+	$('#id_caregiver_form').submit();
+}
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+	<div id="tabs" onload="navig()">
+		<div id="the" ><a href="/admin_management/caregivers_edit/{{caregiver_id}}/" id="current" >{% trans "Caregiver Name" %}</a></div>
+		<div id="cli" ><a href="/admin_management/caregiver_client/{{caregiver_id}}/" id="current1">{% trans "Client" %}</a></div>
+	</div> 
+         
+	<div id="therapist_content"><!--therapist_content start-->
+    	<br>
+		<form enctype="multipart/form-data" id="id_caregiver_form" name="caregiver_form" action="." method="post">{% csrf_token %}
+     		<div class="tabl">
+		       	<table id="tab" cellpadding="5">
+		               <tbody>
+		                  <tr><td class="td_add">{{ form.name.label }}</td><td>{{ form.name }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.name.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.sur_name.label }}</td><td>{{ form.sur_name }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.sur_name.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.last_name.label }}</td><td>{{ form.last_name }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.last_name.errors }}</span></td></tr>
+		                  <tr id="marg" style="margin-top:30px;"><td class="td_add" > {{ form.address.label }}</td><td>{{ form.address }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.address.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.zip_code.label }}</td><td>{{ form.zip_code }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.zip_code.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.place_name.label }}</td><td>{{ form.place_name }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.place_name.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.country.label }}</td><td>{{ form.country }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.country.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.email.label }}</td><td>{{ form.email }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.non_field_errors|safe }}{{ form.email.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.dob.label }}</td><td>{{ form.dob }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.dob.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.gender.label }}</td><td>{{ form.gender }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.gender.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.phone_number.label }}</td><td>{{ form.country_code }}-{{ form.phone_number }}</td></tr>
+						  <tr><td></td><td><span class = "forget-errors">{{ form.country_code.errors }}{{ form.phone_number.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.company.label }}</td><td>{{ form.company }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.company.errors }}</span></td></tr>
+		                  <tr class="role1"><td class="td_add">{{ form.role.label }}</td><td>{{ form.role }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.role.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.caregiver_number.label }}</td><td>{{ form.caregiver_number }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.caregiver_number.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.caregiver_image.label }}</td><td id="file_link" class="locate">{{ form.caregiver_image }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors"><i style="color:#5B5B5B;">{{form.caregiver_image.help_text}}</i>{{ form.caregiver_image.errors }}</span></td></tr>
+		                  <tr><td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td></tr>
+		                  <tr><td></td><td><span class = "forget-errors">{{ form.active.errors }}</span></td></tr>
+		                  <tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+		                  <div id="canc" onclick = "reset()"><a href="/admin_management/caregivers_list/" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+		               </tbody>
+		           	</table>
+    			</div>
+			</form>
+	</div><!--therapist_content end-->
+{% endblock %}

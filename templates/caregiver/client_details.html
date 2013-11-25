@@ -1,0 +1,146 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#details a
+{
+color:#25B513 !important;
+}
+	
+#current3 a
+{
+color:#7CC744;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#file_link a
+{
+color:#25B513 !important;
+text-decoration: none;
+}
+.locate
+{
+padding:0px 0px 0px 5px;
+font-size:15px;
+font-family: 'myriad pro';
+color:#5b5b5b;
+}
+</style>
+
+{% endblock %} 
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_name, #id_sur_name, #id_last_name').attr('readonly', true);
+	$("#id_client_number, #id_insurance_number, #id_insurance_name").attr("readonly", true)
+	$('#id_age, #id_dob').attr('readonly', true);
+	$('#id_company').attr("disabled", true);
+	$('#id_gender').attr("disabled", true);
+	
+	var image_name = $('#file_link a').text().replace('images/', '');
+	var extension = image_name.split('.')[1]
+	if (image_name.length > 30) {
+		image_name = image_name.substring(0, 30) + "..." + extension;
+		$('#file_link a').text(image_name);
+    }
+	
+	$('#file_link a').attr('target', 'blank');
+	$('#file_link a').text($('#file_link a').text().replace('images/', ''));
+	$('#file_link').html($('#file_link').html().replace('Change:', ''));
+	if ('{{analyst}}' == 'True')
+		{
+		$('input, textarea').attr("readonly", true);
+		$('#id_client_image').parent().parent().hide();
+		$('#id_country').attr("disabled", true);
+		$('.help-text').hide();
+		$('#id_dob,').attr('readonly', true);
+		
+		}
+	$(".datepicker").datepicker({"dateFormat": 'mm/dd/yy',
+								 changeMonth:true,
+								 changeYear:true,
+								 yearRange: "-65:-18",
+								 defaultDate: '+0m+0d-18y'
+								});
+	if('{{read_only}}' == "readonly"){
+		$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+		$("#sav").hide();
+	}
+	$('#id_dob').bind("change", dob_change);
+
+
+});
+function save_form(id)
+{
+	$('#id_company').attr("disabled", false);
+	$('#id_gender').attr("disabled", false);
+
+	$('#id_client_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{% trans "Client Details" %}</p>
+	</div><!--banner_left end-->
+	{% if analyst %}
+		<div class="newmessage" style="margin-top:10px;"><!--newmessage start-->
+			<a href="{% url caregiver_client_home domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+	{% endif %}
+
+  	<form enctype='multipart/form-data' name='client_form' id='id_client_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+	        <tbody>
+  			    <tr><td class="td_add">{{ form.name.label }}</td><td>{{ form.name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.name.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.sur_name.label }}</td><td>{{ form.sur_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.sur_name.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.last_name.label }}</td><td>{{ form.last_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.last_name.errors }}</span></td></tr>
+				<tr id="marg" style="margin-top:30px;"><td class="td_add" > {{ form.address.label }}</td><td>{{ form.address }}</td></tr>
+	            <tr><td></td><td><span class = "forget-errors">{{ form.address.errors }}</span></td></tr>
+	            <tr><td class="td_add">{{ form.zip_code.label }}</td><td>{{ form.zip_code }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.zip_code.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.place_name.label }}</td><td>{{ form.place_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.place_name.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.country.label }}</td><td>{{ form.country }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.country.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.email.label }}</td><td>{{ form.email }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.non_field_errors|safe }}{{ form.email.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.phone_number.label }}</td><td>{{ form.country_code }}-{{ form.phone_number }}</td></tr>
+			    <tr><td></td><td><span class = "forget-errors">{{ form.country_code.errors }}{{ form.phone_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.bsn_number.label }}</td><td>{{ form.bsn_number }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.bsn_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.dob.label }}</td><td>{{ form.dob }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.dob.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.age.label }}</td><td>{{ form.age }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.age.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.gender.label }}</td><td>{{ form.gender }}</td></tr>
+	            <tr><td></td><td><span class = "forget-errors">{{ form.gender.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.client_number.label }}</td><td>{{ form.client_number }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.client_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.insurance_name.label }}</td><td>{{ form.insurance_name }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.insurance_name.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.insurance_number.label }}</td><td>{{ form.insurance_number }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.insurance_number.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.company.label }}</td><td>{{ form.company }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.company.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.client_image.label }}</td><td id="file_link" class="locate">{{ form.client_image }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors"><i class="help-text" style="color:#5B5B5B;">&nbsp;&nbsp;&nbsp;{{form.client_image.help_text}}</i>{{ form.client_image.errors }}</span></td></tr>
+				<tr><td class="td_add">{{form.active.label}}</td><td>{{ form.active }}</td></tr>
+				{% if not analyst %}
+					<tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+	                <div id="canc" onclick = "reset()"><a href="{% url caregiver_client_home domain_name client_id %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+        		{% endif %}
+        	</tbody>
+	    </table>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->
+{% endblock %}

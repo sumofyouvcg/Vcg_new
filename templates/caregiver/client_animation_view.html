@@ -1,0 +1,92 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#Animations a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_animation').val('{{animation_id}}').parent().parent().hide();
+});
+function save_form()
+{
+	document.client_animation_feedback.action ="{% url caregiver_client_animation_view domain_name client_id animation_id %}";
+	$('#id_client_animation_feedback').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+{% load truncate_filters %}	
+	<div id="banner_left"><!--banner_left start-->
+	  	<p class="left_content">{% trans "Animation" %} : {{animation}}</p>
+	</div><!--banner_left end-->
+	
+ 	<div id="banner_right"  style="width:500px; margin: -35px 0 0 0;" ><!--banner_right start-->   
+ 		<div class="newmessage" ><!--newmessage start-->
+			<a href="{% url caregiver_client_animation_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		{% if not analyst %}
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url caregiver_client_animation_edit domain_name client_id animation_id %}" >{% trans "Edit Animation" %}</a>
+		</div><!--newmessage end-->
+		{% endif %}
+	</div>  
+ 
+	<form enctype='multipart/form-data' name='client_animation_feedback' id='id_client_animation_feedback' action='.' method='post'>{% csrf_token %}
+	    <div id="newmessage_frm"><!--newmessage_frm start--><!--FORM START-->
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+				<tbody>
+					<tr><td class="goal">{% trans "Animation Name" %}</td><td >{{ selected_animation.animation }}</td></tr>
+					<tr><td class="goal">{% trans "Caregiver" %}</td><td>{{ selected_animation.caregiver }}</td></tr>
+					<tr><td class="goal">{% trans "Animation" %}</td><td id="file_link">{% if selected_animation.animation.location %} <a href="{{ selected_animation.animation.location.url }}" target="_blank" height="50" width="50" />{{ selected_animation.animation.location|truncate_img:75 }}</a>{% else %} -- {% endif %}</td></tr>
+				</tbody>
+			</table>
+			<br></br><br></br>
+			{% if exist_feedback %}
+				<div>
+			    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Feedback sent" %}" : </p><br>
+					{% for feedback in exist_feedback %}
+						{% if feedback.created_by == request.user %}
+						<p style="color:blue; margin-left:10px; class="feed">{% trans "me" %}" : {{feedback.feedback }}</p><br>
+						{% else %}
+						<p style="color:brown;margin-left:10px;" class="feed">{{feedback.created_by}} : {{feedback.feedback }}</p><br>
+						{% endif %}
+					{% endfor %}
+				</div><br>
+			{% endif %}
+		</div><!--newmessage_frm end-->
+		
+		{% if not analyst %}
+			<div style="float:right; width:80%">
+				<div id="banner_left"><!--banner_left start-->
+		  	<p class="left_content">{% trans "Feed Back" %}</p>
+			</div><!--banner_left end-->
+					<form enctype="multipart/form-data" id="id_client_animation_feedback" name="client_animation_feedback" action="." method="post">{% csrf_token %}
+							<table width="771" cellpadding="5" align="center">
+								<tr><td class="td_client" align="center">{{ form.animation.label }}</td><td align="left">{{ form.animation }}</td></tr>
+								<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+								<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+								<tr><td></td><td><div id="sav" ><a href="#" onclick="save_form()" ><p class="save" id="id_save"> {% trans "Send" %}</p></a></div></td></tr>
+							</table>
+					</form><br><br>	
+			</div>	
+		{% endif %}
+	</form><!--FORM START-->{% endblock %}

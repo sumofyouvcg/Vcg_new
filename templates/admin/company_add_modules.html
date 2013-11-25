@@ -1,0 +1,166 @@
+{% extends 'admin/company_select.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/tabmenu.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.theme.css" />
+<style>
+	.module_c
+	{
+		padding:0px 0px 0px 34px;
+		font-size:15px;
+		font-family: 'myriad pro';
+		color:#5b5b5b;
+		padding:5px;
+	}
+	#final
+	{
+	 	float: left;
+	    height: 37px;
+	    margin: 19px 23px 0 35px;
+	    width: 206px;
+	}
+	.list1
+	{
+		background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list1 a
+	{
+		color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jqery.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	if('{{read_only}}' == "readonly"){
+		$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+		$("#sav").hide();
+	}
+	document.getElementById("st").style.backgroundImage = "url(/static/img/admin/Therapistmain.png)";
+	document.getElementById("current3").style.color= "#fff";
+	$("#selectall").click(function () {
+		  $('.case').attr('checked', this.checked);
+	});
+ 	$(".case").click(function(){
+		if($(".case").length == $(".case:checked").length) {
+			$("#selectall").attr("checked", "checked");
+		} else {
+			$("#selectall").removeAttr("checked");
+		}
+	});
+ 	$("#tselectall").click(function () {
+		  $('.tcase').attr('checked', this.checked);
+	});
+	$(".tcase").click(function(){
+		if($(".tcase").length == $(".tcase:checked").length) {
+			$("#tselectall").attr("checked", "checked");
+		} else {
+			$("#tselectall").removeAttr("checked");
+		}
+	});
+	
+	'{% if select or testing %}'
+			'{% for per in permissions %}'
+			 var check_id = '#m' + '{{per}}'
+			 if($(check_id).val() == '{{per}}')
+			 {
+				$(check_id).attr('checked','checked');
+			 }
+			'{% endfor %}'
+			'{% for per in test_select %}'
+			 var check_id = '#t' + '{{per}}'
+			 if($(check_id).val() == '{{per}}')
+			 {
+				$(check_id).attr('checked','checked');
+			 }
+			'{% endfor %}'
+	
+	'{% else %}'
+		'{% if not module_error %}'
+		 	'{% for module in modules %}'
+		 		'{% if module.id in list %}'
+		 			$('#m{{module.id}}').attr("checked", "checked");
+		 		'{% endif %}'
+		 	'{% endfor %}'
+	 	'{% endif %}'
+	 	
+	 	'{% if not test_error %}'
+		 	'{% for module in test_list %}'
+		 		'{% if module.id in test %}'
+		 			$('#t{{module.id}}').attr("checked", "checked");
+		 		'{% endif %}'
+		 	'{% endfor %}'
+	 	'{% endif %}'
+ 	'{% endif %}'
+});
+function save_form(){
+	var selected = new Array();
+	$('#tabtable input:checked').each(function() {
+		if($(this).is(':disabled')){
+			$(this).attr({'disabled' : false });
+		}
+	    selected.push($(this).attr('value'));
+	});
+	var tested = new Array();
+	$('#test_table input:checked').each(function() {
+		if($(this).is(':disabled')){
+			$(this).attr({'disabled' : false });
+		}
+	    tested.push($(this).attr('value'));
+	});
+	document.module_cs_form.action ="/admin_management/company_add_modules/{{company_id}}/?query="+selected+"&tests="+tested
+	$('#id_module_cs_form').submit();
+	//document.module_cs_form.action ="/admin_management/company_add_modules/"+'{{company_id}}'+"/";
+	//$('#id_module_cs_form').submit();
+}
+</script>
+
+{% endblock %}
+
+{% block content%}
+	{% block submenu %}
+		{{block.super}}
+	{% endblock %}
+ 
+<div id="therapist_content"><!--therapist_content start-->
+	<div id="add_heading">
+		<p class="add_heading_content">{% trans "Add Treatment Modules and Tests" %}</p>
+	</div><br>
+	<form enctype='multipart/form-data' name='module_cs_form' id='id_module_cs_form' action='.' method='post'>{% csrf_token %}
+			
+				<div id="tabtable" style="float:left;margin-left:10px; margin-top:0px;width:30%;">
+				    <div class="module_c"><input type="checkbox" class="checkall" id="selectall" value="all">&nbsp;&nbsp;&nbsp;<b> {% trans "Modules" %} </b></div>
+				    {% if not modules == '' %}
+					    {% for module in modules %}
+					    	<div class="module_c"><input type="checkbox" name="choices"  id="m{{module.id}}" value="{{module.id}}" class="case">&nbsp;&nbsp;&nbsp;{{module}} </div>
+					    {% endfor %}
+					{% else %}
+						<div class="module_c">{% trans "No modules" %}</div>
+					{% endif %}<span class="forget-errors">{{module_error}}</span><br>
+				</div>
+				
+				<div id="test_table" style="float:right; margin-top:0px;margin-left:0px;width:65%;">
+					<div class="module_c"><input type="checkbox" class="tcheckall" id="tselectall" value="whole">&nbsp;&nbsp;&nbsp;<b> {% trans "Tests" %} </b></div>
+				    {% if not test_list == '' %}
+					    {% for module in test_list %}
+					    	<div class="module_c"><input type="checkbox" name="tchoices"  id="t{{module.id}}" value="{{module.id}}" class="tcase">&nbsp;&nbsp;&nbsp;{{module}} </div>
+					    {% endfor %}
+					{% else %}
+						<div class="module_c">{% trans "No modules" %}</div>
+					{% endif %}<span class="forget-errors">{{test_error}}</span><br>
+				</div>
+			
+		<div class="clear"></div>
+		<div id="final">
+                <div id="sav" onclick="save_form()"><a href="#" class="save">{% trans "Save" %}</a></div>
+                <div id="canc"><a href="/admin_management/company_list/" class="save1">{% trans "Cancel" %}</a></div>
+        </div>
+    </form>
+</div>
+{% endblock %}

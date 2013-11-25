@@ -1,0 +1,58 @@
+{% extends 'company/configuration.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+#imp a
+{
+color:#7CC744;
+}
+#imp
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#Layout a
+{
+color:#25B513 !important;
+}	
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+ 
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block configurationcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{% trans "Layout Details" %}</p>
+	</div><!--banner_left end-->
+	
+	<div id="banner_right" ><!--banner_right start-->  
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url company_config_layout_update domain_name company_id %}">{% trans "Update" %}</a>
+		</div><!--newmessage end-->
+	</div>
+	 
+  	<form enctype='multipart/form-data' name='client_form' id='id_client_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm" style="margin-top:0;width:715px;"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="12" style="margin-left:20px">
+	        <tbody>
+  			    {% if logo.logo %}
+  			    	<tr><td class="td_config">{% trans "Current" %} {{ form.logo.label }}</td><td><div><img alt="logo" src="{{ logo.logo.url }}" height="60" width="100" /></div></td></tr>
+				{% else %}
+			    	<tr><td class="td_config">{% trans "Current" %} {{ form.logo.label }}</td><td><div><img alt="logo" src="/static/img/company/fresh.png" /></div></td></tr>
+				{% endif %}
+
+  			    {% if logo.favicon %}
+  			    	<tr><td class="td_config">{% trans "Current" %} {{ form.favicon.label }}</td><td><div><img alt="logo" src="{{ logo.favicon.url}}" height="20" width="20" /></td></tr>
+				{% else %}
+			    	<tr><td class="td_config">{% trans "Current" %} {{ form.favicon.label }}</td><td><div><img alt="logo" src="/static/img/admin/favicon.ico" /></td></tr>
+				{% endif %}
+        	</tbody>
+	    </table>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->
+{% endblock %}

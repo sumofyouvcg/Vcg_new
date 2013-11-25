@@ -1,0 +1,48 @@
+{% extends 'admin/communication.html' %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst3
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst3 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content%}
+<div id="content"><!--content start-->    
+  
+	{% block left %}
+		{{ block.super }}
+	{% endblock %}
+	
+	{% block right %}
+	<div id="content_right"><!--content_left start-->
+		<div class="my_contact"	>
+			<table class="features-table" width="739px" height="80px" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+            <thead>
+            	<tr style="padding:3px; height:24px; background:#dcdcdc" cellpadding="15" id="heading" >
+	                <th class="numb" style="width:191px;">Client</th>              
+					<th class="numb" style="width:192px;border-left:1px solid #d0d0d0;">Message</th>          
+					<th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Date</th>		 
+                </tr>
+            </thead> 
+                <tr class="first" style="height:24px;">
+                	<td class="name"><a href="Therapistname.html">xxxxxxx</a></td>
+              		<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">yyyyyyyyy yyyyyyyyyy</td>
+                	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Oct 8,2012,12:05pm </td>
+                </tr>
+            </table>
+        </div>
+	</div>
+	{% endblock %}	
+</div>
+{% endblock %}

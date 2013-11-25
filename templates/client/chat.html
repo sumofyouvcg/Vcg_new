@@ -1,0 +1,44 @@
+{% extends 'client.html' %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.list7
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list7 a
+	{
+	color:#7CC744 !important;
+	}
+	.list8 a
+	{
+	color:#fff !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="client_diary"><!--client_diary start-->      
+        <div id="diary_head"></div>       
+        <div id="banner_left"><!--banner_left start-->
+             <p class="left_content">Chat</p>
+        </div><!--banner_left end-->
+        
+      <div id="banner_right"><!--banner_right start-->          
+  		<div class="newmessage"><!--newmessage start-->
+			<a href="/client_management/add_chat/" >Add Chat</a>
+		</div><!--newmessage end-->
+       </div><!--banner_right end-->
+</div><!--client_diary end--> 
+<div class="clear"></div>
+
+<div class="diary_list"><!--diary_list start-->
+	<ul>
+	<li><a href="#">Food</a></li>
+	<li><a href="#">Thought Schedule</a></li>
+	</ul>
+</div><!--diary_list start-->
+{% endblock %}

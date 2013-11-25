@@ -1,0 +1,33 @@
+{% extends 'company.html' %}
+{% load i18n %}
+
+{% block extrastyle%}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+
+{% block extrahead %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="navbar_configuration_contact"><!--navbar_configuration start-->
+     <ul>
+           <li class="green current" id="confi"><a href="{% url company_configuration_contact domain_name %}">{% trans "Contact" %}</a></li>
+           <li id="domain"><a href="{%url company_configuration_domain  domain_name %}">{% trans "Domain" %}</a></li>
+           <li id="Layout"><a href="{% url company_configuration_layout domain_name %}">{% trans "Layout" %}</a></li>
+           <li id="page"><a href="{% url company_configuration_home_page domain_name %}">{% trans "Home page" %}</a></li>
+           <li id="Location"><a href="{% url company_configuration_location domain_name %}">{% trans "Location" %}</a></li>
+     </ul>
+</div><!--navbar_configuration end-->
+
+{% block configurationcontact %}
+	
+{% endblock %}
+
+
+{% endblock %}

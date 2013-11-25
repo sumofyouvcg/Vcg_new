@@ -1,0 +1,103 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	#messagess a
+	{
+		color:#7CC744;
+	}	
+	.fst
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst a
+	{
+	color:#7CC744 !important;
+	}
+	#file_link a
+	{
+	color:#25B513 !important;
+	text-decoration: none;
+	}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$('#file_link a').text($('#file_link a').text().replace('messages/', ''));
+});
+		
+function delete_form(id)
+{
+	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	if(confirmed)
+	{
+		document.view_message_list.action ="{% url client_message_delete domain_name %}";
+    	$('#id_view_message_list').submit()
+	}
+	else
+	{
+		var link = '{% url client_view_message domain_name 'newid' %}';
+		link = link.replace('newid', id);
+		window.location = link;
+	}
+
+} 		
+</script>
+{% endblock %}
+
+{% block content %}
+{% load truncate_filters %}
+	<div id="banner_left"><!--banner_left start-->
+	    <p class="left_content">{% trans "View Message" %}</p>
+	</div><!--banner_left end-->
+
+	<div id="new_banner_right" style="float:right;margin:15px 0px 0px 170px;"><!--banner_right start--> 
+	    <div class="newmessage" style="float:left;margin:0px 0px 0px 170px;"><!--newmessage start-->
+	        <a href="{% url client_message domain_name %}">{% trans "New Message" %}</a>
+	    </div><!--newmessage end-->
+	    <div id="sav" onclick = "delete_form({{reply_message.id}})" style="float:right;"><a href="#" class="save">{% trans "Delete" %}</a></div>
+	</div><!--banner_right end-->
+	
+	<div class="clear"></div>
+	
+	<form enctype='multipart/form-data' name='view_message_list' id='id_view_message_list' action='.' method='post'>{% csrf_token %}
+		<div class="common_banner"> <!--banner start-->  
+	   		<div class="common_left"><!--common_left start-->
+				<ul><!--common_left ul start-->
+					{% if new_messages %}
+						<li id="messagess"><a href="{% url client_message_list domain_name %}">{% trans "Inbox" %}({{ new_messages|length }})</a></li>
+					{% else %}
+						<li id="messagess"><a href="{% url client_message_list domain_name %}">{% trans "Inbox" %}</a></li>
+					{% endif %}
+					<li id="send"><a href="{% url client_sent_message_list domain_name %}">{% trans "Sent Message" %}</a>	</li>
+					<li id="trash"><a href="{% url client_trash_message_list domain_name %}">{% trans "Trash" %}</a></li>
+					<li id="chat"><a href="{% url client_chat_details domain_name %}">{% trans "Chat History" %}</a></li>
+				</ul><!--common_left ul end-->
+				<div id="online_users">  </div>
+	   		</div><!--common_left end-->
+		</div><!--banner end-->
+		
+		<div class="contact_history1" style="padding-bottom:0;border:0"><!--contact history start-->
+			<div id="newmessage_frm" ><!--newmessage_frm start--><!--FORM START-->
+				<table id="tab" cellpadding="15">
+			        <tbody>
+			 			<tr><td class="td_add">{% trans "Title" %}:</td><td>{{ reply_message.title }}</td></tr>
+						<tr><td class="td_add">{% trans "Description" %}:</td><td>{{ reply_message.description }}</td></tr>
+						<tr><td class="td_add">{% trans "Attachment" %}:</td><td id="file_link">{% if reply_message.attachment %} <a href="{{ reply_message.attachment.url }}" target="_blank" height="50" width="50" />{{ reply_message.attachment|truncate_img:75 }}</a>{% else %} -- {% endif %}</td></tr>
+			       		<tr><td class="td_add"><input type="checkbox" name="choices" value={{reply_message.id}} class="case"  checked style="display:none;"/></td>
+			       	</tbody>
+			    </table>
+			    <div style="margin-left:36%;">
+			    	<div id="canc" ><a href="{% url client_reply_message domain_name reply_message.id %}" class="savereply">{% trans "Reply" %}</a></div>
+					<div id="canc" ><a href="{% url client_message_list domain_name %}" class="save1">{% trans "Back" %}</a></div>
+				</div>
+				<div class="clear"></div>
+			</div><!--newmessage_frm end-->
+		</div>
+	</form>
+{% endblock %}

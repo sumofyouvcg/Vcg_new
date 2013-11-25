@@ -1,0 +1,182 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.theme.css" />
+
+<style type="text/css">
+	#diary_list a
+	{
+	color:#25B513 !important;
+	}
+	#current3
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}	
+	#current3 a
+	{
+	color:#7CC744;
+	}
+	.fst2
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst2 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+<!-- For Slider color in caregiver-diary 
+<link rel='stylesheet' type='text/css' href="/static/css/client/cupertino/theme.css" />
+<link rel='stylesheet' type='text/css' href="/static/css/client/fullcalendar.css"/>
+<link rel='stylesheet' type='text/css' href="/static/css/client/fullcalendar.print.css" media='print' />
+-->
+<style type="text/css">
+	#calendar {
+        width: 500px;
+        margin: 0 auto;
+        }         
+    #newmessage_frm_diary{
+        width:958px;
+        float:right;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 13px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        border:1px solid #D0D0D0;
+        border-radius:10px;
+        -moz-border-radius:10px;
+        -webkit-border-radius:10px;
+        padding-top:20px;
+       
+    }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$('#id_diary').val('{{diary_id}}').parent().parent().hide();
+	$('#id_date').val('{{date}}').parent().parent().hide();
+	
+	
+	'{% for val in slider_val %}'
+	var slide = $('.slider{{val.ques_id}} input#foo').val()
+	if (slide){
+		$( ".slider{{val.ques_id}}" ).slider({
+			range: "min",
+			value: {{val.min_val}},
+			min: {{val.min_val}},
+			max: {{val.max_val}},
+			slide: function( event, ui ) {
+			$( "#amount{{val.ques_id}}" ).val(  $( ".slider{{val.ques_id}}" ).slider( "value" ) );
+			return false;
+			}
+			});
+			$( "#amount{{val.ques_id}}" ).val(  $( ".slider{{val.ques_id}}" ).slider( "value" ) );
+	}
+'{% endfor %}'
+
+'{% for answer in answer_list %}'
+	$('#text{{answer.question}}').val('{{answer.answer}}');
+	$('.radio{{answer.question}}#radio{{answer.answer}}').attr("checked", "checked");
+	var check_list = $(".checkbox{{answer.question}}").val();
+	if (check_list){
+		'{% for ans in answer.answer %}'
+			$('.checkbox{{answer.question}}#checkbox{{ans}}').attr("checked", "checked");
+		'{% endfor %}'
+	}
+	$( "#amount{{answer.question}}" ).val( '{{answer.answer}}' );
+	$('.slider{{answer.question}}').slider('value', '{{answer.answer}}');
+'{% endfor %}'
+
+});
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+{% load truncate_filters %}
+	<div id="banner_left"><!--banner_left start-->
+    	<p class="left_content">{% trans "Diary" %}</p>
+ 	</div><!--banner_left end-->
+	
+	<div style="float:right;margin: 15px 0 0;">
+		<div id="sav" ><a href="{% url caregiver_client_diary_show domain_name client_id diary_id %}" ><p class="save" id="id_save"> {% trans "BACK" %}</p></a></div>
+	</div>
+ 
+ 	<div id="newmessage_frm" ><!--newmessage_frm start--><!--FORM START-->
+		<div class="question">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+				<tr><td>{% trans "Diary Name" %}</td><td></td><td>{{diary}}</td></tr>
+				<tr><td>{% trans "Diary Number" %}</td><td></td><td>{{diary.diary.diary_number}}</td></tr>
+				<tr><td>{% trans "Diary Caregiver" %}</td><td></td><td>{{diary.caregiver}}</td></tr>
+				<tr><td>{% trans "Date" %}</td><td></td><td>{{current_date}}</td></tr>
+				{% if diary.diary.image %}
+					<tr><td>{% trans "Diary Image" %}</td><td></td><td><a href="{{diary.diary.image.url}}"  target="_blank"><img width="50" height="50" src="{{diary.diary.image.url}}"/></a></td></tr>
+				{% endif %}
+			</table>
+		</div>
+		<div id="banner_left"><!--banner_left start-->
+	          <p class="left_content">{% trans "Questions" %}</p>
+	    </div><!--banner_left end-->
+		<div class="clear"></div> 
+			<div class="question">
+	    	<table id="tab" cellpadding="8"  style="padding-right:12px;padding-left:12px;border:0;">
+			 		<tbody>
+			 		{% if all_ques %}
+			 			{% for ques in all_ques %}
+			                <tr><td>{{forloop.counter}}.</td><td>{{ques.question}}</td></tr>
+			                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+			               	{% if ques.answer_type == '1' %}
+			               			<tr><td></td><td><input type="text" name ="text{{ques.id}}" id="text{{ques.id}}" disabled="true" /><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			               	{% endif %}
+	
+			               	{% if ques.answer_type == '2' %} 
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="radio" name ="radio{{ques.id}}" id="radio{{ans}}" class="radio{{ques.id}}" value="{{ ans }}" disabled="true"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '3' %}
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="checkbox" name ="checkbox{{ques.id}}" id="checkbox{{ans}}" class="checkbox{{ques.id}}" value="{{ ans }}" disabled="true"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '4' %} 
+			               		<tr><td></td><td>
+			               		<p>
+									<label for="amount">{% trans "Range" %}:</label>
+									<input type="text" id="amount{{ques.id}}" style="border: 0; color: #f6931f; font-weight: bold;" />
+								</p>
+								<div class="slider{{ques.id}}" id="slider-range-min" ><input type="hidden" id="foo" name="slider{{ques.id}}" value="slider{{ques.id}}" /></div>
+								</td></tr>
+			               		{% for slider in slider_val %}
+			                		{% if slider.ques_id == ques.id %}
+			                			<tr><td></td><td width="100%"><div style="float:left;width:50%">{{slider.min_val}}</div><div style="float:right;width:50%;text-align:right">{{slider.max_val}}</div></td></tr>
+			                		{% endif %}
+	                	 		{% endfor %}
+			               	{% endif %}
+			                
+			            {% endfor %}    
+			       {% else %}
+			       		<p style="padding:15px;">{% trans "No questions for this Diary" %}</p>
+			       	{% endif %}
+			        </tbody>   
+			</table>			</div><!--treatment_panic end-->
+ 	</div><!--newmessage_frm end-->
+{% endblock %}

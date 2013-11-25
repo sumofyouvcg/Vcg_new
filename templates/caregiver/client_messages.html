@@ -1,0 +1,170 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#messagess a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}	
+#current3 a
+{
+color:#7CC744;
+}
+table
+{
+	border-collapse: separate;
+	border-radius: 10px 10px 10px 10px;
+}
+table.features-table tr
+{
+	border-bottom:1px solid #d0d0d0 !important;
+	
+}	
+table.features-table tr:nth-child(1) { border-bottom:1px solid red;}
+</style>
+
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $('#page_number').val({{ client_message_list.number }}).change(function(){
+            var number = $(this).val();
+            window.location.href = '{% url caregiver_client_messages domain_name client_id %}?page=' + number
+    });
+    $("#selectall").click(function () {
+		$('.case').attr('checked', this.checked);
+		});
+ 	
+    '{% if analyst %}'
+		$(".features-table td:first-child").remove();
+		$(".features-table th:first-child").remove();
+	'{% endif %}'
+
+	$(".case").click(function(){
+			if($(".case").length == $(".case:checked").length) {
+				$("#selectall").attr("checked", "checked");
+			}
+			else {
+				$("#selectall").removeAttr("checked");
+			}
+		
+		});	
+});   
+function delete_form()
+{
+	
+	if($(".case:checked").length == 0)
+		{
+		alert('{% trans "Select atleast one record to delete" %}')
+		return
+		}
+	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	if(confirmed)
+	{
+		document.client_messages_list.action ="{% url caregiver_client_messages_delete domain_name client_id %}";
+    	$('#id_client_messages_list').submit()
+	}
+	else
+		{
+		window.location = "{% url caregiver_client_messages domain_name client_id %}";
+		}
+} 
+</script>
+{% endblock %}
+
+
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+{% load truncate_filters %}
+<form name = "client_messages_list" id = "id_client_messages_list" action="." method="POST" >{% csrf_token %}
+<div class="common_banner"> <!--banner start--> 	
+	<div id="banner_left"><!--banner_left start-->
+	 	<p class="left_content" style="margin-top:23px;">{% trans "Messages" %}</p>
+	</div><!--banner_left end-->
+	
+	<div id="banner_right" style="margin-top:23px;"><!--banner_right start-->  
+		<div id="sav" onclick = "delete_form()" style="float:right;"><a href="#" class="save">{% trans "Delete" %}</a></div>		
+	</div>
+	
+	<div class="common_right"><!--common_right start-->
+		<div id="paginationdemo" class="demo" style="margin-top:20px;"><!--paginationdemo start-->
+    		<table class="features-table" width="771" height="auto" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+         		<thead>
+          			<tr style="padding:3px;" cellpadding="15" id="heading" >
+          				<th class="numb" style="width:100px;border-bottom:1px solid #d0d0d0;"><a href="#"><input type="checkbox" name="master"  value="head" id="selectall" /> </th>
+		                <th class="numb" style="width:290px;border-bottom:1px solid #d0d0d0;">{% trans "Title" %}</th>
+		                <th class="numb" style="width:290px;border-bottom:1px solid #d0d0d0;">{% trans "Description" %}</th>
+		                <th class="numb" style="width:290px;border-bottom:1px solid #d0d0d0;">{% trans "Date" %}</th>
+						<th class="numb" style="width:290px;border-bottom:1px solid #d0d0d0;" >{% trans "Reply" %}</th>
+	            	</tr>
+            	</thead> 
+                {% if client_message_list.object_list %}
+                	{% for  client_message in client_message_list.object_list %}
+                   		{% if client_message.read_status %}
+                    		<tr class="first" style="cursor:pointer;background:#F3F3F3;" >
+                    			<td class="numb" style="text-align:center;width:100px;border-bottom:1px solid #d0d0d0;"><input type="checkbox" name="choices" value={{client_message.id}} class="case"  /></td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'">{{ client_message.title }}</td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'" id="current1">{{ client_message.description|truncate_chars:35  }}</td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'" id="current1">{{ client_message.created_at }}</td>
+				                <td class="numb" style="text-align:center;width:290px;text-align:center;border-bottom:1px solid #d0d0d0;">
+									<a href="{% url caregiver_client_reply_message domain_name client_id client_message.id %}" style="text-decoration:none;font-family:Arial, Helvetica, sans-serif;color:#5b5b5b;">{% trans "Reply" %}</a></td>
+                    		</tr>
+                   		{% else %}
+                    		<tr class="first" style="cursor:pointer;background:#F9F9F9;" >
+                    			<td class="numb" style="text-align:center;width:100px;border-bottom:1px solid #d0d0d0;"><input type="checkbox" name="choices" value={{client_message.id}} class="case"  /></td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'">{{ client_message.title }}</td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'" id="current1">{{ client_message.description|truncate_chars:35  }}</td>
+				                <td class="numb" style="text-align:center;width:290px;border-bottom:1px solid #d0d0d0;" onclick="window.location='{% url caregiver_client_view_message domain_name client_id client_message.id %}'" id="current1">{{ client_message.created_at }}</td>
+				                <td class="numb" style="text-align:center;width:290px;text-align:center;border-bottom:1px solid #d0d0d0;">
+									<a href="{% url caregiver_client_reply_message domain_name client_id client_message.id %}" style="text-decoration:none;font-family:Arial, Helvetica, sans-serif;color:#5b5b5b;">{% trans "Reply" %}</a></td>
+                    		</tr>
+           				{% endif %}        	
+                	{% endfor %}
+                {% else %}
+                		<tr class="first" style=" background:#f7f7f7;" align="center">
+                     		<td colspan="6" astyle="text-align:center;border-left:1px solid #d0d0d0;" class="numb" >{% trans "No Messages found for this Caregiver" %}</td>
+                     	</tr>
+                {% endif %}                    
+			</table>
+
+            {% if client_message_list.object_list %}
+	            <div class="pagination" align="center">
+		            <table style="border: 0px; margin-top:15px;" width="15%">
+	                    <tbody>
+	                        <tr>
+	                        	<td width="10%" align="left">
+	                                {% if client_message_list.has_previous %}
+	                                    <a href="?page={{ client_message_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+	                                {% endif %}
+	                          	</td>
+	                          	<td width="80%" align="center">
+	                                <select id="page_number">
+	                                        {% for each in num_pages %}
+	                                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+	                                        {% endfor %}
+	                                </select>
+	                          	</td>
+	                          	<td width="10%" align="right">
+	                                {% if client_message_list.has_next %}
+	                                    <a href="?page={{ client_message_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+	                                {% endif %}
+	                          	</td>
+	                        </tr>
+	                    </tbody>
+		            </table>
+	            </div> 
+            {% endif %}  
+     	</div><!--paginationdemo end-->
+  	</div><!--common_right-->
+  	<div class="clear"></div>
+</div><!--banner end-->
+</form>
+{% endblock %}

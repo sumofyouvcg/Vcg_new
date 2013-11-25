@@ -1,0 +1,32 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+		
+		$(document).ready(function(){
+			$("#id_save").click(function() {
+	       		$('#id_session_form').submit();
+			});
+		});
+</script>
+{% endblock %}
+
+
+{% block content%}
+{{ block.super }}
+
+		<img width="1000" src="/static/img/rich.png"><br><br>
+		<form enctype='multipart/form-data' name='session_form' id='id_session_form' action='.' method='post'>{% csrf_token %}
+		<div align="center">
+			<table>
+			<tr><td>{{form.module_name.label}}</td><td>{{form.module_name}}</td><td>{{form.module_name.errors}}</td></tr>
+			<tr><td>{{form.image.label }}:</td><td>{{form.image }}</td><td>{{form.image.errors }}</td></tr>
+			</table>
+			<input type="button"   id="id_save" name="save" value='{% trans "Submit" %}'  class="login-button"/>
+		</div>
+		</form>
+{% endblock %}

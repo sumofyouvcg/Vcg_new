@@ -1,0 +1,103 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/diary.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+
+<script type="text/javascript" src="/static/js/admin/basic.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery.simplemodal.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	document.getElementById("tr_q").style.backgroundImage = 'url("/static/img/admin/hover_otp.png")';
+	document.getElementById("current4").style.color= "#fff";
+	if('{{read_only}}' == "readonly"){
+		$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+	}
+});
+
+function preview_show()
+{	
+	$('#preview').show();
+}
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+	<div id="treat_content"><!--treat_content start-->
+		{% block treatleft %}
+		{{ block.super }}
+		{% endblock %}
+		
+		<div id="right_treat_content"><!--right_treat_content start-->
+		{% block righttreat %}
+			{{ block.super }}
+		{% endblock %}
+		
+			<div id="therapist_content" style="width:687px !important; margin:0px 0px 0px 6px; border-radius:0px 0px 10px 10px; padding: 1em 1.4em;"><!--therapist_content start-->
+			  	
+			  	<table id="tab_table" cellpadding="5">
+	            	<tbody>
+	                	<tr><td class="label">{{form.name.label}} <span id="count"></span></td><td>{{form.name}}</td></tr>
+	                	<tr><td></td><td><span class="forget-errors">{{form.name.errors}}</span></td></tr>
+	                	<tr><td class="label" >{{form.summary.label}}</td><td>{{form.summary}}</td></tr>
+	                	<tr><td></td><td><span class="forget-errors">{{form.summary.errors}}</span></td></tr>
+	                	<tr>
+	                		<td colspan="3" id="basic-modal_1"><div id="sav" class="basic"><a href="#" class="save_pre">{% trans "Preview" %}</a></div>
+		                  	<div id="canc" onclick = "reset()"><a href="/admin_management/assignments_list/" class="save1">{% trans "Cancel" %}</a></div></td>
+		                </tr>
+					</tbody>
+		         </table>
+	       				
+				<div id="basic-modal-content-1" >
+		    		<div align="center" style="height:20px;background-color:green;width:100%;color:white;text-align:center;">{% trans "Preview" %}</div>
+		   			<table cellpadding="3" cellspacing="3"  style="padding-right:12px;padding-left:12px;border:0;">
+						<tbody>
+			              <tr><td class="td_add">{% trans "Assignment Name" %}</td><td class="td_add" style="text-align:left;">{{assignment}}</td></tr>
+			           </tbody>
+					</table>
+					<br>
+		   			<div class="clear"></div>
+		   			<table id="tab" cellpadding="5"  style="padding-right:12px;padding-left:12px;border:0;">
+				 		<tbody>
+				        	{% for cluster in cluster_list %}
+				                <tr><td>{{forloop.counter}}.</td><td>{% trans "Cluster Name:" %} {{cluster}}</td></tr>
+				                {% for questions in cluster_questions %}
+				                	{% if questions.assignment_cluster.id == cluster.id %}
+				                	<tr><td></td><td>Question : {{questions}}</td></tr>
+					               	 	{% for answer in answers %}
+					                		{% if answer.assignment_question.id == questions.id %}
+					                			<tr><td></td>
+					                				<td>
+					                					{% if answer.answer %}
+					                					<input type="radio" checked="checked"/>{{answer}}
+					                					{% else %}
+					                					<input type="radio"/>{{answer}}
+					                					{% endif %}
+					                				</td>
+					                			</tr>
+					            	    	{% endif %}
+					                	{% endfor %}			
+				                	{% endif %}
+				                {% endfor %}			
+				            {% endfor %}
+				        </tbody>   
+			  		</table>
+		   		</div>
+		   		
+			</div>
+			
+		</div>
+		
+	</div>
+{% endblock %}

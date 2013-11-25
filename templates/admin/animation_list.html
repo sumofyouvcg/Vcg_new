@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+.fst5{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+.fst5 a
+{
+color:#7CC744 !important;
+}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".first:even").css("background-color","#f7f7f7");
+
+	$('#page_number').val({{ animation_list.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '/admin_management/animation_list/?page=' + number
+	});	
+	
+	if ( ("{{ key }}" != '{% trans "SEARCH" %}') && ("{{ key }}" != "None") ) {
+		$("#id_search_field").val("{{ key }}");
+	}
+	
+	$("#selectall").click(function () {
+		$('.case').attr('checked', this.checked);
+		});
+ 	
+	$(".case").click(function(){
+			if($(".case").length == $(".case:checked").length) {
+				$("#selectall").attr("checked", "checked");
+			}
+			else {
+				$("#selectall").removeAttr("checked");
+			}
+		
+		});	 	
+});	
+
+function form_submit(){
+	var confirmed = confirm('{% trans "Are you sure want to delete this animation?" %}');
+    return confirmed;
+}
+
+$(document).keypress(function(event){
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if(keycode == '13'){
+		var keyword = $("#id_search_field").val();
+		if ( keyword == '{% trans "SEARCH" %}') {
+			keyword = '';
+		}
+		if ((keyword != '')){
+			window.location.href = "/admin_management/animation_list/?key=" + keyword
+		}
+		window.location.href = "/admin_management/animation_list/?keyword=" + keyword
+	}
+});
+
+function keyword(){
+	
+	var keyword = $("#id_search_field").val();
+	if ( keyword == '{% trans "SEARCH" %}') {
+		keyword = '';
+	}
+	if (keyword != ''){
+		window.location.href = "/admin_management/animation_list/?key=" + keyword
+	}
+	window.location.href = "/admin_management/animation_list/?keyword=" + keyword
+}
+
+function delete_form()
+{
+	if($(".case:checked").length == 0)
+	{
+	alert('{% trans "Select atleast one record to delete" %}')
+	return
+	}
+	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	if(confirmed)
+	{
+		document.animation_list.action ="/admin_management/animation_delete/";
+    	$('#id_animation_list').submit()
+	}
+	else
+		{
+		window.location = "/admin_management/animation_list/";
+		}
+} 
+</script>
+{% endblock %}
+
+{% block content %}
+	{% load custom_tags %}
+<form name = "animation_list" id = "id_animation_list" action="." method="POST" >{% csrf_token %}	
+	<div id="banner_left">
+  		<p class="left_content">{% trans "Animations" %}</p>
+  	</div>
+  	
+	<div id="new_banner_right"><!--banner_right start-->  
+		<div id="search"><input type="text" name="place" placeholder='{% trans "SEARCH" %}' style="width:213px; height:30px; border-radius:10px; border:none; font-size:12px; color:#aeaeae; font-family:Arial;margin:0px 0px 0px 10px;" id="id_search_field"/></div>
+		<div class="searc">
+			<a href="#">
+				<img src="/static/img/admin/search.png" alt="searchbox" onClick="keyword();" />
+			</a>
+		</div>
+        <div id="add"><a href="/admin_management/animation_add/" style="text-decoration:none;">{% trans "Add Animation" %}</a></div>
+        <div id="sav" onclick = "delete_form()"><a href="#" class="save">{% trans "Delete" %}</a></div>
+	</div><!--banner end--> 
+	
+    <div class="clear"></div>
+	
+	<div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+		<div class="my_contact"	>
+			<table class="features-table" width="960px"  cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+				<thead>
+					<tr style="border-bottom:1px solid #d0d0d0; border-top:1px solid #d0d0d0; padding:3px;" cellpadding="15" id="heading" >
+						<th class="numb" style="width:100px;"><a href="#"><input type="checkbox" name="master"  value="head" id="selectall" /></th>
+						<th class="numb" style="width:269px;border-left:1px solid #d0d0d0; ">{% trans "Name" %}</th>
+						<th class="numb" style="width:290px;border-left:1px solid #d0d0d0;">{% trans "Status" %}</th>
+						<th class="numb" style="width:202px;border-left:1px solid #d0d0d0;">{% trans "Created by" %}</th>
+						<th class="numb" style="width:202px;border-left:1px solid #d0d0d0;">{% trans "Modified by" %}</th>
+				    </tr>
+				</thead>
+				<tbody>
+				{% if animation_list.object_list %}
+				{% for animation in animation_list.object_list %}
+					<tr class="first" style="border-left:1px solid #d0d0d0; background:#F5F2F3;">
+						<td class="numb" style="text-align:center;"><input type="checkbox" name="choices" value={{animation.id}} class="case"  /></td>
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><a href="/admin_management/animation_edit/{{animation.id}}/">{{animation.name}}</a></td>              
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{ animation.active|active_status }}</td>
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{ animation.created_by }}</td>
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{ animation.modified_by }}</td>
+					</tr>
+				{% endfor %}
+				{% else %}
+		        	<tr class="first" style="border-left:1px solid #d0d0d0; background:#f7f7f7;">
+		        		<td colspan="4" style="text-align:center;border-left:1px solid #d0d0d0;">{% trans "No Animations found" %}</td>
+		        	</tr>
+       			{% endif %} 
+				
+				</tbody>
+			</table>
+		</div> 
+	</div> <!--Page 1 END--> 
+	{% if animation_list.object_list %}
+	   	<div class="pagination" align="center">
+	    	<table style="border: 0px; margin-top:15px;" width="15%">
+	    		<tbody>
+	    			<tr>
+	    				<td width="10%" align="left">
+					        {% if animation_list.has_previous %}
+					            <a href="?page={{ animation_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+					        {% endif %}
+	    				</td>
+	    				<td width="80%" align="center">
+							<select id="page_number">
+								{% for each in num_pages %}
+									<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+								{% endfor %}
+							</select>
+	    				</td>
+	    				<td width="10%" align="right">
+					        {% if animation_list.has_next %}
+					            <a href="?page={{ animation_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+					        {% endif %}
+	    				</td>
+	    			</tr>
+	    		</tbody>
+	    	</table>
+		</div>  
+	{% endif %} 	
+</form>	
+{% endblock %}

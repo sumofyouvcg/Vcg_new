@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+	.list7
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list7 a
+	{
+	color:#7CC744 !important;
+	}
+	.list8 a
+	{
+	color:#FFFFFF !important;
+	}
+	#tabtable{
+ 	border:none !important;
+	}
+	#tabtable tr td
+	{
+	padding:10px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+function save_form(){
+	document.mail_configuration_form.action ="/admin_management/mail_configuration_form/;
+	$('#id_mail_configuration_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<form name = "user_list" id = "id_user_list" action="." method="POST" >{% csrf_token %}
+	<div id="banner_left">
+    	<p class="left_content">{% trans "Admin Users" %}</p>
+    </div>
+
+    <div id="new_banner_right" style="width:100px"><!--banner_right start-->  
+    	<div id="sav"><a href="/admin_management/mail_configuration_update/" class="save">{% trans "Update" %}</a></div>
+    </div><!--banner end--> 
+    <div class="clear"></div>
+        
+	
+    	<div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+        	<div class="my_contact"	>
+    			<table class="features-table" width="960px"  cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+          
+				<tbody>
+  			    {% if mail.english %}
+  			    	<tr><td class="numb" style="width:100px">{{ form.english.label }}</td><td class="numb" style="text-align:left;">{{ mail.english }}</td></tr>
+				{% else %}
+			    	<tr><td class="numb" style="width:100px">{{ form.english.label }}</td><td class="numb" style="text-align:left;">{% trans "None" %}</td></tr>
+				{% endif %}
+				<tr><td></td><td></td></tr>	           
+  			    {% if mail.dutch %}
+  			    	<tr><td class="numb" style="width:100px">{{ form.dutch.label }}</td><td class="numb" style="text-align:left;">{{ mail.dutch }}</td></tr>
+				{% else %}
+			    	<tr><td class="numb" style="width:100px">{{ form.dutch.label }}</td><td class="numb" style="text-align:left;">{% trans "None" %}</td></tr>
+				{% endif %}
+	       		
+				</tbody>
+            	</table>
+    		</div> 
+		</div> <!--Page 1 END-->
+	   	
+	
+</form>		
+{% endblock %}
+
+<div id="add_heading">
+	<p class="add_heading_content">{% trans "Add user" %}</p>
+</div>
+    <div id="new_banner_right"><!--banner_right start-->  
+    	<div id="search"><input type="text" name="place" placeholder="SEARCH" style="width:205px; height:30px; border-radius:10px; border:none; font-size:12px; color:#aeaeae; font-family:Arial; margin:0 0 0 10px;" id="id_search_field"/></div>
+		<div class="searc">
+			<a href="#"><img src="/static/img/admin/search.png" alt="searchbox"  onClick="keyword();"/></a>
+		</div>
+    	<div id="add1"><a href="/admin_management/user_add/" style="text-decoration:none;">{% trans "Add Admin User" %}</a></div>
+    	<div id="sav" onclick = "delete_form()"><a href="#" class="save">{% trans "Delete" %}</a></div>
+    </div><!--banner end--> 
+<form enctype='multipart/form-data' name='mail_configuration_form' id='id_mail_configuration_form' action='.' method='post'>{% csrf_token %}
+    <div id="add_therapist"><!--add_caregiver start-->
+    	<div class="tabl">
+          	<table id="tab" cellpadding="5">
+				<tbody>
+  			    {% if mail.english %}
+  			    	<tr><td class="td_add">{{ form.english.label }}</td><td class="td_add">{{ mail.english }}</td></tr>
+				{% else %}
+			    	<tr><td class="td_add">{{ form.english.label }}</td><td class="td_add">None</td></tr>
+				{% endif %}
+	            </tbody>
+  			    {% if mail.dutch %}
+  			    	<tr><td class="td_add">{{ form.dutch.label }}</td><td class="td_add">{{ mail.dutch }}</td></tr>
+				{% else %}
+			    	<tr><td class="td_add">{{ form.dutch.label }}</td><td class="td_add">{% trans "None" %}</td></tr>
+				{% endif %}
+	        </table>
+        </div>
+   </div><!--add_caregiver end-->
+</form>

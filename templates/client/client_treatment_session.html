@@ -1,0 +1,109 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst3
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst3 a
+	{
+	color:#7CC744 !important;
+	}
+	p{
+	margin-left:5px;
+	}
+	.feed{
+	font-family: 'myriad pro';
+	font-size: 15px;
+	margin: 0;
+	margin-left:5px;
+	}
+	.td_client 
+	{
+	  color:#999999;
+	  font-family:Arial, Helvetica, sans-serif;
+	  font-size:15px;
+	  height:32px;
+	  padding:0;
+	  width:185px;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	//$('#plain_text').html($('#id_plaintext').val());
+	$('#id_client').val('{{client_id}}').parent().parent().hide();
+	$('#id_treatment_session').val('{{session_id}}').parent().parent().hide();
+	$('#id_client_treatment').val('{{session.client_treatment.id}}').parent().parent().hide();
+	$('#id_plaintext').hide()
+	$('#error').hide();
+	
+})
+function save_form()
+{
+	document.client_treatment_add_form.action ="{% url client_treatment_session domain_name session_id %}";
+	$('#id_client_treatment_add_form').submit();
+}
+
+</script>
+{% endblock %}
+
+{% block content %}
+<form enctype='multipart/form-data' name='test_form' id='id_test_form' action='.' method='post'>{% csrf_token %}
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{{session.sessions|title}}</p>
+	</div><!--banner_left end-->
+	<div style="float:right;margin: 11px 0 0;">
+		<div id="sav" ><a href="{% url client_treatment_view domain_name session.client_treatment.id %}" ><p class="save" id="id_save">{% trans "BACK" %}</p></a></div>
+	</div>
+    <div class="clear"></div>
+    
+		<div style="border-radius: 10px;border:1px solid #CCCCCC;font-family: Arial,Verdana,sans-serif;font-size: 12px;"><!--treatment_panic start-->
+		    <form action="#" method="post" name="newmessage_form"><!--FORM START-->
+		    {% if session.sessions.plaintext %}
+		    	{{session.sessions.plaintext|safe}}
+		    {% else %}
+	    		<p style="color:green;margin:0px; padding-top: 34px;text-align: center;">{% trans "At Present, no details in this Session" %}</p> 
+	    	{% endif %}
+		    </form><!--FORM END--><br><br>
+		    {% if exist_feedback %}
+		    <div>
+		    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Feedback sent" %} : </p><br>
+				{% for feedback in exist_feedback %}
+					{% if feedback.created_by == request.user %}
+					<p style="color:blue;" class="feed">{% trans "me" %} : {{feedback.feedback }}</p><br>
+					{% else %}
+					<p style="color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+					{% endif %}
+				{% endfor %}
+			</div><br>
+			{% endif %}
+		</div><!--treatment_panic end-->
+	
+		{% if not session.completed %}
+			{% if session.make_unaccompanied %}
+			<div style="border-radius: 10px;border:1px solid #CCCCCC;">
+				<div style="margin-top:10px; width:100%;">
+					<form enctype="multipart/form-data" id="id_client_treatment_add_form" name="client_treatment_add_form" action="." method="post">{% csrf_token %}
+							<table width="771" cellpadding="5" align="center">
+								<tr><td class="td_client" align="center">{{ form.client.label }}</td><td align="left">{{ form.client }}</td></tr>
+								<tr><td class="td_client" align="center">{{ form.client_treatment.label }}</td><td align="left">{{ form.client_treatment }}</td></tr>
+								<tr><td></td><td><span class = "forget-errors">{{form.non_field_errors}}{{ form.client_treatment.errors }}</span></td></tr>
+								<tr><td class="td_client" align="center">{{ form.treatment_session.label }}</td><td align="left">{{ form.treatment_session }}</td></tr>
+								<tr><td></td><td><span class = "forget-errors">{{form.non_field_errors}}{{ form.treatment_session.errors }}</span></td></tr>
+								<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+								<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+								<tr><td></td><td><div id="sav" ><a href="#" onclick="save_form()" ><p class="save" id="id_save">{% trans "Save" %}</p></a></div></td></tr>
+							</table>
+					</form><br><br>	
+				</div>
+			</div>	
+			{% endif %}
+		{% endif %}
+	
+</form>
+{% endblock %}

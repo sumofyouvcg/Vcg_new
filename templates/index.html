@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!--[if lte IE 6]>
+		    <style type="text/css">
+		    body {height:100%; overflow-y:auto;}
+		    html {overflow-x:auto; overflow-y:hidden;}
+		    * html .footer {position:absolute;}
+		    </style>
+		    <![endif]-->
+		    
+		<!--[if IE 7 ]>
+		<link rel="stylesheet" href="/static/css/ie7.css" type="text/css"/>
+		<![endif]-->    
+{% load i18n %}
+		<meta name="google-site-verification" content="BG7-rYei61T6Z5tC3qeK9Bl1noSZw4THlhDYYanvCSk" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="google-translate-customization" content="e0e4748d4ec51f1e-73f46e68f19dbe5f-g43707b5fb8113b34-f"></meta>
+		<title>{% block title %}Virtual Care Group{% endblock %}</title>
+		
+		{% if company_logo_icon.favicon %}
+			<link rel="shortcut icon" href="{{ company_logo_icon.favicon.url }}" />
+		{% else %}
+			<link rel="shortcut icon" href="/static/img/admin/favicon.ico" />
+		{% endif %}
+		
+		<link rel="stylesheet" type="text/css" href="/static/css/admin/style.css" />
+		<style type="text/css">
+			#form-div
+			{
+			    border: 1px solid #C0C0C0;
+			    border-radius: 10px 10px 10px 10px;
+			    box-shadow: 0 0 3px #FFFFFF inset, 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+			    height: auto;
+			    margin: 35px auto 20px;
+			    width: 500px;
+			}
+			.form-text
+			{
+			    height: 25px;
+			    width: 245px;
+			    margin-left: 40px;
+			}
+			h3
+			{
+			    color: #434D51;
+			    font-family: Arial,Helvetica,sans-serif;
+			    font-weight: bold;
+			    margin-left: 41px;
+			}
+			.login-button
+			{
+			    border: 1px solid #C0C0C0;
+			    border-radius: 8px 8px 8px 8px;
+			    box-shadow: 0 0 3px #FFFFFF inset, 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+			    color: #333333;
+			    font-family: Arial,Helvetica,sans-serif;
+			    font-size: 16px;
+			    height: 30px;
+			    width: 110px;
+			    margin: 0px 0px 40px 50px;
+			}
+			.login-button1
+			{
+			    border: 1px solid #C0C0C0;
+			    border-radius: 8px 8px 8px 8px;
+			    box-shadow: 0 0 3px #FFFFFF inset, 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+			    color: #333333;
+			    font-family: Arial,Helvetica,sans-serif;
+			    font-size: 16px;
+			    height: 30px;
+			    width: 110px;
+			    margin: 0px 0px 0px 10px;
+			    
+			}
+			.errors
+			{
+			    color: #F59DC0;
+			    font-family: Arial,Helvetica,sans-serif;
+			    font-size: 12px;
+			    margin-left: 41px;
+			}
+			#img-div
+			{
+				margin-top: 150px;
+			}
+		</style>
+
+		{% block extrastyle %}
+		{% endblock %}
+
+		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+
+		{% block extrahead %}
+		{% endblock %}
+	</head>
+
+	<div class="clear"></div>
+
+	<body>
+				{% if messages %}
+				<div align='center'>
+					<ul id="message" >
+					    {% for message in messages %}
+					    	{% if forloop.counter == 1 %}
+					    		<ul{% if message.tags %} class="{{ message.tags }}"{% endif %}><font color="green">{{message}}</font></ul>
+				    		{% endif %}
+					    {% endfor %}
+					</ul></div>
+			{% endif %}
+		<div id="img-div" align="center">
+			{% if company_logo_icon.logo %}
+				<img src="{{company_logo_icon.logo.url}}" alt="logo" width="369px" height="75px" />
+			{% else %}
+				<img src="/static/img/admin/logo.jpg" alt="logo" width="369px" height="75px" />
+			{% endif %}	
+		</div>
+
+
+		<div width ="100%" style="background-color:#87CCCB; color:white"><b>
+			{% block top %}
+			{% endblock %}</b>
+		</div>
+
+		<div id="wrapper"><!--wrapper start-->
+			{% block content %}
+					<div id="form-div">
+			<h3>{% trans "Please log in below..." %}</h3>
+			<form action="." method="post">{% csrf_token %}
+				
+				<input type="text" class="form-text" name="username" placeholder='{% trans "Username" %}' value="{{ username}}" /><br /><br />
+				<input type="password" class="form-text" name="password" placeholder='{% trans "Password" %}' value="" /><br />
+				{% if domain_name %}
+					<span class="errors" style="margin-left:200px;"><a href ="{% url company_password_reset domain_name %}" >{% trans "Forgot password" %}?</a></span><br /><br />
+				{% else %}	
+					<span class="errors" style="margin-left:200px;"><a href ="admin_management/password_reset/" >{% trans "Forgot password" %}?</a></span><br /><br />
+				{% endif %}
+				<span class="errors">{{ state }}</span><br />
+				
+				 
+				<input type="submit" class="login-button" value='{% trans "Log In" %}'/>
+			</form>
+		</div>
+			{% endblock %} 
+		</div><!--wrapper end-->
+
+		{% block bottom %}
+		{% endblock %}
+
+		<div id="clear"></div>
+
+		{% block footer %}
+		{% endblock %}
+	</body>
+</html>

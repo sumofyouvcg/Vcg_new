@@ -1,0 +1,95 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrahead %}
+<script type="text/javascript">
+
+$(function(){
+	$('#page_number').val({{ caregiver_chat.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '{% url caregiver_client_chat_details domain_name client_id %}?page=' + number
+	});
+	$("#id_details").hide();
+
+});
+function call_details(){
+	$("#id_details").show();
+
+}
+</script>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+
+#Chat a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %} 
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left">
+    <p class="left_content" style="margin-top:23px;">{% trans "Chat History" %}</p>
+</div>
+ 	
+<div class="common_right"><!--common_right start-->     
+	 <div id="paginationdemo" class="demo"><!--paginationdemo start-->
+           <div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+	            <div class="my_contact"	>
+	    		<table class="features-table" width="771" height="100" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+	    		{% if caregiver_chat.object_list %}
+		    		{% for query in caregiver_chat.object_list %}
+		                <tr class="first" style="height:24px;">
+			                <td height="44" class="name"><a href='{% url caregiver_client_chat_history domain_name client_id query.received_at|date:"Y-m-d" %}'>{{query.received_at}}</a></td>
+			           </tr>
+					{% endfor %}
+				{% else %}
+					<tr class="first" style="height:24px;">
+						<td height="44" class="name">{% trans "No Chat Available" %}</td>
+					</tr>
+				{% endif %}
+	            </table>
+	    		</div> <br><br><br>
+          </div> <!--Page 1 END-->
+	</div><!--paginationdemo end-->
+	
+	{% if caregiver_chat.object_list %}
+	   	<div class="pagination" align="center">
+	    	<table style="border: 0px; margin-top:15px;" width="15%">
+	    		<tbody>
+	    			<tr>
+	    				<td width="10%" align="left">
+					        {% if caregiver_chat.has_previous %}
+					            <a href="?page={{ caregiver_chat.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+					        {% endif %}
+	    				</td>
+	    				<td width="80%" align="center">
+							<select id="page_number">
+								{% for each in num_pages %}
+									<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+								{% endfor %}
+							</select>
+	    				</td>
+	    				<td width="10%" align="right">
+					        {% if caregiver_chat.has_next %}
+					            <a href="?page={{ caregiver_chat.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+					        {% endif %}
+	    				</td>
+	    			</tr>
+	    		</tbody>
+	    	</table>
+		</div> 
+	{% endif %}
+</div>
+{% endblock %}

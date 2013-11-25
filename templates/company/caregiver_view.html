@@ -1,0 +1,78 @@
+{% extends 'company.html' %}
+{% block extrastyle %}
+<style type="text/css">
+#current4 a
+{
+color:#7CC744;
+}
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+$(function(){
+	$("#id_clients").hide();
+});
+function call_details(){
+	$("#id_details").show();
+
+}
+
+function call_clients(){
+	$("#id_clients").show();
+	
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="banner_left"><!--banner_left start-->
+    <p class="left_content">Caregivers Details</p>
+</div><!--banner_left start-->
+ <div id="banner_right"><!--banner_right start--> 
+  	<div id="add"><a href="{% url company_caregivers_add domain_name %}" style="text-decoration:none;">Add Caregivers</a></div>
+ </div><!--banner_right_caregiver end-->
+ <div class="clear"></div>         
+ <div class="profile_details_caregivers" style="margin-bottom: 60px;"><!--profile_details_caregivers start-->
+    <p align="center"><img src="/static/img/company/profile.png" /></p>
+    <p align="center" style="font-family:Arial, Helvetica, sans-serif;color:#5b5b5b;font-size:15px;margin-left:20px;font-weight:bold;">Tessa van eossan<a href="#"></a></p>
+    <p align="center"><a href="caregiver_details.html" style="text-decoration:none;cursor:pointer;"><input type="button" value="Details" class="btn_details" /></a>
+    </p>
+    <p align="center"><a href="{% url company_caregiver_client domain_name %}"  style="text-decoration:none;cursor:pointer;"><input type="button" value="Clients" class="btn_details"/></a></p>
+ </div><!--profile_details_caregivers start-->
+<div id="add_client_caregivers"><!--add_client_caregivers start-->
+	<table width="464" align="center" cellpadding="5" style="border:0;">
+         <tbody> 
+         	<tr>
+				<td class="pl_first7_view" >First Name</td>
+		         <td class="pl_first7_care" >Tessa </td>
+            </tr><br /><br />
+            <tr>
+				<td class="pl_first7_view">Last Name</td>
+				<td  class="pl_first7_care" >van eossan </td>
+			</tr>
+             <tr>
+				<td class="pl_first7_view">Address</td>
+				<td class="pl_first7_care" >Address</td>
+			</tr>
+            <tr>
+				<td class="pl_first7_view">Address</td>
+				<td class="pl_first7_care" >warn</td>
+	       </tr>
+		   <tr>
+`				<td  class="pl_first7_view">Email Address</td>
+				<td><input type="text" name="name" style="width:243px; height:25px;" /></td>
+		   </tr>
+           <tr>
+                <td  class="pl_first7_view">Branch</td>
+                <td><input type="text" name="name" style="width:243px; height:25px;" /></td>
+           </tr>
+           <tr>
+               <td class="pl_first7_view">Caregivers rollen</td>
+               <td class="pl_first7_care" >Application header</td>
+           </tr>
+         </tbody>
+     </table>
+ </div><!--add_client_caregivers end-->
+
+{% endblock %}

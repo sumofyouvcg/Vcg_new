@@ -1,0 +1,14 @@
+{% extends 'company.html' %}
+{% load i18n %}	
+
+{% block extrahead %}
+<script type="text/javascript">
+function form_submit(){
+	var confirmed = confirm('{% trans "Are you sure want to delete this client?" %}');
+    return confirmed;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+{% endblock %}

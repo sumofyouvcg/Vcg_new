@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--HEAD TAG START-->
+<head>
+{% load custom_tags %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>virtual care group</title>
+	<!--CSS LINKS START-->
+	
+	{% if request.session.lang == 'en' %}
+		<link rel="stylesheet" href="/static/css/client/style_client.css" type="text/css" />
+	{% else %}
+		<link rel="stylesheet" href="/static/css/client/dutch_style_client.css" type="text/css" />
+	{% endif %}
+	
+	<link rel="stylesheet" href="/static/css/client/form.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/client/page_count.css" media="screen"/>
+
+	{% if domain_name|company_icon %}
+		<link rel="shortcut icon" href="/uploads/{{domain_name|company_icon}}" />
+	{% else %}
+		<link rel="shortcut icon" href="/static/img/admin/favicon.ico" />
+	{% endif %}
+	
+	<!--[if IE 9]>
+		<link rel="stylesheet" type="text/css" href="/static/css/client/ie9.css" />
+	<![endif]-->
+	<!--[if IE 8]>
+		<link rel="stylesheet" type="text/css" href="/static/css/client/ie8.css" />
+	<![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/css/client/ie7.css" /> <![endif]--> 
+	
+	<!--CSS LINKS START-->
+	<!--[if lte IE 6]>
+	    <style type="text/css">
+	    body {height:100%; overflow-y:auto;}
+	    html {overflow-x:auto; overflow-y:hidden;}
+	    * html .footer {position:absolute;}
+	    </style>
+	    <![endif]-->
+	    
+	<!--[if IE 7 ]>
+	<link rel="stylesheet" href="/static/css/ie7.css" type="text/css"/>
+	<![endif]-->    
+	
+	<meta name="google-site-verification" content="BG7-rYei61T6Z5tC3qeK9Bl1noSZw4THlhDYYanvCSk" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="google-translate-customization" content="e0e4748d4ec51f1e-73f46e68f19dbe5f-g43707b5fb8113b34-f"></meta>
+	<title>{% block title %}Virtual Care Group{% endblock %}</title>
+	
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.theme.css" />
+	<link rel="stylesheet" type="text/css" href="/static/chat/jquery.ui.chatbox.css" />
+	<!-- chat -->
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+	<!-- chat end -->
+	
+	<style>
+		.messagepop {
+		  cursor:default;
+		  display:none;
+		  margin-top: 0;
+		  margin-left: 747px;
+		  text-align:left;
+		  width:176px;
+		  height:75px;
+		  z-index:600;
+		}
+		.lang_select
+		{
+			border: medium none;
+		    color: #9F9F9F;
+		    font-family: Arial;
+		    font-size: 13px;
+		    font-weight: bold;
+		    text-decoration: none;
+		    text-transform: uppercase;
+		    width: 119px;
+		    cursor: pointer;
+		    background-color: #E6E6E6;
+		    border-radius: 5px;
+		    padding: 5px;
+		}
+		.active_lang
+		{
+			padding: 7px;
+			font-size: 16px;
+			background-color: #25B513;
+   			color: #FFFFFF;
+		}
+		#contact
+		{
+			width: 400px;
+		}
+		.messagepop { position: absolute; background:#F0F0F0; border: 4px solid #A7FA8F; }
+		 .messagepop:after, .arrow_box:before { bottom: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } 
+		 .messagepop:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #A7FA8F; border-width: 20px; left: 50%; margin-left: -20px; }
+		 .messagepop:before { border-color: rgba(194, 225, 245, 0); border-bottom-color: #c2e1f5; border-width: 26px; left: 50%; margin-left: -26px; }
+	</style>
+
+	{% block extrastyle %}
+	{% endblock %}
+	<script type="text/javascript" src="/static/js/jquery-1.8.2.js" ></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.js" ></script>
+	
+	<script type="text/javascript">
+		setTimeout( function() {
+			jQuery('#message').hide();
+		}, 2000 );
+	</script>
+
+	<!--SCRIPT START FOR POPUP-->	
+	<script>
+	function deselect() {
+	    $(".pop").slideFadeToggle(function() { 
+	        $("#contact").removeClass("selected");
+	    });    
+	}
+
+	$(function() {
+	    $("#txt").click(function() {
+	        if($(this).hasClass("selected")) {
+	            deselect();               
+	        } else {
+	            $(this).addClass("selected");
+	            $(".pop").slideFadeToggle(function() { 
+	                $("#email").focus();
+	            });
+	        }
+	        return false;
+	    });
+
+		$('#contact li:contains("{{ request.LANGUAGE_CODE }}"):first').addClass('active_lang');
+		$('.lang_select').click(function(){
+			var lang_code = $(this).text();
+			$.ajax({
+		 		"type"		: 'GET',
+				"url"		: '/set_lang?lang_code=' + lang_code,
+				"dataType"	: "json",
+				"cache"		: false,
+		  		"success"	: function(json) {
+                    	location.href = window.location.pathname
+                	}
+	 		});
+		});
+
+		$(".close").live('click', function() {
+	        deselect();
+	        return false;
+	    });
+	});
+
+	$.fn.slideFadeToggle = function(easing, callback) {
+	    return this.animate({ opacity: 'toggle', height: 'toggle' }, "fast", easing, callback);
+	};
+	</script>
+	<!--SCRIPT END FOR POPUP-->	
+
+	<!--SCRIPT START FOR CHAT-->
+		<script type="text/javascript" src="/static/chat/jquery.ui.chatbox.js" ></script>
+		<script type="text/javascript">
+
+			var offset_val = 0;
+		
+			$(document).ready(function(){
+		   	  		
+		    	    $.ajaxSetup({
+		    		    cache: false,
+		    	        timeout: 1000*60//set a global ajax timeout of a minute
+		    	     });
+		    	    
+		    	    doPoll(); // do the first poll
+		          
+			});
+
+			function check_vchat_req(message, username) {
+				if (message.indexOf('VCHAT_REQ->') != -1) {
+					from_user = message.split('VCHAT_REQ->')[1];
+					var div_id = "#chat_" + username;
+					 
+					 
+					 link_html = ' Video Chat Request from: ' + from_user +  '<a target="_blank" href="/vchat_join?from=' + from_user + '">  Accept </a>'
+					 $("#video_chat_requests").html($("#video_chat_requests").html() + '<br>' +  link_html);
+					return "Video Chat request from " + username + " Please Click on the Accept"
+				}
+				return message
+			}
+
+		    function doPoll(){
+		        $.get('{% url client_get domain_name %}', function(data) {
+		        	
+		            if(data.indexOf('ACTIVE:') != -1 ) {            	
+		            	users_list = data.split('ACTIVE:')[1];          	
+		            	old_details = data.split('ACTIVE:')[0];
+		            	build_chat_links(users_list, old_details);
+		            } else {
+		            	
+                        var stringArray = new Array();
+                        stringArray = data.split("%:$");
+                        username = stringArray[0];
+		            	message =stringArray[1];
+		            	old_details = stringArray[2];
+		            	//update_chat_message(username, message, old_details)
+		            	update_chat_message(username, check_vchat_req(message, username))
+		            }            
+		            
+		            setTimeout(doPoll,5000);
+		        });
+		    }
+			    
+			function update_chat_message(username, message,old_details) {
+				openChatBox(username, message,old_details, true);
+			}    
+			    
+    
+			function build_chat_links(users_list, old_details) {
+				
+				var users = users_list.split(',');	
+				var html_str = "";
+				if (users=='')
+				{
+					for(var i = 0; i < users.length; i++ ) {	
+						html_str += "<a href=\"javascript:openChatBox('" + users[i] + "', '','"+old_details+"', false)\">" +  users[i] + "<br>";
+					}
+				}
+				else
+				{
+					html_str += "<ul><li style='color: #25B513;font-family:Arial,Helvetica,sans-serif;font-size: 15px;font-weight: bold;text-decoration: none;'>Online Users</li><li>";
+					for(var i = 0; i < users.length; i++ ) {	
+						html_str += "<a href=\"javascript:openChatBox('" + users[i] + "', '','"+old_details+"', false)\">" +  users[i] + "  <img src=/static/img/company/green_dot.gif height='15' width='15' style='margin-top:1px;'></a><br>";
+					}
+					html_str +="</li></ul>"
+				}
+				
+				$("#online_users").html(html_str);
+			}
+    
+
+  
+			function server_update(message, to_user) {	
+				$.post(
+						"{% url client_post domain_name %}",
+						{message: message, to_user: to_user},
+						function(responseText){
+							//$("#content").html(responseText);
+						},
+						"html"
+					);	
+			}
+
+
+			function chat_old_details(username){
+				var result = null;
+				var link = '{% url client_chat_old_details domain_name 'newid' %}';
+				link = link.replace('newid', username);
+				$.ajax({
+					url:link,
+					type:'get',
+					dataType:'html',
+					async:false,
+					success:function(data)
+					{
+						result=data;
+					}
+					
+					
+				});
+				return result;
+			}
+			function openChatBox(username, message, old_details, auto) {	
+				
+				old_details = chat_old_details(username)
+				var div_name = "chat_" + username;
+				var div_id = "#chat_" + username;
+					
+			    var offset = $(div_id).chatbox("option", "offset");
+				if( typeof $("#chat_" + username).html() == 'undefined') {
+					$('body').append("<div id = " + div_name + "></div>");
+					
+					$(div_id).chatbox({id:div_name, 
+			            user: username,
+			            title : username + ' (<a target="_blank" style="text-decoration:none;" href="/vchat_req?to=' + username + '">Video Chat</a>)',
+			            offset: offset_val,
+			            boxClosed: function(id) {
+			            	offset_val -= 250;
+			            },
+			            messageSent : function(id, user, msg) {
+			                $("#log").append(id + " said: " + msg + "<br/>");
+			                server_update(msg, id.replace('chat_', ''));
+			                $(div_id).chatbox("option", "boxManager").addMsg('me', msg);
+			            }});
+					
+					var stringArray = new Array();
+                    stringArray = old_details.split("|,|");
+                    for (i = 0; i < stringArray.length; i++) {
+                        var user_msg = stringArray[i].split("^-#");
+                        if (user_msg[0] != ' ')
+                        	{	
+                        		if (i == '0')
+                        			{
+                        			$(div_id).chatbox("option", "boxManager").addMsgEmpty(user_msg[0], user_msg[1]);
+                        			}
+                        		else
+                        			{
+                        			$(div_id).chatbox("option", "boxManager").addMsg(user_msg[0], user_msg[1]);	
+                        			}
+                    			
+                        	}
+                    }
+					offset_val += 250;
+				} else {
+					if(!auto) {
+			        	$(div_id).chatbox("option", "boxManager").toggleBox();
+					}
+				}
+			
+				if(auto) {
+					var stringArray = new Array();
+                    stringArray = old_details.split("|,|");
+                    for (i = 0; i < stringArray.length; i++) {
+                        var user_msg = stringArray[i].split("^-#");
+                        if (user_msg[0] != ' ')
+                        	{	
+                        		if (i == '0')
+                        			{
+                        			$(div_id).chatbox("option", "boxManager").addMsgEmpty(user_msg[0], user_msg[1]);
+                        			}
+                        		else
+                        			{
+                        			$(div_id).chatbox("option", "boxManager").addMsg(user_msg[0], user_msg[1]);	
+                        			}
+                    			
+                        	}
+                    }
+				}
+			}
+    		</script>
+    	<!--SCRIPT END FOR CHAT-->
+
+	{% block extrahead %}
+	{% endblock %}
+	
+</head>
+
+	<div class="clear"></div>
+{% load i18n %}
+	<body>
+		<div id="wrapper"><!--wrapper start-->
+		<div width ="100%" style="background-color:#87CCCB; color:white"><b></b></div>
+		{% if messages %}
+			<div align='center'>
+				<ul id="message" >
+				    {% for message in messages %}
+				    	<ul{% if message.tags %} class="{{ message.tags }}"{% endif %}><font color="green">{{message}}</font></ul>
+				    {% endfor %}
+				</ul></div>
+		{% endif %}
+		
+		<div id="header_bottom"><!--header_bottom start-->
+        		<div id="logo"><!--logo start-->
+           		    <a href="" style="border:none;">
+           		    {% if domain_name|company_logo %}
+           		    	<img src="/uploads/{{domain_name|company_logo}}" alt="logo"  width="369px" height="75px"/></a>
+           		    {% else %}	
+                		<img src="/static/img/admin/logo.jpg" alt="logo" width="369px" height="75px" /></a>
+                	{% endif %}	
+                </div><!--logo end-->
+                <div id="contact" style="cursor:pointer"><!--contact start-->  
+					 <ul class="menu1" style="float:right!important;"><!--menu1 ul start-->
+					 	<input type="hidden" id="hidden_lang" name="lang" />
+		        		<li id="en" class="lang_select">en</li> 
+		        		<li id="nl" class="lang_select">nl</li>
+					 	{% if  request.user  %}
+	    	        		<li id="txt">{% trans "Welcome Client" %} {{request.user}}</li>
+	    	        	{% else %}
+	    	        		<li id="txt" style="cursor:pointer;">{% trans "Welcome Guest," %}</li>
+	                    {% endif %}
+	                </ul><!--menu1 ul end-->	
+                </div> <!--contact end--> 
+        </div><!--header_bottom end-->
+   	    
+   	    <div class="messagepop pop" style="padding:15px";>
+		 	{% if  request.user  %}
+	 	        		<a href="{% url client_password_change domain_name %}" id="txt">{% trans "Change Password" %}</a><br></br>
+	 	        		<a href="{% url client_my_profile domain_name %}" id="txt">{% trans "My Profile" %}</a><br></br>
+	 	        		<a href="{% url admin_management.views.logout_user domain_name %}" id="txt">{% trans "Logout" %}</a><br></br>
+	        {% endif %}
+        </div>
+        
+       <div id="header"><!--header start-->
+        	<ul id="navigation" class="nav-main "><!--ul navigation start-->
+                <li class="list1"><a href='{% url client_task_list domain_name %}'>{% trans "Tasks" %}</a></li>
+                <li class="fst"><a href='{% url client_message_list domain_name %}'>{% trans "Messages" %}</a></li>
+                <li class="list"><a href='{% url client_test_list domain_name %}'>{% trans "Tests" %}</a></li>
+                <li class="fst1"><a href='{% url client_plan_list domain_name %}'>{% trans "Plans" %}</a></li>
+                <li class="fst2"><a href='{% url client_diary_list domain_name %}'> {% trans "Diary" %} </a></li>
+                <li class="fst3"><a href='{% url client_treatment_list domain_name %}'>{% trans "Treatment" %}</a></li>
+                <li class="fst4"><a href='{% url client_questions_list domain_name %}'>{% trans "Questions" %}</a></li>
+                <li class="assi" ><a href='{% url client_assignment_list domain_name %}'>{% trans "Assignments" %}</a></li>
+                <li class="list7" ><a href='{% url client_animation_list domain_name %}'>{% trans "Animations" %}</a></li>
+                <li class="list8" ><a href='{% url client_forms_list domain_name %}'>{% trans "Form" %}</a></li>
+<!--				
+				<li class="list7" id="imp"><a href="#" style=" margin:0;"> Request context</a>                
+                   <ul class="nav-sub">
+                    	<li class="list8"><a href="/client_management/webcam/" style="color:#FFF;">Webcam</a></li>
+                        <li class="list8"><a href="/client_management/chat/" style="color:#FFF;">Chat </a></li>
+                  </ul>
+               </li>
+-->               
+			</ul><!--ul navigation end-->
+		</div><!--header end-->
+		
+		<div class="clear"></div>
+	    <div class="clear"></div>
+			{% block content %}
+			{% endblock %}         
+  			<br></br>
+		</div><!--wrapper end-->
+		<div class="clear"></div>
+  		<div class="clear"></div>
+  		<div class="clear"></div>
+  		<div id="video_chat_requests"></div>
+		<div class="footer">
+ 			<p id="copyright1">{% trans "Copyright © virtual care group.com. All rights reserved." %}</p>
+ 		</div>
+ 		{% block footer %}
+		{% endblock %}
+	</body>
+</html>

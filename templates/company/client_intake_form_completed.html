@@ -1,0 +1,413 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	#Webcam a
+	{
+	color:#25B513 !important;
+	}
+	.fst4
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst4 a
+	{
+	color:#7CC744 !important;
+	}
+	
+	#comment_middle
+	{
+	margin-top:31px;
+	}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.form-text, .form-textarea, .form-dropdownfield').attr({'disabled':true});
+	$('input[name="terms_conditions"]').attr('disabled', 'disabled');
+	
+	$('#id_client_intake_form').val('{{intake_id}}').parent().parent().hide();
+	$('#id_client').val('{{client_name.id}}').parent().parent().hide();
+	
+});
+
+function save_feedback(){
+	$('#id_client_intake_form, #id_client').attr({'disabled':false});
+	$('#id_client_question_feedback').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	
+	<div id="banner_left"><!--banner_left start-->
+          <p class="left_content">{% trans "IntakeForm" %} </p>
+     </div><!--banner_left end-->
+ 	<div id="banner_right" style="width:393px; margin: 11px -12px 0 0;"><!--banner_right start-->  
+ 		<div class="newmessage" style="padding-left:15px;"><!--newmessage start-->
+			<a href="{% url company_client_forms_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url company_client_forms_edit domain_name client_id form_id %}" >{% trans "Edit Form" %}</a>
+		</div><!--newmessage end-->
+	</div> 	     
+   <div id="newmessage_frm" style="border:0;padding-top:0;margin-top:0px;"><!--newmessage_frm start--><!--FORM START-->
+    		<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+	    	<table id="tab" cellpadding="5" style="margin-left:20px">
+	    		<legend>{% trans "Personal" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.name.label}}</td><td class="td_add" style="text-align:left">{{form1.name}}<span class="forget-errors">{{form1.name.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.birth_name.label}}</td><td class="td_add" style="text-align:left">{{form1.birth_name}}<span class="forget-errors">{{form1.birth_name.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.first_name.label}}</td><td class="td_add" style="text-align:left">{{form1.first_name}}<span class="forget-errors">{{form1.first_name.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.nick_name.label}}</td><td class="td_add" style="text-align:left">{{form1.nick_name}}<span class="forget-errors">{{form1.nick_name.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.address.label}}</td><td class="td_add" style="text-align:left">{{form1.address}}<span class="forget-errors">{{form1.address.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.postal_code_city.label}}</td><td class="td_add" style="text-align:left">{{form1.postal_code_city}}<span class="forget-errors">{{form1.postal_code_city.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.phone_number.label}}</td><td class="td_add" style="text-align:left">{{form1.phone_number}}<span class="forget-errors">{{form1.phone_number.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.email.label}}</td><td class="td_add" style="text-align:left">{{form1.email}}<span class="forget-errors">{{form1.email.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.dob.label}}</td><td class="td_add" style="text-align:left">{{form1.dob}}<span class="forget-errors">{{form1.dob.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.gender.label}}</td><td class="td_add" style="text-align:left">{{form1.gender}}<span class="forget-errors">{{form1.gender.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.marital_status.label}}</td><td class="td_add" style="text-align:left">{{form1.marital_status}}<span class="forget-errors">{{form1.marital_status.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.home.label}}</td><td class="td_add" style="text-align:left">{{form1.home}}<span class="forget-errors">{{form1.home.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.citizen_service_number.label}}</td><td class="td_add" style="text-align:left">{{form1.citizen_service_number}}<span class="forget-errors">{{form1.citizen_service_number.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.health_insurance_number.label}}</td><td class="td_add" style="text-align:left">{{form1.health_insurance_number}}<span class="forget-errors">{{form1.health_insurance_number.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.doctor_name.label}}</td><td class="td_add" style="text-align:left">{{form1.doctor_name}}<span class="forget-errors">{{form1.doctor_name.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.telephone_gp.label}}</td><td class="td_add" style="text-align:left">{{form1.telephone_gp}}<span class="forget-errors">{{form1.telephone_gp.errors}}</span></td></tr>
+		        </tbody>
+			</table>
+			</fieldset>   
+			
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+				<legend>{% trans "Living Conditions" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.live.label}}</td><td class="td_add" style="text-align:left">{{form1.live}}<span class="forget-errors">{{form1.live.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.change_living_environment.label}}</td><td class="td_add" style="text-align:left">{{form1.change_living_environment}}<span class="forget-errors">{{form1.change_living_environment.errors}}</span></td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+				<legend>{% trans "Current Relationships" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.partner_details.label}}</td><td class="td_add" style="text-align:left">{{form1.partner_details}}</td></tr>
+		 		<tr><td width="500px">{{form1.children_details.label}}</td><td class="td_add" style="text-align:left">{{form1.children_details}}</td></tr>
+		 		<tr><td width="500px">{{form1.about_relationship.label}}</td><td class="td_add" style="text-align:left">{{form1.about_relationship}}</td></tr>
+		 		<tr><td width="500px">{{form1.friends_details.label}}</td><td class="td_add" style="text-align:left">{{form1.friends_details}}</td></tr>
+		 		<tr><td width="500px">{{form1.main_name.label}}</td><td class="td_add" style="text-align:left">{{form1.main_name}}</td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Current activities" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.profession.label}}</td><td class="td_add" style="text-align:left">{{form1.profession}}<span class="forget-errors">{{form1.profession.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.working_hours.label}}</td><td class="td_add" style="text-align:left">{{form1.working_hours}}<span class="forget-errors">{{form1.working_hours.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.steady_income.label}}</td><td class="td_add" style="text-align:left">{{form1.steady_income}}<span class="forget-errors">{{form1.steady_income.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.benefit.label}}</td><td class="td_add" style="text-align:left">{{form1.benefit}}<span class="forget-errors">{{form1.benefit.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.provides_other_people.label}}</td><td class="td_add" style="text-align:left">{{form1.provides_other_people}}<span class="forget-errors">{{form1.provides_other_people.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.household_chores.label}}</td><td class="td_add" style="text-align:left">{{form1.household_chores}}<span class="forget-errors">{{form1.household_chores.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.free_time.label}}</td><td class="td_add" style="text-align:left">{{form1.free_time}}<span class="forget-errors">{{form1.free_time.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.free_time_hobbies.label}}</td><td class="td_add" style="text-align:left">{{form1.free_time_hobbies}}<span class="forget-errors">{{form1.free_time_hobbies.errors}}</span></td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Problem" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.problem.label}}</td><td class="td_add" style="text-align:left">{{form1.problem}}</td></tr>
+		 		<tr><td width="500px">{{form1.problem_duration.label}}</td><td class="td_add" style="text-align:left">{{form1.problem_duration}}</td></tr>
+		 		<tr><td width="500px">{{form1.event_advance.label}}</td><td class="td_add" style="text-align:left">{{form1.event_advance}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Causes of your problem" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.cause_problem.label}}</td><td class="td_add" style="text-align:left">{{form1.cause_problem}}</td></tr>
+		 		<tr><td width="500px">{{form1.people_involved.label}}</td><td class="td_add" style="text-align:left">{{form1.people_involved}}<span class="forget-errors">{{form1.people_involved.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.your_share.label}}</td><td class="td_add" style="text-align:left">{{form1.your_share}}</td></tr>
+		 		<tr><td>{{form1.their_share.label}}</td><td class="td_add" style="text-align:left">{{form1.their_share}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Perception of the problem" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.suffer_problem_count.label}}</td><td class="td_add" style="text-align:left">{{form1.suffer_problem_count}}</td></tr>
+		 		<tr><td width="500px">{{form1.feel_location.label}}</td><td class="td_add" style="text-align:left">{{form1.feel_location}}</td></tr>
+		 		<tr><td width="500px">{{form1.like_to_change.label}}</td><td class="td_add" style="text-align:left">{{form1.like_to_change}}</td></tr>
+		 		<tr><td width="500px">{{form1.genaral_feel_number.label}}</td><td class="td_add" style="text-align:left">{{form1.genaral_feel_number}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Impact on your daily life" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.way_of_thinking.label}}</td><td class="td_add" style="text-align:left">{{form1.way_of_thinking}}</td></tr>
+		 		<tr><td width="500px">{{form1.emotional_life.label}}</td><td class="td_add" style="text-align:left">{{form1.emotional_life}}</td></tr>
+		 		<tr><td width="500px">{{form1.behaviour.label}}</td><td class="td_add" style="text-align:left">{{form1.behaviour}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Problem Handling" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.already_tried.label}}</td><td class="td_add" style="text-align:left">{{form1.already_tried}}</td></tr>
+		 		<tr><td width="500px">{{form1.differnce.label}}</td><td class="td_add" style="text-align:left">{{form1.differnce}}</td></tr>
+		 		<tr><td width="500px">{{form1.want_to_try.label}}</td><td class="td_add" style="text-align:left">{{form1.want_to_try}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Earlier Assistance" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.therapy.label}}</td><td class="td_add" style="text-align:left">{{form1.therapy}}</td></tr>
+		 		<tr><td width="500px">{{form1.duration.label}}</td><td class="td_add" style="text-align:left">{{form1.duration}}<span class="forget-errors">{{form1.duration.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.who_was_that.label}}</td><td class="td_add" style="text-align:left">{{form1.who_was_that}}<span class="forget-errors">{{form1.who_was_that.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.what_problem.label}}</td><td class="td_add" style="text-align:left">{{form1.what_problem}}</td></tr>
+		 		<tr><td width="500px">{{form1.therapy_outcome.label}}</td><td class="td_add" style="text-align:left">{{form1.therapy_outcome}}<span class="forget-errors">{{form1.therapy_outcome.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.finding_solution.label}}</td><td class="td_add" style="text-align:left">{{form1.finding_solution}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Supportive Conditions" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.keeps_on_leg.label}}</td><td class="td_add" style="text-align:left">{{form1.keeps_on_leg}}<span class="forget-errors">{{form1.keeps_on_leg.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.get_energy.label}}</td><td class="td_add" style="text-align:left">{{form1.get_energy}}<span class="forget-errors">{{form1.get_energy.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.where_satisfied.label}}</td><td class="td_add" style="text-align:left">{{form1.where_satisfied}}<span class="forget-errors">{{form1.where_satisfied.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.good_in_your_life.label}}</td><td class="td_add" style="text-align:left">{{form1.good_in_your_life}}<span class="forget-errors">{{form1.good_in_your_life.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Social support to your problem" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.someone_your_problem.label}}</td><td class="td_add" style="text-align:left">{{form1.someone_your_problem}}<span class="forget-errors">{{form1.someone_your_problem.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.anyone_you_support.label}}</td><td class="td_add" style="text-align:left">{{form1.anyone_you_support}}<span class="forget-errors">{{form1.anyone_you_support.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.height_of_problem.label}}</td><td class="td_add" style="text-align:left">{{form1.height_of_problem}}<span class="forget-errors">{{form1.height_of_problem.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.you_smoke.label}}</td><td class="td_add" style="text-align:left">{{form1.you_smoke}}<span class="forget-errors">{{form1.you_smoke.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Current function" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form1.carry_out_work.label}}</td><td class="td_add" style="text-align:left">{{form1.carry_out_work}}<span class="forget-errors">{{form1.carry_out_work.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.relation_with_others.label}}</td><td class="td_add" style="text-align:left">{{form1.relation_with_others}}<span class="forget-errors">{{form1.relation_with_others.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.meaning_in_life.label}}</td><td class="td_add" style="text-align:left">{{form1.meaning_in_life}}<span class="forget-errors">{{form1.meaning_in_life.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.interest_in_things.label}}</td><td class="td_add" style="text-align:left">{{form1.interest_in_things}}<span class="forget-errors">{{form1.interest_in_things.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.meet_expectations.label}}</td><td class="td_add" style="text-align:left">{{form1.meet_expectations}}<span class="forget-errors">{{form1.meet_expectations.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form1.about_future.label}}</td><td class="td_add" style="text-align:left">{{form1.about_future}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Current health" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form2.physical_problems.label}}</td><td class="td_add" style="text-align:left">{{form2.physical_problems}}<span class="forget-errors">{{form2.physical_problems.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.medical_conditions.label}}</td><td class="td_add" style="text-align:left">{{form2.medical_conditions}}<span class="forget-errors">{{form2.medical_conditions.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.about_medication.label}}</td><td class="td_add" style="text-align:left">{{form2.about_medication}}<span class="forget-errors">{{form2.about_medication.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.about_drugs.label}}</td><td class="td_add" style="text-align:left">{{form2.about_drugs}}<span class="forget-errors">{{form2.about_drugs.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.about_alcohol.label}}</td><td class="td_add" style="text-align:left">{{form2.about_alcohol}}<span class="forget-errors">{{form2.about_alcohol.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.about_smoke.label}}</td><td class="td_add" style="text-align:left">{{form2.about_smoke}}<span class="forget-errors">{{form2.about_smoke.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.eating_disorders.label}}</td><td class="td_add" style="text-align:left">{{form2.eating_disorders}}<span class="forget-errors">{{form2.eating_disorders.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.sleep_problem.label}}</td><td class="td_add" style="text-align:left">{{form2.sleep_problem}}<span class="forget-errors">{{form2.sleep_problem.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.sexually_active.label}}</td><td class="td_add" style="text-align:left">{{form2.sexually_active}}<span class="forget-errors">{{form2.sexually_active.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Therapy goals" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form2.accomplish.label}}</td><td class="td_add" style="text-align:left">{{form2.accomplish}}</td></tr>
+		 		<tr><td width="500px">{{form2.effect.label}}</td><td class="td_add" style="text-align:left">{{form2.effect}}</td></tr>
+		 		<tr><td width="500px">{{form2.most_important.label}}</td><td class="td_add" style="text-align:left">{{form2.most_important}}</td></tr>
+		 		<tr><td width="500px">{{form2.life_look.label}}</td><td class="td_add" style="text-align:left">{{form2.life_look}}<span class="forget-errors">{{form2.life_look.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.when_achieved.label}}</td><td class="td_add" style="text-align:left">{{form2.when_achieved}}<span class="forget-errors">{{form2.when_achieved.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.what_tasks.label}}</td><td class="td_add" style="text-align:left">{{form2.what_tasks}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Biography" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form2.parents_details.label}}</td><td class="td_add" style="text-align:left">{{form2.parents_details}}<span class="forget-errors">{{form2.parents_details.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.family_children_details.label}}</td><td class="td_add" style="text-align:left">{{form2.family_children_details}}<span class="forget-errors">{{form2.family_children_details.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.chile_in_line.label}}</td><td class="td_add" style="text-align:left">{{form2.chile_in_line}}<span class="forget-errors">{{form2.chile_in_line.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.child_temperament.label}}</td><td class="td_add" style="text-align:left">{{form2.child_temperament}}<span class="forget-errors">{{form2.child_temperament.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.easy_contact.label}}</td><td class="td_add" style="text-align:left">{{form2.easy_contact}}<span class="forget-errors">{{form2.easy_contact.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.like_as_child.label}}</td><td class="td_add" style="text-align:left">{{form2.like_as_child}}</td></tr>
+		 		<tr><td width="500px">{{form2.material_conditions.label}}</td><td class="td_add" style="text-align:left">{{form2.material_conditions}}<span class="forget-errors">{{form2.material_conditions.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.emotional_conditions.label}}</td><td class="td_add" style="text-align:left">{{form2.emotional_conditions}}</td></tr>
+		 		<tr><td width="500px">{{form2.father.label}}</td><td class="td_add" style="text-align:left">{{form2.father}}</td></tr>
+		 		<tr><td width="500px">{{form2.style_of_parenting.label}}</td><td class="td_add" style="text-align:left">{{form2.style_of_parenting}}</td></tr>
+		 		<tr><td width="500px">{{form2.father_occupation.label}}</td><td class="td_add" style="text-align:left">{{form2.father_occupation}}<span class="forget-errors">{{form2.father_occupation.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.father_relationship.label}}</td><td class="td_add" style="text-align:left">{{form2.father_relationship}}</td></tr>
+		 		<tr><td width="500px">{{form2.mother.label}}</td><td class="td_add" style="text-align:left">{{form2.mother}}</td></tr>
+		 		<tr><td width="500px">{{form2.untitled_element.label}}</td><td class="td_add" style="text-align:left">{{form2.untitled_element}}</td></tr>
+		 		<tr><td width="500px">{{form2.mother_occupation.label}}</td><td class="td_add" style="text-align:left">{{form2.mother_occupation}}<span class="forget-errors">{{form2.mother_occupation.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.mother_relationship.label}}</td><td class="td_add" style="text-align:left">{{form2.mother_relationship}}</td></tr>
+		 		<tr><td width="500px">{{form2.parents_eye_desires.label}}</td><td class="td_add" style="text-align:left">{{form2.parents_eye_desires}}</td></tr>
+		 		<tr><td width="500px">{{form2.parents_relationship.label}}</td><td class="td_add" style="text-align:left">{{form2.parents_relationship}}</td></tr>
+		 		<tr><td width="500px">{{form2.important_in_youth.label}}</td><td class="td_add" style="text-align:left">{{form2.important_in_youth}}<span class="forget-errors">{{form2.important_in_youth.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.cultural_background.label}}</td><td class="td_add" style="text-align:left">{{form2.cultural_background}}<span class="forget-errors">{{form2.cultural_background.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Family situation as a child" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form2.family_involvement.label}}</td><td class="td_add" style="text-align:left">{{form2.family_involvement}}<span class="forget-errors">{{form2.family_involvement.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.support.label}}</td><td class="td_add" style="text-align:left">{{form2.support}}<span class="forget-errors">{{form2.support.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.warmth_love.label}}</td><td class="td_add" style="text-align:left">{{form2.warmth_love}}<span class="forget-errors">{{form2.warmth_love.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.home_for_saying.label}}</td><td class="td_add" style="text-align:left">{{form2.home_for_saying}}<span class="forget-errors">{{form2.home_for_saying.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.responsibility.label}}</td><td class="td_add" style="text-align:left">{{form2.responsibility}}<span class="forget-errors">{{form2.responsibility.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.decisions.label}}</td><td class="td_add" style="text-align:left">{{form2.decisions}}<span class="forget-errors">{{form2.decisions.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.bepreken.label}}</td><td class="td_add" style="text-align:left">{{form2.bepreken}}<span class="forget-errors">{{form2.bepreken.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.religion_role.label}}</td><td class="td_add" style="text-align:left">{{form2.religion_role}}<span class="forget-errors">{{form2.religion_role.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.about_freedom.label}}</td><td class="td_add" style="text-align:left">{{form2.about_freedom}}<span class="forget-errors">{{form2.about_freedom.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.labor_division.label}}</td><td class="td_add" style="text-align:left">{{form2.labor_division}}<span class="forget-errors">{{form2.labor_division.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.family_tasks.label}}</td><td class="td_add" style="text-align:left">{{form2.family_tasks}}<span class="forget-errors">{{form2.family_tasks.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Youth Experiences" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form2.physical_violence.label}}</td><td class="td_add" style="text-align:left">{{form2.physical_violence}}<span class="forget-errors">{{form2.physical_violence.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.mental_violenc.label}}</td><td class="td_add" style="text-align:left">{{form2.mental_violenc}}<span class="forget-errors">{{form2.mental_violenc.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.sexual_violence.label}}</td><td class="td_add" style="text-align:left">{{form2.sexual_violence}}<span class="forget-errors">{{form2.sexual_violence.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.childhood.label}}</td><td class="td_add" style="text-align:left">{{form2.childhood}}<span class="forget-errors">{{form2.childhood.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.bullied_in_childhood.label}}</td><td class="td_add" style="text-align:left">{{form2.bullied_in_childhood}}<span class="forget-errors">{{form2.bullied_in_childhood.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.adolescence.label}}</td><td class="td_add" style="text-align:left">{{form2.adolescence}}<span class="forget-errors">{{form2.adolescence.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.accepted_youth.label}}</td><td class="td_add" style="text-align:left">{{form2.accepted_youth}}<span class="forget-errors">{{form2.accepted_youth.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.pleasant_memory.label}}</td><td class="td_add" style="text-align:left">{{form2.pleasant_memory}}<span class="forget-errors">{{form2.pleasant_memory.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form2.nastiest_memory.label}}</td><td class="td_add" style="text-align:left">{{form2.nastiest_memory}}<span class="forget-errors">{{form2.nastiest_memory.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Precepts" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form3.commandments_youth.label}}</td><td class="td_add" style="text-align:left">{{form3.commandments_youth}}<span class="forget-errors">{{form3.commandments_youth.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.prohibited_youth.label}}</td><td class="td_add" style="text-align:left">{{form3.prohibited_youth}}<span class="forget-errors">{{form3.prohibited_youth.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.informed_sexually.label}}</td><td class="td_add" style="text-align:left">{{form3.informed_sexually}}<span class="forget-errors">{{form3.informed_sexually.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.handle_conflicts.label}}</td><td class="td_add" style="text-align:left">{{form3.handle_conflicts}}<span class="forget-errors">{{form3.handle_conflicts.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.affection_shown.label}}</td><td class="td_add" style="text-align:left">{{form3.affection_shown}}<span class="forget-errors">{{form3.affection_shown.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.standards_values.label}}</td><td class="td_add" style="text-align:left">{{form3.standards_values}}<span class="forget-errors">{{form3.standards_values.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Training and Opportunities" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form3.school.label}}</td><td class="td_add" style="text-align:left">{{form3.school}}<span class="forget-errors">{{form3.school.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.highest_education.label}}</td><td class="td_add" style="text-align:left">{{form3.highest_education}}<span class="forget-errors">{{form3.highest_education.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.training.label}}</td><td class="td_add" style="text-align:left">{{form3.training}}<span class="forget-errors">{{form3.training.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.encouraged_parents.label}}</td><td class="td_add" style="text-align:left">{{form3.encouraged_parents}}<span class="forget-errors">{{form3.encouraged_parents.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.talents.label}}</td><td class="td_add" style="text-align:left">{{form3.talents}}<span class="forget-errors">{{form3.talents.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.forced_direction.label}}</td><td class="td_add" style="text-align:left">{{form3.forced_direction}}<span class="forget-errors">{{form3.forced_direction.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.contacts_at_school.label}}</td><td class="td_add" style="text-align:left">{{form3.contacts_at_school}}<span class="forget-errors">{{form3.contacts_at_school.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.contacts_with_friends.label}}</td><td class="td_add" style="text-align:left">{{form3.contacts_with_friends}}<span class="forget-errors">{{form3.contacts_with_friends.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.your_hobbies.label}}</td><td class="td_add" style="text-align:left">{{form3.your_hobbies}}<span class="forget-errors">{{form3.your_hobbies.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.clubs_associations.label}}</td><td class="td_add" style="text-align:left">{{form3.clubs_associations}}<span class="forget-errors">{{form3.clubs_associations.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.satisfied_education.label}}</td><td class="td_add" style="text-align:left">{{form3.satisfied_education}}<span class="forget-errors">{{form3.satisfied_education.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.satisfied_work.label}}</td><td class="td_add" style="text-align:left">{{form3.satisfied_work}}<span class="forget-errors">{{form3.satisfied_work.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Filing" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form3.terms_conditions.label}}</td><td class="td_add" style="text-align:left">{{form3.terms_conditions}}<span class="forget-errors">{{form3.terms_conditions.errors}}</span></td></tr>
+		 		<tr><td width="500px">{{form3.finance_therapy.label}}</td><td class="td_add" style="text-align:left">{{form3.finance_therapy}}<span class="forget-errors">{{form3.finance_therapy.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Remaining" %}</legend>
+		 		<tbody>
+		 		<tr><td width="500px">{{form3.comments.label}}</td><td class="td_add" style="text-align:left">{{form3.comments}}</td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+	 
+   
+
+		{% if exist_feedback %}
+			<div>
+		    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Comments" %} : </p><br>
+				{% for feedback in exist_feedback %}
+					{% if feedback.created_by == request.user %}
+					<p style="color:blue;" class="feed">{% trans "me" %} : {{feedback.feedback }}</p><br>
+					{% else %}
+					<p style="color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+					{% endif %}
+				{% endfor %}
+			</div><br>
+		{% endif %}
+
+	<div style="float:right;margin-top:0!important">
+		
+  		<p class="left_content">{% trans "Feed Back" %}</p>
+	
+		<div style="margin-top:10px; width:100%;">
+			<form enctype="multipart/form-data" id="id_client_question_feedback" name="client_question_feedback" action="." method="post">{% csrf_token %}
+				<table width="771" cellpadding="5" align="center">
+					<tr><td class="goal">{{form.client_intake_form.label}}</td><td align="left" class="goal_box">{{form.client_intake_form}}</td></tr>
+					<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" ><a href="#" onclick="save_feedback()" ><p class="save" id="id_save">{% trans "Send" %}</p></a></div></td></tr>
+				</table>
+			</form>	
+		</div>
+	</div>	
+</div><!--treatment_panic end-->
+ {% endblock %}

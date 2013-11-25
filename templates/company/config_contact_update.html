@@ -1,0 +1,63 @@
+{% extends 'company/configuration.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+#imp a
+{
+color:#7CC744;
+}
+#imp
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#confi a
+{
+color:#25B513 !important;
+}	
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_company').val('{{company_id}}').parent().parent().hide();
+});
+
+function save_form()
+{
+	$('#id_config_contact_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block configurationcontact %}{% endblock %}
+<div id="banner_left"><!--banner_left start-->
+	<p class="left_content">{% trans "Contact Details" %}</p>
+</div><!--banner_left end-->
+
+  	<form enctype='multipart/form-data' name='config_contact_form' id='id_config_contact_form' action='.' method='post'>{% csrf_token %}
+    <div id="newmessage_frm" style="margin-top:0;width:715px;"><!--newmessage_frm start--><!--FORM START-->
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+	        <tbody>
+	        	<tr><td class="td_add">{{ form.company.label }}</td><td>{{ form.company }}</td></tr>
+  			    <tr><td class="td_add">{{ form.name_of_institution.label }}</td><td>{{ form.name_of_institution }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.name_of_institution.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.email_external.label }}</td><td>{{ form.email_external }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.email_external.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.phone_number_external.label }}</td><td>{{ form.country_code_external }}-{{ form.phone_number_external }}</td></tr>
+			    <tr><td></td><td><span class = "forget-errors">{{ form.country_code_external.errors }}{{ form.phone_number_external.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.email_internal.label }}</td><td>{{ form.email_internal }}</td></tr>
+				<tr><td></td><td><span class = "forget-errors">{{ form.email_internal.errors }}</span></td></tr>
+				<tr><td class="td_add">{{ form.phone_number_internal.label }}</td><td>{{ form.country_code_internal }}-{{ form.phone_number_internal }}</td></tr>
+			    <tr><td></td><td><span class = "forget-errors">{{ form.country_code_internal.errors }}{{ form.phone_number_internal.errors }}</span></td></tr>
+			    <tr><td></td><td><span class = "forget-errors">{{ form.non_field_errors|safe }}</span></td></tr>
+				<tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+                
+                <div id="canc" onclick = "reset()"><a href="{% url company_configuration_contact domain_name %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+        	</tbody>
+	    </table>
+</div><!--newmessage_frm end-->
+</form><!--FORM START-->
+{% endblock %}

@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+	<style type="text/css">
+		#nav 
+		{
+		width:960px;
+		height:73px;
+		clear:both;
+		margin:0px;
+		}
+		#nav li 
+		{ 
+		width:192px;
+		height:73px;
+		float: left;
+		margin:0px; 
+		padding:0px;
+		list-style: none ;
+		}
+		#nav .active
+		{
+		color:#FFFFFF;
+		}
+		#nav a 
+		{ 
+		padding: 0px; 
+		display: block; 
+		border: none;
+		text-transform:uppercase;
+		float:left ;
+		font-size:11px;
+		font-family:Arial;
+		font-weight:bold;
+		color:#000000;
+		}
+		#nav li.activeSlide a { background: #88f;  }
+		#nav a:focus { outline: none; }
+		#nav img { border: none; display: block }
+		.list6
+		{
+		background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+		}
+		.list6 a
+		{
+		color:#7CC744 !important;
+		}
+		.add_another
+		{
+		height:35px;
+		min-width:50px;
+		xtext-transform:uppercase;
+		color:#FFF;
+		background:#25B513;
+		border-radius:6px;
+		margin-bottom:10px;
+		}
+		.remove_score, .remove_question, .remove_answer
+		{
+		height:30px;
+		width:40px;
+		text-transform:uppercase;
+		color:#FFF;
+		background:#25B513;
+		border-radius:6px;
+		}
+		.likeabutton
+		{
+	    text-decoration: none;
+	    font: menu;
+	    display: inline-block;
+	    padding: 2px 8px;
+	    background: #25B513;
+	    color: #FFF;
+	    border-style: solid;
+	    border-width: 2px;
+	    border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	    text-transform:uppercase;
+		}
+		.likeabutton:active
+		{
+	    border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+		}
+		.frm_diary2
+		{
+		margin:0 auto;
+		min-height:95px !important;
+		width:960px;
+		-moz-border-radius: 9px;
+		-webkit-border-radius: 9px;
+		border-radius: 9px;
+		border:1px solid #d1d1d1;
+		behavior: url(border-radius.htc);
+		}
+		.table1
+		{
+		    border: medium none !important;
+		}
+		.td_add1
+		{
+		padding:0px 10px 0px 0px;
+		font-size:15px;
+		font-family: 'myriad pro';
+		color:#5b5b5b;
+		}
+		.td_add2
+		{
+		padding:0px 10px 0px 10px;
+		font-size:15px;
+		font-family: 'myriad pro';
+		color:#5b5b5b;
+		}
+		#save_can
+		{
+		margin-left:350px;
+		margin-top:15px;
+		}
+		#save
+		{
+		background-image:url('/static/img/admin/save1.png');
+		border:none;color:#ffffff;
+		height:35px;
+		width:99px;
+		border-radius:5px;
+		xtext-transform:uppercase;
+		}
+		
+	</style>
+{% endblock %}
+
+{% block extrahead %}
+	<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+	<script type="text/javascript" src="/static/js/admin/jquery.numeric.js"></script>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		$('.form-text-small').numeric().attr('maxlength', '3');
+
+    		if ('{{ test.active }}' == 'True') {
+    			$('#active').attr('checked', true);
+    		} else {
+    			$('#active').attr('checked', false);
+    		}
+
+    		if ($('.remove_question').length == 1) {
+				$('.remove_question').hide();
+			}
+
+    		if('{{read_only}}' == "readonly"){
+    			$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+    			$("#add_another_question").hide();
+    			$("#add_another").hide();
+    			$("#save").hide();
+    		}
+
+			$('.remove_question').click(function(){
+				var remove_id = this.id;
+				$('#' + remove_id).parent().parent().parent().parent().parent().parent().remove();
+
+				question_number = 1;
+    			$('td:contains({% trans "Question" %} )').each(function(){
+    				$(this).text('{% trans "Question" %} ' + question_number);
+    				question_number += 1;
+    			});
+    			if ($('.remove_question').length == 1) {
+    				$('.remove_question').hide();
+    			}
+			});
+
+			$('.remove_answer').click(function(){
+				var remove_id = this.id;
+				$('#' + remove_id).parent().parent().remove();
+				var current_question = remove_id.split('_')[2];
+
+				answer_number = 1;
+				$('#question_table_' + current_question + ' td:contains({% trans "Answer" %} )').each(function(){
+    				$(this).text('{% trans "Answer" %} ' + answer_number + '*');
+    				answer_number++;
+    			});
+			});
+
+			$('.remove_score').click(function(){
+				var remove_id = this.id;
+				$('#' + remove_id).parent().parent().remove();
+			});
+
+    		'{% for each in test_scores %}'
+    			var question_id_value = {{ forloop.counter }};
+    		'{% endfor %}'
+
+    		$('#add_another_question').click(function(){
+       			question_id_value++;
+       			$('#add_question').before('<div class="frm_diary2" id="question_div_' + question_id_value + '" style="margin-top: 10px;" ><div style="margin-left: 27px;"><table class="table1" id="question_table_' + question_id_value + '" cellpadding="5" width="100%"> \
+   					    		    		<tr><td class="td_add1" width="15%">{% trans "Question" %} ' + question_id_value + '*</td> \
+       		    							<td width="20%"><input type="text" name="question_' + question_id_value + '" id="question_' + question_id_value + '" class="form-text-long" maxlength="150" /></td> \
+       		    							<td width="15%"><input type="image" class="remove_question" id="remove_question_' + question_id_value + '" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td><td width="50%"></td></tr><tr> \
+       	    								<td class="td_add1">{% trans "Answer" %} 1*</td> \
+       	    								<td><input type="text" name="question_' + question_id_value + '_answer_1" id="question_' + question_id_value + '_answer_1" class="form-text-long" maxlength="150" /></td> \
+       	    								<td class="td_add1">Score <input type="text" name="question_' + question_id_value + '_score_1" id="question_' + question_id_value + '_score_1" class="form-text-small" maxlength="150" /></td><td></td> \
+       	   									</tr><tr><td class="td_add1">{% trans "Answer" %} 2*</td> \
+       	    								<td><input type="text" name="question_' + question_id_value + '_answer_2" id="question_' + question_id_value + '_answer_2" class="form-text-long" maxlength="150" /></td> \
+       	    								<td class="td_add1">Score <input type="text" name="question_' + question_id_value + '_score_2" id="question_' + question_id_value + '_score_2" class="form-text-small" maxlength="150" /></td><td></td> \
+       	   									</tr><tr align="right"><td class="td_add1" colspan="6" style="align:right; "> \
+       										<input type="button" id="add_another_answer_' + question_id_value + '" class="add_another add_another_answer" value="{% trans "Add Answer" %}" /> \
+       										</td></tr></table></div></div>'
+     				);
+       			$('.form-text-small').numeric().attr('maxlength', '3');
+
+	    		$('#add_another_answer_' + question_id_value).click(function(){
+	    			var question_id = (this.id).split('_')[3];
+	    			var no_of_answers = $('input:text[id^=question_' + question_id + '_answer]').length;
+	    			$('#question_div_' + question_id + ' table tr:last').before('<tr><td class="td_add1">{% trans "Answer" %} ' + (no_of_answers + 1) + '*</td> \
+	    				<td><input type="text" name="question_' + question_id + '_answer_' + (no_of_answers + 1) + '" id="question_' + question_id + '_answer_' + (no_of_answers + 1) + '" class="form-text-long" maxlength="150" /></td> \
+	    				<td class="td_add1">Score <input type="text" name="question_' + question_id + '_score_' + (no_of_answers + 1) + '" id="question_' + question_id + '_score_' + (no_of_answers + 1) + '" class="form-text-small" maxlength="150" /></td> \
+	    				<td><input type="image" class="remove_answer" id="remove_answer_' + question_id + '_' + (no_of_answers + 1) + '" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td></tr>'
+					);
+	    			$('.form-text-small').numeric().attr('maxlength', '3');
+	
+					$('.remove_answer').click(function(){
+						var remove_id = this.id;
+						$('#' + remove_id).parent().parent().remove();
+						var current_question = remove_id.split('_')[2];
+
+						answer_number = 1;
+	    				$('#question_table_' + current_question + ' td:contains({% trans "Answer" %} )').each(function(){
+		    				$(this).text('{% trans "Answer" %} ' + answer_number + '*');
+		    				answer_number++;
+		    			});
+					});
+	    		});
+
+    			var question_number = 1;
+    			$('td:contains({% trans "Question" %} )').each(function(){
+    				$(this).text('{% trans "Question" %} ' + question_number +'*');
+    				question_number++;
+    			});
+
+				$('.remove_question').click(function(){
+					var remove_id = this.id;
+					$('#' + remove_id).parent().parent().parent().parent().parent().parent().remove();
+
+					question_number = 1;
+	    			$('td:contains({% trans "Question" %} )').each(function(){
+	    				$(this).text('{% trans "Question" %} ' + question_number +'*');
+	    				question_number += 1;
+	    			});
+	    			if ($('.remove_question').length == 1) {
+	    				$('.remove_question').hide();
+	    			}
+				});
+    		});
+
+    		$('.add_another_answer').click(function(){
+    			var question_id = (this.id).split('_')[3];
+    			var no_of_answers = $('input:text[id^=question_' + question_id + '_answer]').length;
+    			$('#question_div_' + question_id + ' table tr:last').before('<tr><td class="td_add1">{% trans "Answer" %} ' + (no_of_answers + 1) + '*</td> \
+    				<td><input type="text" name="question_' + question_id + '_answer_' + (no_of_answers + 1) + '" id="question_' + question_id + '_answer_' + (no_of_answers + 1) + '" class="form-text-long" maxlength="150" /></td> \
+    				<td class="td_add1">Score <input type="text" name="question_' + question_id + '_score_' + (no_of_answers + 1) + '" id="question_' + question_id + '_score_' + (no_of_answers + 1) + '" class="form-text-small" maxlength="150" /></td> \
+    				<td><input type="image" class="remove_answer" id="remove_answer_' + question_id + '_' + (no_of_answers + 1) + '" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td></tr>'
+				);
+    			$('.form-text-small').numeric().attr('maxlength', '3');
+
+				$('.remove_answer').click(function(){
+					var remove_id = this.id;
+					$('#' + remove_id).parent().parent().remove();
+					var current_question = remove_id.split('_')[2];
+
+					answer_number = 1;
+    				$('#question_table_' + current_question + ' td:contains({% trans "Answer" %} )').each(function(){
+	    				$(this).text('{% trans "Answer" %} ' + answer_number + '*');
+	    				answer_number++;
+	    			});
+				});
+    		});
+
+    		'{% for each in test_scores %}'
+    			var score_id_value = {{ forloop.counter }};
+    		'{% endfor %}'
+    		$('#add_another').click(function(){
+        		score_id_value += 1;
+   				$('#score_table tr:last').before('<tr> \
+										<td class="td_add">{% trans "Scores" %}</td> \
+										<td class="td_add"><input type="text" name="score_from_' + score_id_value + '" id="score_from_' + score_id_value + '" class="form-text-small" /></td> \
+										<td class="td_add">{% trans "to" %}</td> \
+										<td class="td_add"><input type="text" name="score_to_' + score_id_value + '" id="score_to_' + score_id_value + '" class="form-text-small" /></td> \
+										<td class="td_add">{% trans "means" %}</td> \
+										<td class="td_add"><input type="text" name="score_mean_' + score_id_value + '" id="score_mean_' + score_id_value + '" class="form-text-long" maxlength="150" /></td> \
+										<td><input type="image" class="remove_score" id="remove_score_' + score_id_value + '" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td> \
+									</tr> \
+									');
+	    		$('.form-text-small').numeric().attr('maxlength', '3');
+				$('.remove_score').click(function(){
+					var remove_id = this.id;
+					$('#' + remove_id).parent().parent().remove();
+				});
+    		});
+
+    		$('#sav').click(function(){
+				$('#id_test_form').submit();
+    		});
+
+    		$('#save').click(function () {
+    			$.ajax({
+    		 		"type"		: $('#id_test_form').attr('method'),
+    				"url"		: $('#id_test_form').attr('action'),
+    				"dataType"	: "json",
+    				"data"		: $('#id_test_form').serialize(),
+    				"cache"		: false,
+    		  		"success"	: function(json) {
+    		  			if (json == 'save_success') {
+    		  				location.href = "/admin_management/test_list/"
+    		  			} else {
+    		  				alert(json)
+    		  			}
+    		  		}
+    	 		});
+    	    });
+
+    	});
+	</script>
+{% endblock %}
+
+{% block content %}
+{% load util_custom_tags %}
+	<div id="add_heading">
+		<p class="add_heading_content">{% trans "Edit Test" %}</p>
+	</div>
+
+	<form enctype="multipart/form-data" id="id_test_form" name="test_form" action="." method="post">{% csrf_token %}
+    	<div id="title_div" class="add_therapist" style="margin-bottom:20px;">
+    		<div style="padding:5px 15px;">
+	    		<table id="tab" cellpadding="5">
+	    			<tr><td class="td_add2" style="padding-right:85px;">{% trans "Title" %}*</td><td><input type="text" name="title" id="title" value="{{ test.title }}" class="form-text-long" maxlength="50" /></td></tr>
+	    			<tr><td class="td_add2" style="padding-right:85px;">{% trans "Active" %}</td><td><input type="checkbox" name="active" id="active" /></td></tr>
+	   			</table>
+   			</div>
+    	</div>
+
+   		{% for each in test_questions %}
+		    <div class="frm_diary2" id="question_div_{{ forloop.counter }}" style="margin-top: 10px;" >
+				<div style="margin-left: 27px;">
+			     	<table class="table1" id="question_table_{{ forloop.counter }}" cellpadding="5" width="100%">
+			    		<tr>
+			    			<td class="td_add1" width="15%">{% trans "Question" %} {{ forloop.counter }}*</td>
+			    			<td width="20%"><input type="text" name="question_{{ forloop.counter }}" id="question_{{ forloop.counter }}" value="{{ each.question }}" class="form-text-long" maxlength="150" /></td>
+		    				<td width="15%"><input type="image" class="remove_question" id="remove_{{ forloop.counter }}" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td>
+			    			<td width="50%"></td>
+		    			</tr>
+		    			{% with forloop.counter as question_no %}
+		    				{% with 0 as answer_no %}
+				    			{% for each_answer in test_answers %}
+				    				{% if each_answer.question.id == each.id %}
+					    				{% ++ answer_no %}
+						    			<tr>
+						    				<td class="td_add1" id="answer_{{ question_no }}_{{ answer_no }}">{% trans "Answer" %} {{ answer_no }}*</td>
+						    				<td><input type="text" name="question_{{ question_no }}_answer_{{ answer_no }}" id="question_{{ question_no }}_answer_{{ answer_no }}" class="form-text-long" maxlength="150" value="{{ each_answer.answer }}" /></td>
+						    				<td class="td_add1">Score <input type="text" name="question_{{ question_no }}_score_{{ answer_no }}" id="question_{{ question_no }}_score_{{ answer_no }}" class="form-text-small" maxlength="150" value="{{ each_answer.score }}" /></td>
+						    				{% if answer_no > 2 %}
+						    					<td><input type="image" class="remove_answer" id="remove_answer_{{ question_no }}_{{ answer_no }}" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td>
+					    					{% else %}
+						    					<td></td>
+				    						{% endif %}
+						   				</tr>
+				   					{% endif %}
+				   				{% endfor %}
+			   				{% endwith %}
+		   				{% endwith %}
+						<tr align="right">
+							<td class="td_add1" colspan="6" style="align:right; ">
+								<input type="button" id="add_another_answer_{{ forloop.counter }}" class="add_another add_another_answer" value='{% trans "Add Answer" %}' />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		{% endfor %}
+		<div style="margin-top: 10px;" align="right" id="add_question">
+			<input type="button" id="add_another_question" class="add_another" value='{% trans "Add Another Question" %}' />
+		</div>
+
+	    <div id="scores_div" class="add_therapist"  style="padding-top:10px;">
+			<div style="margin-left: 27px;">
+		     	<table id="table2" cellpadding="5" >
+		    	    <tbody>
+						<tr>
+							<table id="score_table" style="border:0;width="100%;padding-top:10px;">
+								{% for each in test_scores %}
+									<tr>
+										<td class="td_add" width="5%">{% trans "Scores" %}*</td>
+										<td class="td_add" width="5%"><input type="text" name="score_from_{{ forloop.counter }}" id="score_from_{{ forloop.counter }}" value="{{ each.from_value }}" class="form-text-small" /></td>
+										<td class="td_add" width="5%">{% trans "to" %}</td>
+										<td class="td_add" width="5%"><input type="text" name="score_to_{{ forloop.counter }}" id="score_to_{{ forloop.counter }}" value="{{ each.to_value }}" class="form-text-small" /></td>
+										<td class="td_add" width="5%">{% trans "means" %}</td>
+										<td class="td_add" width="10%"><input type="text" name="score_mean_{{ forloop.counter }}" id="score_mean_{{ forloop.counter }}" value="{{ each.result }}" class="form-text-long" maxlength="150" /></td>
+										{% if forloop.counter > 3 %}
+											<td width="65%"><input type="image" class="remove_score" id="remove_score_{{ forloop.counter }}" src="/static/img/admin/delete-button.jpg" alt="Remove" /></td>
+										{% else %}
+											<td width="65%"></td>
+										{% endif %}
+									</tr>
+								{% endfor %}
+								<tr align="right">
+									<td class="td_add" colspan="7">
+										<input type="button" id="add_another" class="add_another" value='{% trans "Add Another Range" %}' />
+									</td>
+								</tr>
+							</table>
+						</tr>
+		            </tbody>
+		        </table>
+			</div>
+		</div>
+
+		<div id="save_can">
+			<div style="float:left;"><input type="button" id="save" value='{% trans "Save" %}' /></div>
+			<div id="canc" onclick = "reset()"><a href="/admin_management/test_list/" class="save1">{% trans "Cancel" %}</a></div>
+		</div>
+		<br><br>
+	</form>
+{% endblock %}

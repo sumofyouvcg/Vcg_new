@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content%}
+
+	{% block submenu %}
+	<div id="tabs" onload="navig()">
+		<div id="the" ><a href="/admin_management/company_edit/{{company_id}}/" id="current" >{% trans "Company Name" %}</a></div>
+		<div id="cr" ><a href="/admin_management/company_caregivers/{{company_id}}/" id="current2">{% trans "Caregivers" %}</a></div>
+		<div id="cli" ><a href="/admin_management/company_client/{{company_id}}/" id="current1">{% trans "Client" %}</a></div>
+		<div id="st" ><a href="/admin_management/company_add_modules/{{company_id}}/" id="current3">{% trans "Settings" %}</a></div>   
+	</div> 
+	{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/diary.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+<style type="text/css">
+	.fst1
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst1 a
+	{
+	color:#7CC744 !important;
+	}
+	#file_link a
+	{
+	color:#25B513 !important;
+	text-decoration: none;
+	}
+	.locate
+	{
+	padding:0px 0px 0px 5px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+
+<script type="text/javascript" src="/static/js/admin/basic.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery.simplemodal.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#image_link a').attr("target","blank"); 
+	if('{{read_only}}' == "readonly"){
+		$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+		$(".save_diary").hide();
+	}
+	$("#id_add").click(function() {
+   		alert("Add another Question")
+	});
+	$("#id_type_of_answer_1").click(function() {
+		$('#help_text').show();
+	});
+	$("#id_type_of_answer_2").click(function() {
+		$('#help_text').show();
+	});
+	$("#id_type_of_answer_0").click(function() {
+		$('#help_text').hide();
+	});
+	$("#id_type_of_answer_3").click(function() {
+		$('#help_text').hide();
+	});
+	
+	var image_name = $('#file_link a').text().replace('images/', '');
+	var extension = image_name.split('.')[1]
+	if (image_name.length > 30) {
+		image_name = image_name.substring(0, 30) + "..." + extension;
+		$('#file_link a').text(image_name);
+    }
+	
+	$('#file_link a').attr('target', 'blank');
+	$('#file_link a').text($('#file_link a').text().replace('images/', ''));
+	$('#file_link').html($('#file_link').html().replace('Change:', ''));
+	
+	
+});
+$(function() {
+    $( ".slider" ).slider({ disabled: "true" });
+});
+function save_form(id)
+{
+
+	document.diary_form.action ="/admin_management/diary_edit/{{diary_id}}/";
+	$('#id_diary_form').submit();
+}
+function reset()
+{
+	$('#id_title').val(' ');
+	$('#id_question').val(' ');
+	$('#id_help_text').val(' ');
+	$('#id_answers').val(' ');
+}
+function preview_show()
+{	
+	$('#answer').hide();
+	$('#text').hide();
+	$('#radio').hide();
+	$('#check').hide();
+	$('#slider').hide();
+	
+	if($('input[name=type_of_answer]:radio:checked').val()=='Text')
+		{
+			$('#answer').show();
+			$('#text').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Radio')
+		{
+			$('#answer').show();
+			$('#radio').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Checkbox')
+		{
+			$('#answer').show();
+			$('#check').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Slider')
+	{
+		$('#answer').show();
+		$('#slider').show();
+	}
+
+	$('#title').text($('#id_title').val());
+	$('#question').text($('#id_question').val());
+	$('#helptext').text($('#id_help_text').val());
+	$('#type_of_answer').text($('#id_type_of_answer').val());
+	$('#preview').show();
+}
+
+function del_question(){
+	var confirmed = confirm('{% trans "Are you sure want to delete this Question?" %}');
+    return confirmed;
+}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<div id="add_heading">
+		<p class="add_heading_content">{% trans "Edit Diary" %}</p>
+	</div>
+	<form enctype="multipart/form-data" id="id_diary_form" name="diary_form" action="." method="post">{% csrf_token %}
+    	<div id="add_therapist"><!--add_caregiver start-->
+          	<div class="tabl" style="margin-bottom:0;">
+	           	<table id="tab" cellpadding="5">
+	               <tbody>
+	                   <tr><td class="td_add">{{ form.title.label }}</td><td>{{ form.title }}</td></tr>
+		               <tr><td></td><td><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+		               <tr id="marg" style="margin-top:30px;"><td class="td_add" > {{ form.diary_number.label }}</td><td>{{ form.diary_number }}</td></tr>
+		               <tr><td></td><td><span class = "forget-errors">{{ form.diary_number.errors }}</span></td></tr>
+		               <tr><td class="td_add">{{ form.image.label }}</td><td id="file_link" class="locate">{{ form.image }}</td></tr>
+		               <tr><td></td><td><span class = "forget-errors"><i style="color:#5B5B5B;">{{form.image.help_text}}</i>{{ form.image.errors }}</span></td></tr>
+		               <tr><td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td></tr>
+	                   <tr><td class="td_add_another" colspan="2">
+	                   		{% if not read_only == 'readonly' %}
+	                   			{% if all_ques %}
+	                   			<a href="/admin_management/diary_question1/{{diary_id}}/" onclick="add_another()">{% trans "Add Another Question" %}</a>
+	                   			{% else %}
+	                   			<a href="/admin_management/diary_question1/{{diary_id}}/" onclick="add_another()">{% trans "Add Question" %}</a>	
+	                   			{% endif %}
+	                   			
+	                   		{% endif %}
+	                   		</td></tr>   
+         	           <tr><td></td>
+	                  		<td colspan="3" id="basic-modal_1"><div id="sav" class="basic"><a href="#" class="save_pre">{% trans "Preview" %}</a></div>
+	                  		<div class="save_diary"id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+	          		        <div id="canc" onclick = "reset()"><a href="/admin_management/diary_list/" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+					   <tr><td></td><td class="td_add">	                 
+	              	   </td></tr> 
+	               </tbody>
+	           	</table>
+         	</div>
+         	
+         	
+         	{% if not read_only == 'readonly' %}
+	         	<div id="add_heading" style="margin-bottom:0">
+					<p class="add_heading_content" >{% trans "List of Questions" %}</p>
+				</div>
+				{% if all_ques %}	
+					<div class="tabl" style="height:250px !important;margin-top:0;margin-bottom:0;overflow:auto; margin-left:0;border:#ccc solid 1px;">
+						<table id="tab" cellpadding="5" style="margin-left:10px;">
+					 		<tbody>
+					        	{% for ques in all_ques %}
+					        		<tr><td class="td_add">{{forloop.counter}}.</td><td class="td_add" style="text-align:left"><div  style="width:450px">{{ques.question}}</div></td><td><a href="/admin_management/diary_question_edit/{{ques.diary_id}}/{{ques.id}}/">{% trans "Edit" %}</a></td><td><a href="/admin_management/diary_question_delete/{{ques.diary_id}}/{{ques.id}}/" onclick="return del_question()">{% trans "Delete" %}</a></td></tr>
+					        		<tr><td></td></tr>
+						        {% endfor %}    
+						    </tbody>   
+					  	</table>
+					</div>
+				{% else %}
+					<div class="tabl">
+				  		<table id="tab" cellpadding="5" style="margin-left:10px">
+				 			<tbody>
+				        		<tr><td class="td_add" style="text-align:left"><div  style="width:450px">{% trans "No Questions Available for this diary" %}</div></td></tr>
+				        		<tr><td></td></tr>
+					    	</tbody>   
+				  		</table>
+				  	</div>	
+				{% endif %}	
+	  		{% endif %}
+   		</div><!--add_caregiver end-->
+	
+		<div id="basic-modal-content-1" >
+    		<div align="center" style="height:20px;background-color:green;width:100%;color:white;text-align:center;">{% trans "Preview" %}</div>
+   			<table cellpadding="3" cellspacing="3"  style="padding-right:12px;padding-left:12px;border:0;">
+				<tbody>
+	              <tr><td class="td_add">Diary Name</td><td class="td_add" style="text-align:left;">{{diary_detail.title}}</td></tr>
+	              <tr><td class="td_add">Diary Number</td><td class="td_add" style="text-align:left;">{{diary_detail.diary_number}}</td></tr>
+	              <tr><td>{% trans "Diary Image" %}</td><td><img src="/uploads/{{diary_detail.image}}" height="50" width="50" /></td></tr>
+	           </tbody>
+			</table>
+			<br>
+   			<div class="clear"></div>
+   			<table id="tab" cellpadding="5"  style="padding-right:12px;padding-left:12px;border:0;">
+		 		<tbody>
+		        	{% for ques in all_ques %}
+		                <tr><td>{{forloop.counter}}.</td><td>{{ques.question}}</td></tr>
+		                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+		                {% if ques.answer_type == '1' %} 
+		                	<tr><td></td><td><input type="text" disabled="true"/></td></tr>
+		                {% endif %}
+
+		                {% if ques.answer_type == '2' %} 
+		                	{% for choice in choice_val %}
+		                		{% if choice.ques_id == ques.id %}
+		                			{% for ans in choice.answer %}
+		                			<tr><td></td><td><input type="radio" name="{{ ques.id }}" disabled="true"/>{{ ans }}</td></tr>
+		            	    		{% endfor %}
+		            	    	{% endif %}
+		                	{% endfor %}			
+		                {% endif %}
+		                
+		                {% if ques.answer_type == '3' %}
+		                	{% for choice in choice_val %}
+		                		{% if choice.ques_id == ques.id %}
+		                			{% for ans in choice.answer %}
+		                			<tr><td></td><td><input type="checkbox" disabled="true"/>{{ ans }}</td></tr>
+		            	    		{% endfor %}
+		            	    	{% endif %}
+		                	{% endfor %}			
+		                {% endif %}
+		                
+		                {% if ques.answer_type == '4' %} 
+		                	<tr><td></td><td><div id="slider" class="slider" disabled="true"></div></td></tr>
+		                	{% for slider in slider_val %}
+		                		{% if slider.ques_id == ques.id %}
+		                			<tr><td></td><td width="100%"><div style="float:left;width:50%">{{slider.min_val}}</div><div style="float:right;width:50%;text-align:right">{{slider.max_val}}</div></td></tr>
+		                		{% endif %}
+	                	 	{% endfor %}  
+		                {% endif %}
+		                
+		            {% endfor %}    
+		        </tbody>   
+	  		</table>
+   		</div>
+	</form>
+{% endblock %}

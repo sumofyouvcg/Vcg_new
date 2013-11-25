@@ -1,0 +1,128 @@
+{% extends 'caregiver.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.contact_history input
+	{
+		height:15px;
+		width:15px;
+	}
+	#trash a
+	{
+		color:#7CC744;
+	}
+	#current2 a
+	{
+	color:#7CC744;
+	}
+	#current2
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst a
+	{
+	color:#7CC744 !important;
+	}
+	#view_msg {
+	  border:1px solid #D0D0D0;
+	  border-bottom-left-radius:10px;
+	  border-bottom-right-radius:10px;
+	  border-top-left-radius:10px;
+	  border-top-right-radius:10px;
+	  color:#5B5B5B;
+	  font-family:'myriad pro';
+	  font-size:15px;
+	  margin-bottom:70px;
+	  padding:10px;
+	}
+	#file_link a
+	{
+	color:#25B513 !important;
+	text-decoration: none;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+		$(document).ready(function(){
+			$('#file_link a').text($('#file_link a').text().replace('messages/', ''));
+		});
+		
+function delete_form(id)
+{
+	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	if(confirmed)
+	{
+		document.view_message_list.action ="{% url caregiver_trash_message_delete domain_name %}";
+    	$('#id_view_message_list').submit()
+	}
+	else
+	{
+		var link = '{% url caregiver_view_trash_message domain_name 'newid' %}';
+		link = link.replace('newid', id);
+		window.location = link;
+	}
+
+}		
+</script>
+{% endblock %}
+
+{% block content %}
+{% load truncate_filters %}
+	<div id="banner_left"><!--banner_left start-->
+	    <p class="left_content">{% trans "View Message" %}</p>
+	</div><!--banner_left end-->
+
+	<div id="new_banner_right" style="float:right;margin:15px 0px 0px 170px;"><!--banner_right start--> 
+	 	<div class="newmessage" style="float:left;margin:0px 0px 0px 1px;"><!--newmessage start-->
+			<a href="{% url caregiver_new_message domain_name %}">
+				{% trans "New Message" %}
+			</a>
+	   	</div><!--newmessage end-->
+	   	<div id="savlong" onclick = "delete_form({{view_msg.id}})" style="float:right;margin:0px 0px 0px 1px;"><a href="#" class="save">{% trans "Delete Forever" %}</a></div>
+	</div><!--banner_right end-->
+	 
+	<div class="clear"></div>
+
+	<form enctype='multipart/form-data' name='view_message_list' id='id_view_message_list' action='.' method='post'>{% csrf_token %}
+		<div class="common_banner"> <!--banner start-->  
+	   		<div class="common_left"><!--common_left start-->
+				<ul><!--common_left ul start-->
+					{% if new_messages %}
+						<li id="messagess"><a href="{% url caregiver_message domain_name %}">{% trans "Inbox" %}({{ new_messages|length }})</a></li>
+					{% else %}
+						<li id="messagess"><a href="{% url caregiver_message domain_name %}">{% trans "Inbox" %}</a></li>
+					{% endif %}
+					<li id="send"><a href="{% url caregiver_sent_message domain_name %}">{% trans "Sent Message" %}</a>	</li>
+					<li id="trash"><a href="{% url caregiver_trash_message domain_name %}">{% trans "Trash" %}</a>	</li>
+					<li id="chat"><a href="{% url caregiver_chat_details domain_name %}">{% trans "Chat History" %}</a>	</li>
+				</ul><!--common_left ul end-->
+				<div id="online_users">  </div>
+	   		</div><!--common_left end-->
+		</div><!--banner end-->
+
+		<div class="contact_history" style="padding-bottom:0;border:0;"><!--contact history start-->	
+			<div id="view_msg" ><!--newmessage_frm start--><!--FORM START-->
+				<table id="tab" cellpadding="15">
+			        <tbody>
+			 			<tr><td class="td_add">{% trans "Title" %}:</td><td>{{ view_msg.title }}</td></tr>
+						<tr><td class="td_add">{% trans "Description" %}:</td><td>{{ view_msg.description }}</td></tr>
+						<tr><td class="td_add">{% trans "Attachment" %}:</td><td id="file_link">{% if view_msg.attachment %} <a href="{{ view_msg.attachment.url }}" target="_blank" height="50" width="50" />{{ view_msg.attachment|truncate_img:75  }}</a>{% else %} -- {% endif %}</td></tr>
+						<tr><td class="td_add"><input type="checkbox" name="choices" value={{view_msg.id}} class="case"  checked style="display:none;"/></td>
+			       	</tbody>
+			    </table>
+			    <div style="margin-left:36%;">
+			    	<div id="canc" ><a href="{% url caregiver_reply_trash_message domain_name view_msg.id %}" class="save1">{% trans "Reply" %}</a></div>
+					<div id="canc" ><a href="{% url caregiver_trash_message domain_name %}" class="save1">{% trans "Back" %}</a></div>
+				</div>
+				<div class="clear"></div>
+			</div><!--newmessage_frm end-->
+		</div>
+	</form>		
+{% endblock %}

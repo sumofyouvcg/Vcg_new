@@ -1,0 +1,214 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/diary.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+
+<script type="text/javascript" src="/static/js/admin/basic.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery.simplemodal.js"></script>
+<script type="text/javascript">
+		$(document).ready(function(){
+			if('{{module_id}}' != ''){
+				$('#id_module').val('{{module_id}}')
+			}
+			if('{{read_only}}' == "readonly"){
+				$("input, textarea, select").attr('disabled',true).css('color','#5B5B5B');
+				
+			}
+			document.getElementById("tr_st").style.backgroundImage = 'url("/static/img/admin/hover_otp.png")';
+			document.getElementById("current3").style.color= "#fff";
+			$('.choice_table').hide();			
+			$('.slider_table').hide();
+			if ('{{ans_type}}'== 'text')
+				{
+				$('.choice_table').show();
+				}
+			else if('{{ans_type}}'== 'slider')
+				{
+				$('.slider_table').show();
+				}
+			$('#id_answer_type').bind('change', answer_type);
+			if($('#id_answer_type').val() == ('2'))
+			{
+				$('.choice_table').show();			
+				$('.slider_table').hide();	
+			}
+			else if ($('#id_answer_type').val() == ('3'))
+			{
+				$('.choice_table').show();			
+				$('.slider_table').hide();
+			}	
+			else if ($('#id_answer_type').val() == ('4'))
+			{
+				$('.choice_table').hide();			
+				$('.slider_table').show();	
+			}
+			else
+			{
+				$('.choice_table').hide();			
+				$('.slider_table').hide();	
+			}								
+		});
+		function answer_type()
+		{	
+			if($('#id_answer_type').val() == ('2'))
+			{
+				$('.choice_table').show();			
+				$('.slider_table').hide();	
+			}
+			else if ($('#id_answer_type').val() == ('3'))
+			{
+				$('.choice_table').show();			
+				$('.slider_table').hide();
+			}	
+			else if ($('#id_answer_type').val() == ('4'))
+			{
+				$('.choice_table').hide();			
+				$('.slider_table').show();	
+			}
+			else
+			{
+				$('.choice_table').hide();			
+				$('.slider_table').hide();	
+			}				
+		}		
+		function save_form(id)
+		{
+
+//			document.diary_form.action ="/admin_management/diary_question/{{diary_id}}/0";
+//			$('#id_diary_form').submit();
+			$('#id_questions_form').attr('action',"/admin_management/edit_createquestion/{{module_id}}/{{question_id}}/").submit();
+			
+		}
+		
+		function del_question(){
+			var confirmed = confirm('{% trans "Are you sure want to delete this Question?" %}');
+		    return confirmed;
+		}
+		function cancel(){
+			window.location.href="/admin_management/questions_list/"
+		}
+		$(function() {
+		    $( ".slider" ).slider({ disabled: "true" });
+		});
+		function add_another()
+		{
+			window.location.href="/admin_management/add_module_questions/{{module_id}}/"
+		}
+</script>
+{% endblock %}
+
+
+{% block content%}
+	<div id="treat_content"><!--treat_content start-->
+		{% block treatleft %}
+			{{ block.super }}
+		{% endblock %}
+		
+		<div id="right_treat_content"><!--right_treat_content start-->
+			{% block righttreat %}
+				{{ block.super }}
+			{% endblock %}
+			
+			<div id="therapist_content3" style=" width:687px !important; margin:0px 0px 0px 6px; border-radius:0px 0px 10px 10px; padding: 1em 1.4em;"><!--therapist_content3 start-->
+				<form enctype="multipart/form-data" id="id_questions_form" name="questions_form" action="." method="post">{% csrf_token %} 
+			        {% if all_ques %}	
+			        <div style="max-height: 350px; overflow: auto; ">
+					 	<table id="tab" cellpadding="5">
+					 		<tbody>
+					        	{% for ques in all_ques %}
+					                <tr height="50px">
+					                	<td class="td_add" style="text-align:left">{{forloop.counter}}. {{ques}}</td>
+					                	{% if not read_only == "readonly" %}
+					                	
+					                	<td><div id="sav_treat"><a href="/admin_management/edit_createquestion/{{ques.module.id}}/{{ques.id}}/"><p class="save_treat">{% trans "Edit" %}</p></a></div></td>
+					                	<td><div id="sav_treat"><a href="/admin_management/question_delete/{{ques.module.id}}/{{ques.id}}/"><p class="save_treat" onclick="return del_question()">{% trans "Delete" %}</p></a></div></td>
+					                	{% endif %}
+					                	
+					                </tr>
+					            {% endfor %}
+					           
+					        </tbody>   
+				  		</table>
+				  	</div>
+				  	{% if not read_only == "readonly" %}
+				  		{% if  'TREAT1' in permission or request.user.id == 1 %}  
+				  			<div class="td_add_another" style="float:left;"><a href="#" onclick="add_another()">{% trans "Add Another Question" %}</a></div>
+					  	{% endif %}
+					{% endif %}
+				  	 
+				  	{% endif %}	
+                   <div id="treat_submit_tab4">
+                   		<div id="basic-modal_1"><div id="sav"  class="basic"><a href="#" class="save_treat">{% trans "Preview" %}</a></div></div>
+                        <!-- {% if not read_only == "readonly" %}
+                        		<div id="sav_treat"><a href="#"><p class="save_treat" onclick = "save_form(this.id)">save</p></a></div>
+                        	{% endif %}
+                         -->
+                        <div id="sav_treat"><a href="#"><p class="save_treat" onclick = "cancel()">{% trans "Cancel" %}</p></a></div>
+                   </div>
+	            </form>      
+            </div>
+            
+           	<div id="basic-modal-content-1" >
+		    	<div align="center" style="height:20px;background-color:green;width:100%;color:white;text-align:center;">{% trans "Preview" %}</div>
+	   			<table cellpadding="3" cellspacing="3"  style="padding-right:12px;padding-left:12px;border:0;">
+					<tbody>
+		              	<tr><td>{% trans "Module Name" %}:</td><td style="text-align:left; color:brown;">{{diary_detail}}</td></tr>
+		            </tbody>
+				</table>
+				<br>
+		   		<div class="clear"></div>
+	   			<table id="tab" cellpadding="5"  style="padding-right:12px;padding-left:12px;border:0;">
+			 		<tbody>
+			        	{% for ques in all_ques %}
+			                <tr><td>{{forloop.counter}}.</td><td>{{ques.question_text}}</td></tr>
+			                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+			               	{% if ques.answer_type == '1' %} 
+			               		<tr><td></td><td><input type="text" disabled="true"/></td></tr>
+			               	{% endif %}
+	
+			               	{% if ques.answer_type == '2' %} 
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="radio" disabled="true"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '3' %}
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="checkbox" disabled="true"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '4' %} 
+			               		<tr><td></td><td><div id="slider" class="slider" disabled="true"></div></td></tr>
+			               		{% for slider in slider_val %}
+			                		{% if slider.ques_id == ques.id %}
+			                			<tr><td></td><td width="100%"><div style="float:left;width:50%">{{slider.min_val}}</div><div style="float:right;width:50%;text-align:right">{{slider.max_val}}</div></td></tr>
+			                		{% endif %}
+	                	 		{% endfor %}
+			               	{% endif %}
+			                
+			            {% endfor %}    
+					</tbody>   
+				</table>
+			</div>
+		</div><!--therapist_content3 end-->
+	</div>  
+{% endblock %}

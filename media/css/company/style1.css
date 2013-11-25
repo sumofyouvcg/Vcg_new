@@ -1,0 +1,243 @@
+body
+{
+margin:0;
+padding:0;
+background:url(../images/backgr.jpg) #FFFFFF repeat-x !IMPORTANT;
+}
+
+
+
+@font-face {
+	font-family: 'Myridpro Regular';
+	src: url('Myridpro Regular.eot'); /* IE9 Compat Modes */
+	src: url('Myridpro Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('Myridpro Regular.woff') format('woff'), /* Modern Browsers */
+	     url('Myridpro Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+	     
+	}
+	
+	
+.outer_wrapper{
+margin:0 auto;
+width:960px;	
+}
+#header{
+width:775px;
+height:101px;
+background-image:url(../images/vcare.png);
+background-repeat:no-repeat;	
+float:left;
+
+}
+#login{
+width:185px;
+height:101px;
+float:right;
+background-image:url(../images/welcome.png);
+background-repeat:repeat-x;
+}
+#login p{
+padding-top:40px;
+text-transform:uppercase;
+font-family:Arial, Helvetica, sans-serif;
+font-weight:bold;
+font-size:13px;
+color:#9f9f9f;
+}
+.navbar{
+	margin:0 auto;
+width:960px;
+height:42px;
+background-repeat:repeat-x;	
+clear:both;
+ -moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+	behavior: url(border-radius.htc);
+}
+ul#nav_list{
+list-style:none;
+padding-left:0px;	
+}
+ul#nav_list li{
+display:block;
+float:left;	
+padding-right:35px;
+padding-left:10px;
+margin-top:8px;
+
+}
+ul#nav_list li a{
+text-decoration:none;
+font-family: 'myriad pro';
+font-size:16px;
+color:#7c7c7c;	
+}
+ul#nav_list li a:hover{
+color:#35b70d;	
+}
+.wrapper{
+margin:0 auto;
+width:960px;
+height:auto;
+	
+}
+.wrapper h1{
+color:#25b513;
+font-family:Arial, Helvetica, sans-serif;
+font-size:20px;
+font-weight:bold;	
+   margin-left: 20px;
+}
+#frm_diary{
+margin:0 auto;
+height:auto;
+width:960px;
+-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+	border:1px solid #d1d1d1;
+	behavior: url(border-radius.htc);
+}
+#diary_form{
+margin-left:20px;	
+width:760px;
+height:auto;
+
+}
+#above_answer {
+padding:26px 0px 0px 80px ;
+font-family: 'myriad pro';
+font-size:15px;
+color:#5b5b5b;
+}
+#answer{
+	font-family: 'myriad pro';
+font-size:15px;
+color:#5b5b5b;
+padding:0px;
+margin: 0 0 0 27px;
+
+}
+#answer ul{
+list_style:none;	
+margin-left:-29px;
+}
+#answer ul li{
+display:inline-block;
+	float:left;
+padding-left:20px;
+}
+#buttons{
+	padding-left:111px;
+	height:60px;
+}
+#buttons input{
+background-color:#36af12;
+	moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+
+	border-radius: 7px;
+	behavior: url(border-radius.htc);
+	color:#FFF;	
+	width:97px;
+	height:35px;
+}
+#buttons ul{
+list-style:none;
+
+}
+#buttons input:hover{
+	background-color:#2c2c2c;
+}
+
+#buttons ul li{
+display:inline-block;
+float:left;	
+width:100px;
+	
+}
+.show{
+width:696px;
+height:auto;	
+margin-left:50px;
+overflow:hidden;
+
+}
+#show_text{
+margin-left:70px;
+margin-top:30px;
+clear:both;	
+dispaly:none;
+}
+#show_text input{
+width:250px;
+height:40px;
+clear:both;
+dispaly:none;	
+}
+.show_slider{
+	margin-left:0px;
+margin-top:30px;
+width:750px;
+clear:both;
+dispaly:none;
+color:#5b5b5b;
+font-size:15px;
+font-family: 'myriad pro';
+
+}
+.show_slider input{
+width:192px;
+height:40px;
+margin-left:14px;	
+}
+.show_slidert{
+	margin-left:0px;
+margin-top:30px;
+width:750px;
+clear:both;
+dispaly:none;
+color:#5b5b5b;
+font-size:15px;
+font-family: 'myriad pro';
+
+}
+.show_slidert input{
+width:76px;
+height: 34px;
+margin-left:14px;	
+}
+.show_slidert1{
+	margin-left:0px;
+margin-top:30px;
+width:750px;
+clear:both;
+dispaly:none;
+color:#5b5b5b;
+font-size:15px;
+font-family: 'myriad pro';
+
+}
+.show_slidert1 input{
+width:76px;
+height: 34px;
+margin-left:20px;	
+}
+.dis
+{
+margin-left:94px;
+font-family: 'myriad pro';
+font-size:15px;
+}
+
+#copyright1
+{
+font-size:13px;
+font-family:Arial;
+width:317px;
+height:20px;
+margin:7px auto;
+ xmargin:9px 0 0 322px;
+ color: #5B5B5B;
+}

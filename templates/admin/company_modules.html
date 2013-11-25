@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+	.module_c
+	{
+	padding:0px 0px 0px 34px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	padding:5px;
+	}
+	#final
+	{
+	 	float: left;
+	    height: 37px;
+	    margin: 19px 23px 0 35px;
+	    width: 206px;
+	}
+	.list1
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list1 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+		
+		$(document).ready(function(){
+			$("#selectall").click(function () {
+				  $('.case').attr('checked', this.checked);
+			});
+		   $(".case").click(function(){
+				if($(".case").length == $(".case:checked").length) {
+					$("#selectall").attr("checked", "checked");
+				} else {
+					$("#selectall").removeAttr("checked");
+				}
+			});
+		   $("#tselectall").click(function () {
+				  $('.tcase').attr('checked', this.checked);
+			});
+			$(".tcase").click(function(){
+				if($(".tcase").length == $(".tcase:checked").length) {
+					$("#tselectall").attr("checked", "checked");
+				} else {
+					$("#tselectall").removeAttr("checked");
+				}
+			});
+		});
+		function save_form(){
+			document.module_cs_form.action ="/admin_management/company_modules/"+'{{comp_id}}'+"/";
+			$('#id_module_cs_form').submit();
+		}
+		
+</script>
+{% endblock %}
+
+
+{% block content%}
+<div id="therapist_content"><!--therapist_content start-->
+	<div id="add_heading">
+		<p class="add_heading_content">{% trans "Add Treatment Modules and Tests" %}</p>
+	</div><br>
+	<form enctype='multipart/form-data' name='module_cs_form' id='id_module_cs_form' action='.' method='post'>{% csrf_token %}
+			
+				<div style="float:left;margin-left:10px; margin-top:0px;width:30%;">
+			    <div class="module_c"><input type="checkbox" class="checkall" id="selectall">&nbsp;&nbsp;&nbsp;<b> {% trans "Modules" %} </b></div>
+			    {% if not modules == '' %}
+				    {% for module in modules %}
+				    	<div class="module_c"><input type="checkbox" name="choices"  id="m{{module.id}}" value="{{module.id}}" class="case">&nbsp;&nbsp;&nbsp;{{module}} </div>
+				    {% endfor %}
+				{% else %}
+					<div class="module_c">{% trans "No modules" %}</div>
+				{% endif %}<span class="forget-errors">{{module_error}}</span><br>
+				</div>
+				
+				<div style="float:right; margin-top:0px;margin-left:0px;width:65%;">
+					<div class="module_c"><input type="checkbox" class="tcheckall" id="tselectall">&nbsp;&nbsp;&nbsp;<b> {% trans "Tests" %} </b></div>
+				    {% if not test_list == '' %}
+					    {% for module in test_list %}
+					    	<div class="module_c"><input type="checkbox" name="tchoices"  id="t{{module.id}}" value="{{module.id}}" class="tcase">&nbsp;&nbsp;&nbsp;{{module}} </div>
+					    {% endfor %}
+					{% else %}
+						<div class="module_c">{% trans "No modules" %}</div>
+					{% endif %}<span class="forget-errors">{{test_error}}</span><br>
+				</div>
+			
+		<div class="clear"></div>
+		<div id="final">
+                <div id="sav" onclick="save_form()"><a href="#" class="save">{% trans "Save" %}</a></div>
+                <div id="canc"><a href="/admin_management/company_list/" class="save1">{% trans "Cancel" %}</a></div>
+        </div>
+    </form>
+</div>
+{% endblock %}

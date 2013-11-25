@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+.fst5{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+.fst5 a
+{
+color:#7CC744 !important;
+}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#sav").click(function() {
+      		$('#id_animation_form').submit();
+	});
+});
+</script>
+{% endblock %}
+
+{% block content%}
+	<form enctype='multipart/form-data' name='animation_form' id='id_animation_form' action='.' method='post'>{% csrf_token %}
+		<div id="add_heading">
+			<p class="add_heading_content">{% trans "Add Animation" %}</p>
+		</div>
+		<div id="add_client"><!--add_animation start-->
+			<div class="tabl">
+				<table id="cl_tab" style="border: none;" cellpadding="5">
+					<tbody>
+						<tr><td class="td_add">{{ form.name.label }}</td><td>{{ form.name }}</td></tr>
+						<tr><td></td><td><span class="forget-errors">{{ form.name.errors }}</span></td></tr><br /><br />
+						<tr><td class="td_add">{{form.location.label }}</td><td>{{ form.location }}</td></tr>
+						<tr><td></td><td><span class="forget-errors">{{ form.location.errors }}</span></td></tr><br /><br />
+						<tr>
+							<td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td>
+						</tr>
+						<tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+					                     <div id="canc" onclick = "reset()"><a href="/admin_management/animation_list/" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div><!--add_animation end-->
+	</form>
+{% endblock %}

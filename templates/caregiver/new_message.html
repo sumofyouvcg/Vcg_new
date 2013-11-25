@@ -1,0 +1,73 @@
+{% extends 'caregiver.html' %}
+{% load i18n %}
+
+{% block extrastyle%}
+<style>
+#current2 a
+{
+color:#7CC744;
+}
+#current2
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+</style>
+{%endblock%}
+
+{% block extrahead %}
+<script type="text/javascript">
+function save_form(id)
+{
+	document.new_message_form.action ="{% url caregiver_new_message domain_name %}";
+	$('#id_new_message_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+	<div class="clear"></div>
+	
+	<div id="banner_left"><!--banner_left start-->
+		 <p class="left_content">{% trans "New Messages" %}</p>
+	</div><!--banner_left end-->
+ 	
+ 	<div class="clear"></div>
+
+	<div class="common_banner"> <!--banner start-->  
+   		<div class="common_left"><!--common_left start-->
+			<ul><!--common_left ul start-->
+				{% if new_messages %}
+					<li id="messagess"><a href="{% url caregiver_message domain_name %}">{% trans "Inbox" %}({{ new_messages|length }})</a></li>
+				{% else %}
+					<li id="messagess"><a href="{% url caregiver_message domain_name %}">{% trans "Inbox" %}</a></li>
+				{% endif %}
+				<li id="send"><a href="{% url caregiver_sent_message domain_name %}">{% trans "Sent Message" %}</a>	</li>
+				<li id="trash"><a href="{% url caregiver_trash_message domain_name %}">{% trans "Trash" %}</a>	</li>
+				<li id="chat"><a href="{% url caregiver_chat_details domain_name %}">{% trans "Chat History" %}</a>	</li>
+			</ul><!--common_left ul end-->
+			<div id="online_users">  </div>
+   		</div><!--common_left end-->
+	</div><!--banner end-->
+	     
+
+	<div id="newmessage_frm" style="margin-bottom: 65px;margin-top:18px;"><!--newmessage_frm start-->
+		<form action="#" method="post" enctype='multipart/form-data'  name="new_message_form" id="id_new_message_form">{% csrf_token %} <!--FORM START-->
+			<table align="center" cell padding="5" width="748" style="border:0;">
+				<tbody>	
+					<tr><td width="276" height="51" align="right">{{ form.recipient.label }}</td><td width="465">{{ form.recipient }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.recipient.errors }}</span></td></tr>
+					<tr><td height="43" align="right">{{ form.title.label }}</td><td>{{ form.title }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+					<tr><td height="45" align="right">{{ form.description.label }}</td><td>{{ form.description }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.description.errors }}</span></td></tr>
+					<tr><td height="53" align="right">{{ form.attachment.label }}</td><td>{{ form.attachment }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.attachment.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" onclick = "save_form()"><a href="#" class="save">{% trans "Send" %}</a></div>
+	                <div id="canc" onclick = "reset()"><a href="{% url caregiver_message domain_name %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+					<tr><td></td><td>&nbsp;</td></tr>
+				</tbody>
+			</table>
+       </form><!--FORM END-->
+	</div><!--new_message_form end-->
+				
+{% endblock %}	

@@ -1,0 +1,58 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}	
+
+{% block extrastyle %}
+<style type="text/css">
+#send a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+
+{% endblock %} 
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_recipient').val('{{user_id}}').parent().parent().hide();
+});
+
+function save_form()
+{
+		document.client_message_form.action ="{% url company_client_send_message domain_name client_id %}";
+		$('#id_client_message_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+	  	<p class="left_content">{% trans "Send Message" %}</p>
+	</div><!--banner_left end-->
+	<form enctype="multipart/form-data" id="id_client_message_form" name="client_message_form" action="." method="post">{% csrf_token %}
+	    <div id="newmessage_frm"><!--newmessage_frm start--><!--FORM START-->
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+		        <tbody>
+	  			    <tr><td class="td_add">{{ form.recipient.label }}</td><td>{{ form.recipient }}</td></tr>
+					<tr><td class="td_add">{{ form.title.label }}</td><td>{{ form.title }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.description.label }}</td><td>{{ form.description }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.description.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.attachment.label }}</td><td>{{ form.attachment }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.attachment.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" onclick = "save_form()"><a href="#" class="save">{% trans "Send" %}</a></div>
+	                <div id="canc" onclick = "reset()"><a href="{% url company_client_home domain_name client_id %}" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+	        	</tbody>
+		    </table>
+		</div><!--newmessage_frm end-->
+	</form><!--FORM START-->
+{% endblock %}

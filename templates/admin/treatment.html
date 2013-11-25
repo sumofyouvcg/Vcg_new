@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load i18n %}	
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/tabmenu.css" />
+<style type="text/css">    
+	
+	.features-table
+	{
+	 
+	  border-collapse: separate;
+	  border-spacing: 0;
+	  text-shadow: 0 1px 0 #fff;
+	  
+	}
+	#therapist_content4 
+	{
+	    border: 1px solid #D0D0D0;
+	    border-radius: 10px 10px 10px 10px;
+	    height: auto;
+	    margin-top: 62px;
+	    overflow: hidden;
+	    width: 960px;
+	}
+	.fst4{
+		background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst4 a
+	{
+		color:#7CC744 !important;
+	}
+	table {   border-radius:5px; border:1px solid #d0d0d0; border-spacing:0}
+	.br{ border:none !important;}
+	table {   border-radius:5px; border:1px solid #d0d0d0; border-spacing:0}
+	.br{ border:none !important;}
+	tfoot td:first-child{ border-radius:0px 0 0 15px; -webkit-border-radius:0 0 0 15px ;-moz-border-radius:0 0 0 15px ;}
+	tfoot td:last-child{  border-radius:0px 0 15px 0;-webkit-border-radius:0 0 15px 0;-moz-border-radius:0 0 15px 0;}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jqery.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery-1.10.1-ui.js"></script>
+<script type="text/javascript">
+
+ddaccordion.init({
+	headerclass: "expandable", //Shared CSS class name of headers group that are expandable
+	contentclass: "categoryitems", //Shared CSS class name of contents group
+	revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+	mouseoverdelay: 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+	collapseprev: true, //Collapse previous content (so only one open at any time)? true/false 
+	defaultexpanded: [0], //index of content(s) open by default [index1, index2, etc]. [] denotes no content
+	onemustopen: false, //Specify whether at least one header should be open always (so never all headers closed)
+	animatedefault: false, //Should contents open by default be animated into view?
+	persiststate: true, //persist state of opened contents within browser session?
+	toggleclass: ["", "openheader"], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+	togglehtml: ["prefix", "", ""], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+	animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+	oninit:function(headers, expandedindices){ //custom code to run when headers have initalized
+		//do nothing
+	},
+	onopenclose:function(header, index, state, isuseractivated){ //custom code to run whenever a header is opened or closed
+		//do nothing
+	}
+})
+$(document).ready(function(){
+	var yellow = $('#catalog');
+	var offset = yellow.offset();
+	var offsetWidth = offset.left + yellow.width();
+	var offsetHeight = offset.top + yellow.height();
+
+	var red = $('.scrl');
+
+	var intRightHandler = null;
+	var intLeftHandler = null;
+	var intTopHandler= null;
+	var intBottomHandler= null;
+	var distance = 70;
+	var timer = 100;
+	var step = 10;
+
+
+	function clearInetervals()
+	{
+	    clearInterval(intRightHandler);
+	    clearInterval(intLeftHandler);
+	    clearInterval(intTopHandler);
+	    clearInterval(intBottomHandler);    
+	}
+
+	red.draggable({
+	    start : function(){},
+	    stop: function(){clearInetervals(); },    
+	    drag : function(e){
+	        var isMoving = false;        
+	        
+	        
+	        //Top
+	        if((e.pageY - offset.top) <= distance)
+	        {
+	            isMoving = true;
+	            clearInetervals();            
+	            intTopHandler= setInterval(function(){
+	                yellow.scrollTop(yellow.scrollTop() - step)
+	            },timer);
+	            console.log('top')
+	        }                          
+	        
+	        //Bottom
+	        if(e.pageY >= (offsetHeight - distance))
+	        {
+	            isMoving = true;
+	            clearInetervals();            
+	            intBottomHandler= setInterval(function(){
+	                yellow.scrollTop(yellow.scrollTop() + step)
+	            },timer);
+	            console.log('bottom')
+	        }     
+	        
+	        //No events
+	        if(!isMoving)
+	           clearInetervals();  
+	    }
+	});
+	'{% if 'TREAT3' in permission %}'
+		$('#tr_cli').hide();
+		$('#tr_cr').hide();
+	'{% endif %}'	
+	'{% if 'TREAT3' and 'TREAT2' in permission %}'
+		$('#tr_cli').hide();
+		$('#tr_cr').hide();
+	'{% endif %}'	
+	'{% if 'TREAT3' and 'TREAT1' in permission %}'
+		$('#tr_cli').show();
+		$('#tr_cr').show();
+	'{% endif %}'	
+});
+$(function() {
+	//$( "#catalog" ).accordion();
+	$( "#catalog li" ).draggable({
+	containment: "#catalog",
+	appendTo: "body",
+	helper: "clone"
+	});
+	$( "#catalog div" ).droppable({
+	activeClass: "ui-state-default",
+	hoverClass: "ui-state-hover",
+	accept: ":not(.ui-sortable-helper)",
+	drop: function( event, ui ) {
+		var module_id = $(this).attr("id");
+		var session_id = ui.draggable.attr("id").split('session')[1]
+		$.ajax({
+			"type"		: "GET",
+			"url"		: "/admin_management/treatment_drag/"+module_id.split('module')[1]+'/'+session_id+'/',
+			"dataType"	: "json",
+			"cache"		: false,
+	  		"success"	: function(json) {
+	  			if (json['message'] == 'Sorry'){
+	  				alert('{% trans "Session with this name already exists in this module" %}')
+	  			}
+	  			else if (json['status'] == 'error'){
+	  				window.location.href="/admin_management/module_list/"
+	  			}
+	  			else{
+	  			var abc = 'title'+module_id.split('module')[1];
+	  			$(  "#"+module_id +' ul').append('<li id=session'+json['message']+' class="ui-draggable"><a href="/admin_management/session/'+json['message']+'/" style="width:196px; color:#44AD24; font-size: 15px;" class="title" id='+abc+'>'+ ui.draggable.text() +'</a></li>');
+	  			$( "#catalog li" ).draggable({
+	  				containment: "#catalog",
+	  				appendTo: "body",
+	  				helper: "clone"
+	  				});
+	  			}
+	  		}
+		});
+	}
+	})
+	});
+</script>
+
+{% endblock %}
+
+
+{% block content%}
+	<div id="treat_content"><!--treat_content start-->
+		{% block treatleft %}
+			<div id="treat_left"><!--treatment_left_content start-->
+				<div class="treat_title" style="border-radius:5px 5px 0px 0px"><!--comm_title start-->
+					<p class="module_treat" >{% trans "modules" %}</p>
+				</div><!--comm_title end-->
+				
+				<div id="catalog" class="arrowlistmenu" style="margin:0px;"><!-- Tab start-->
+				{% if module_list %}
+						{% for module in module_list %}
+							<div id="module{{module.id}}"><h3 class="menuheader expandable" style="width:196px; color:#5B5B5B; font-size: 15px" class="title">{{module}}</h3>
+							<ul class="categoryitems" style="width:196px;">
+								{% for session in session_list %}
+									{% if session.module.id == module.id %}
+										<li class="scrl" id='session{{session.id}}'><a href="/admin_management/session/{{session.id}}/" style="width:196px; color:#44AD24; font-size: 15px;" class="title" id="title{{module.id}}">{{session}}</a></li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+							</div>
+						{% endfor %}	
+					{% else %}
+						<h3 class="menuheader expandable" style="width:196px; color:#5B5B5B; font-size: 15px" class="title">{% trans "No Modules" %}</h3>
+					{% endif %}
+					
+				</div><!-- Tab end-->
+	     	</div><!--treatment_left_content end-->
+	     	
+		 {% endblock %}
+		 		
+	     <div id="right_treat_content"><!--right_treat_content start-->
+	     	{% block righttreat %}		
+			<div id="tabs" style="margin-top:0px;">
+			<div id="tr_the" class="new_module1" onclick="test1()"><a href="/admin_management/module_list/" id="current">{% trans "Add New Module" %}</a></div>
+			<div id="tr_cli" class="new_module2" onclick="test2()"><a href="/admin_management/add_session/" id="current1" >{% trans "Add New Session" %}</a></div>
+			<div id="tr_cr" class="new_module" onclick="test3()" ><a href="/admin_management/animation_media/" id="current2">{% trans "Insert Animation" %}</a></div>
+			<div id="tr_st" class="new_module" onclick="test4()" ><a href="/admin_management/questions_list/" id="current3">{% trans "Create Questions" %}</a></div>
+			<div id="tr_q" class="new_module" onclick="test5()" ><a href="/admin_management/assignments_list/" id="current4">{% trans "Create Assignments" %}</a></div></div>
+			{% endblock %}
+		</div><!--treat_content end-->
+	</div>                
+{% endblock %}

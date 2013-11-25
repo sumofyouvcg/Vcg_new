@@ -1,0 +1,98 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.assi
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.assi a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<!--SCRIPT START-->
+<script type="text/javascript">
+			setTimeout( function() {
+				jQuery('#message').hide();
+			}, 2000 );
+		</script>
+		
+<script>
+$(document).ready(function(){
+	$('#form-div1').show();
+	
+	$('#next').click(function(){
+		if($('#wheat1').is(':checked')) {
+			$('#form-div2,#form-div3,#form-div4').hide();
+			$('#form-div1').show();
+		}
+	})
+	
+});
+
+function click_question(id)
+{
+	$('#sav').val(id);
+}
+
+function post_question(id)
+{	
+	ans = $('#sav').val();
+	if (ans == '')
+		{
+			alert('{% trans "Please Select Any One Choice" %}');
+		}
+	else
+		{
+		document.assign_ques_form.action ="{% url client_assignment_questions domain_name assign_id %}?cluster_id="+'{{cluster_question.assignment_cluster.id}}'+"&question_id="+'{{cluster_question.id}}'+"&answer="+ans
+			$('#id_assign_ques_form').submit();
+		}
+}	
+</script>
+{% endblock %}
+
+{% block content %}
+	<div id="banner_left"><!-- banner_left start-->
+    	<p class="left_content">{{selected_assignment|title}} {% trans "Questions" %}</p>
+    </div><!-- banner_left end-->
+    
+    <div style="float:right;margin: 11px 0 0;">
+		<div id="sav" ><a href="{% url client_assignment_list domain_name %}" ><p class="save" id="id_save"> {% trans "BACK" %}</p></a></div>
+	</div>
+
+    <div class="clear"></div>
+    
+	<div id="newmessage_frm" style="margin-bottom:10px;text-align:left; width: 98%; height:350px; overflow:auto;background-color:lightgrey;"><!--newmessage_frm start-->
+		<p align="center"><b>{% trans "Summary" %}</b></p>
+		<div style="margin: 0px auto 0px auto; width: 98%; height:auto; background-color:lightgrey;">
+			<div id="form-div1" class="physical-text" text-align:left;>
+					{{ selected_assignment.assignment.summary }}
+			</div><!--end of form-div-->
+		</div>
+	</div>
+		
+	<div id="newmessage_frm"><!--newmessage_frm start-->
+		<form enctype="multipart/form-data" id="id_assign_ques_form" name="assign_ques_form" action="." method="post">{% csrf_token %}
+			<div style="margin: 10px auto 10px auto; width: 625px; height:200px; background-color:#A7FA8F; border: 1px solid Gray">
+				<div id="form-div1" align="center"><br><br>
+				{% if not cluster_question == '' %}
+					{{cluster_question.question_text }}<br><br><br>
+					{% for answer in question_answers %}
+						<input type="radio" id="{{ answer.option }}" class="answer" name='foo' onclick = "click_question(this.id)" >{{ answer.option }}</input>
+					{% endfor %}	
+					<br><br><br>
+					<div id="sav"  style="margin-left:250px !important;" onclick = "post_question(this.id)"><a href="#" class="save">{% trans "Next" %}</a></div>
+				{% else %}
+					{% trans "No Cluster Questions Found" %}
+				{% endif %}
+				</div><!--end of form-div-->
+			</div>		
+		</form>
+	</div>
+
+{% endblock %}

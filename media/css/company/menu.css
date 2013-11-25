@@ -1,0 +1,109 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* First Level UL List */
+
+@font-face {
+	font-family: 'Myridpro Regular';
+	src: url('Myridpro Regular.eot'); /* IE9 Compat Modes */
+	src: url('Myridpro Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('Myridpro Regular.woff') format('woff'), /* Modern Browsers */
+	     url('Myridpro Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+	     
+	}
+#navigation{
+    margin:0;
+    padding:0; 
+    list-style:none;
+}
+     
+    #navigation li {
+        width:267px;	
+		
+    }
+	
+     
+   #navigation li a {
+        display: block;
+        width: 268px;
+        height: 33px;  
+        text-indent:4em;
+	padding-top:10px;
+        outline:none;
+		color:#FFF;
+		text-decoration:none;
+		font-family:'Myridpro Regular', Gadget, sans-serif;
+		font-size:18px;
+		text-shadow:#666;
+		-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	border-radius:20px;
+	margin-left:20px;
+
+	
+		
+		
+    }
+         
+    /* Using CSS Sprite for menu item */
+    #navigation li a.popular {
+        background-color:#3586be;		
+    }
+ 
+    #navigation li a.popular:hover, .popularOver {
+    background-color:#3391d4; 
+	
+    }
+         
+    #navigation li a.category {
+        background-color:#3586be;
+    }
+ 
+    #navigation li a.category:hover, .categoryOver {
+       background-color:#3391d4;
+    }
+         
+    #navigationli a.comment {
+       background-color:#3586be;
+    }
+ 
+    #navigation li a.comment:hover, .commentOver {
+      background-color:#3391d4;
+    }
+         
+         
+    /* Second Level UL List*/
+    #navigation ul {
+    background-color:#FFF;
+        width:268px;
+        margin-left:20px;
+        padding:0;
+        display:none;  
+	list-style:none;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	border-radius:20px;
+		
+    }
+         
+        #navigationul li {
+            height:30px;
+        }
+             
+        /* styling of submenu item */
+        #navigationul li a {
+            width:240px;
+            height:25px;
+            margin-left:15px;
+            padding-top:5px;
+            border-bottom: 1px dotted #777;
+            text-indent:1em;
+            color:#ccc;
+            text-decoration:none;
+        }
+ 
+        /* remove border bottom of the last item */
+        #navigationul li a.last {
+            border-bottom: none;
+        }   
+		

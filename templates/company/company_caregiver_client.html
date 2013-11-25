@@ -1,0 +1,107 @@
+{% extends 'company.html' %}
+
+{% block extrastyle %}
+<style type="text/css">
+#current4 a
+{
+color:#7CC744;
+}
+#current4
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+$(function(){
+	$("#id_clients").hide();
+});
+function call_details(){
+	$("#id_details").show();
+	$(".left_content").text("Caregiver Details");
+}
+
+function call_clients(){
+	$("#id_clients").show();
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="banner_left"><!--banner_left start-->
+	<p class="left_content">Clients Details</p>
+</div><!--banner_left start-->
+
+<div id="banner_right"><!--banner_right start--> 
+	<div id="add"><a href="{% url company_caregivers_add domain_name %}" style="text-decoration:none;">Add Caregivers</a></div>
+</div><!--banner_right_caregiver end-->
+            
+<div class="clear"></div>
+
+<div><!--profile_details_caregivers start-->
+	<div class="profile_details_caregivers" style="margin-bottom: 60px;"">
+		<p align="center"><img src="/static/img/company/profile.png" /></p>
+		<div align="center" style="font-family:Arial, Helvetica,sans-serif;color:#5b5b5b;font-size:15px;margin-left:20px;font-weight:bold;">
+			Tessa van eossan
+		</div>
+		<div align="center" style="margin-top:10px;">
+ 		<p align="center">
+			<a href="{% url company_caregiver_view domain_name %} " style="text-decoration:none;" >
+				<input type="button" value="Details" class="btn_details" />
+			</a>
+   		</p>
+        <p align="center">
+			<a href="{% url company_caregiver_client domain_name %}" style="text-decoration:none;">
+				<input type="button" value="Clients" class="btn_details"/>
+			</a>
+		</p>
+	</div>
+</div><!--profile_details_caregivers start-->
+
+<div id="add_client_caregivers"><!--add_client_caregivers start-->
+     <table width="464" align="center" cellpadding="5" style="border:0;">
+         <tbody>
+             <tr>
+                <td class="pl_first4">Client 1</td>
+             </tr><br /><br />
+              <tr>
+                 <td class="pl_first4">Client 2</td>
+              </tr>
+         </tbody>
+    </table>
+ </div><!--add_client_caregivers end-->
+	
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

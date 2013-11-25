@@ -1,0 +1,113 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#plan_list a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_plan').val('{{plan_id}}').parent().parent().hide();
+});
+function save_form()
+{
+	document.client_plan_feedback.action ="{% url caregiver_client_plan_view domain_name client_id plan_id %}";
+	$('#id_client_plan_feedback').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+	  	<p class="left_content">{% trans "Plan" %} : {{plan}}</p>
+	</div><!--banner_left end-->
+	
+ 	<div id="banner_right"  style="width:500px; margin: -35px 0 0 0;" ><!--banner_right start-->   
+ 		<div class="newmessage" ><!--newmessage start-->
+			<a href="{% url caregiver_client_plan_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		{% if not analyst %}
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url caregiver_client_plan_edit domain_name client_id plan_id %}" >{% trans "Edit Plan" %}</a>
+		</div><!--newmessage end-->
+		{% endif %}
+	</div>  
+ 
+	<form enctype='multipart/form-data' name='client_plan_feedback' id='id_client_plan_feedback' action='.' method='post'>{% csrf_token %}
+	    <div id="newmessage_frm"><!--newmessage_frm start--><!--FORM START-->
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+				<tbody>
+					<tr><td class="goal">{% trans "Plan Name" %}</td><td >{{ selected_plan.practise_plan }}</td></tr>
+					<tr><td class="goal">{% trans "Plan Description" %}</td><td >{{ selected_plan.practise_plan.description }}</td></tr>
+					<tr><td class="goal">{% trans "Plan Image" %}</td><td><a href="{{selected_plan.practise_plan.image.url}}"  target="_blank"><img src="{{selected_plan.practise_plan.image.url}}" height="50" width="50" /></a></td></tr>
+					<tr><td class="goal">{% trans "Caregiver" %}</td><td>{{ selected_plan.caregiver }}</td></tr>
+					<tr><td class="goal">{% trans "Goal" %}</td><td>{{ selected_plan.goal }}</td></tr>
+					<tr><td class="goal">{% trans "Description" %}</td><td>{{ selected_plan.description }}</td></tr>
+		            <tr><td class="goal">{% trans "When will be Goal Achieved" %}</td><td>{{ selected_plan.goal_achieved }}</td></tr>
+				</tbody>
+			</table>
+			{% if all_actions %}
+			   	<div id="add_heading" style="margin-bottom:0">
+					<p class="add_heading_content" >{% trans "List of Actions" %}</p>
+				</div>
+		
+		    	<div class="tabl" style="max-height:250px!important; width:98% !important;margin-left:10px;margin-right:10px;overflow:auto; border:#ccc solid 1px;border-radius: 10px 10px 10px 10px;">
+					<table id="tab" cellpadding="5" style="margin-left:10px;">
+						<tbody>
+						<th colspan="2" width="50%" class="numb" style="width:100px;">{% trans "Actions" %}</th><th width="50%" class="numb" style="width:100px;">{% trans "Achieved" %}</th>
+		       			{% for action in all_actions %}
+		               		<tr><td class="numb" style="text-align:center;">{{forloop.counter}}.</td><td class="numb" style="text-align:center;">{{action.action}}</td><td class="numb" style="text-align:center;">{{action.achieved}}</td></tr>
+		           		{% endfor %}    
+		       		</tbody>   
+					</table>
+				</div>
+			{% endif %}
+			
+			{% if exist_feedback %}
+				<div>
+			    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Feedback sent" %} : </p><br>
+					{% for feedback in exist_feedback %}
+						{% if feedback.created_by == request.user %}
+						<p style="color:blue; margin-left:10px; class="feed">{% trans "me" %} : {{feedback.feedback }}</p><br>
+						{% else %}
+						<p style="color:brown;margin-left:10px;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+						{% endif %}
+					{% endfor %}
+				</div><br>
+			{% endif %}
+		</div><!--newmessage_frm end-->
+		
+		{% if not analyst %}
+			{% if all_actions %}
+				<div style="float:right; width:80%">
+					<div id="banner_left"><!--banner_left start-->
+			  	<p class="left_content">{% trans "Feed Back" %}</p>
+				</div><!--banner_left end-->
+						<form enctype="multipart/form-data" id="id_client_plan_feedback" name="client_plan_feedback" action="." method="post">{% csrf_token %}
+								<table width="771" cellpadding="5" align="center">
+									<tr><td class="td_client" align="center">{{ form.plan.label }}</td><td align="left">{{ form.plan }}</td></tr>
+									<tr><td class="td_client" align="center">{{ form.feedback.label }}</td><td align="left">{{ form.feedback }}</td></tr>
+									<tr><td></td><td><span class = "forget-errors">{{ form.feedback.errors }}</span></td></tr>
+									<tr><td></td><td><div id="sav" ><a href="#" onclick="save_form()" ><p class="save" id="id_save">{% trans "Send" %}</p></a></div></td></tr>
+								</table>
+						</form><br><br>	
+				</div>	
+			{% endif %}
+		{% endif %}
+	</form><!--FORM START-->{% endblock %}

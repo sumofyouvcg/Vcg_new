@@ -1,0 +1,165 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	#Form a
+	{
+	color:#25B513 !important;
+	}
+	.fst4
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst4 a
+	{
+	color:#7CC744 !important;
+	}
+	
+	#comment_middle
+	{
+	margin-top:31px;
+	}
+	legend{
+	color:green;
+	}
+	
+	label 
+	{
+	    display: block;
+	    margin-bottom: 3px;
+	    padding-left: 15px;
+	    text-indent: -15px;
+	}
+	.online
+	{
+	margin:0px 0px 0px 25px;
+	}		
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.form-text, .form-textarea, .form-dropdownfield').attr({'disabled':true});
+	$('input[name="contents_sessions"]').attr('disabled', 'disabled');	
+	$('input[name="online_therapy"]').attr('disabled', 'disabled');
+	$('input[name="client_consultation"]').attr('disabled', 'disabled');
+
+	$('#id_client_treatment_agreement_form').val('{{treat_agree_id}}').parent().parent().hide();
+	$('#id_client').val('{{client_name.id}}').parent().parent().hide();
+
+	var value = $('input[name="contents_sessions"]:checked').val();
+	if(value== '5')
+		{
+		$('.online').show();
+		}
+	else
+		{
+		$('.online').hide();
+		}
+		
+});
+
+function save_feedback(){
+	$('#id_client_treatment_agreement_form, #id_client').attr({'disabled':false});
+	$('#id_client_question_feedback').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	
+	<div id="banner_left"><!--banner_left start-->
+          <p class="left_content">{% trans "IntakeForm" %} </p>
+     </div><!--banner_left end-->
+     
+ 	<div id="banner_right" style="width:393px; margin: 11px -12px 0 0;"><!--banner_right start-->  
+ 		<div class="newmessage" style="padding-left:15px;"><!--newmessage start-->
+			<a href="{% url caregiver_client_forms_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		{% if not analyst %}
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url caregiver_client_forms_edit domain_name client_id form_id %}" >{% trans "Edit Form" %}</a>
+		</div><!--newmessage end-->
+		{% endif %}
+	</div>
+	 	     
+   	<div id="newmessage_frm" style="border:0;padding-top:0;margin-top:0px;"><!--newmessage_frm start--><!--FORM START-->
+		 	
+   		<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+    	<table id="tab" cellpadding="5" style="margin-left:20px">
+    		<legend>{% trans "Personal" %}</legend>
+	 		<tbody>
+	 		<tr><td width="375px">{{form.client_name.label}}</td><td class="td_add" style="text-align:left">{{form.client_name}}<span class="forget-errors">{{form.client_name.errors}}</span></td></tr>
+	 		<tr><td width="375px">{{form.address.label}}</td><td class="td_add" style="text-align:left">{{form.address}}<span class="forget-errors">{{form.address.errors}}</span></td></tr>
+	 		<tr><td width="375px">{{form.code_town.label}}</td><td class="td_add" style="text-align:left">{{form.code_town}}<span class="forget-errors">{{form.code_town.errors}}</span></td></tr>
+	 		<tr><td width="375px">{{form.dob.label}}</td><td class="td_add" style="text-align:left">{{form.dob}}<span class="forget-errors">{{form.dob.errors}}</span></td></tr>
+	 		<tr><td width="375px">{{form.bsn_number.label}}</td><td class="td_add" style="text-align:left">{{form.bsn_number}}<span class="forget-errors">{{form.bsn_number.errors}}</span></td></tr>
+	        </tbody>
+		</table>
+		</fieldset>   
+	 	
+	 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+		<legend>{% trans "Treatment Goal" %}</legend>
+	 		<tbody>
+		 		<tr><td width="375px">{{form.date_treatment_agreement.label}}</td><td class="td_add" style="text-align:left">{{form.date_treatment_agreement}}<span class="forget-errors">{{form.date_treatment_agreement.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.treatment_goal.label}}</td><td class="td_add" style="text-align:left">{{form.treatment_goal}}<span class="forget-errors">{{form.treatment_goal.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.notes.label}}</td><td class="td_add" style="text-align:left">{{form.notes}}<span class="forget-errors">{{form.notes.errors}}</span></td></tr>
+	 		</tbody>
+	 	</table>
+	 	</fieldset>
+	 	
+	 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+		<legend>{% trans "Contents Sessions" %}</legend>
+	 		<tbody>
+		 		<tr><td width="375px">{{form.contents_sessions.label}}</td><td class="td_add" style="text-align:left">{{form.contents_sessions}}<span class="forget-errors">{{form.contents_sessions.errors}}</span></td></tr>
+		 		<tr><td width="375px"></td><td valign="top" class="td_add" style="text-align:left;margin-left:280px; padding: 0;"><p class="online">{{form.online_therapy}}</p><span class="forget-errors">{{form.online_therapy.errors}}</span></td></tr>
+	 		</tbody>
+	 	</table>
+	 	</fieldset>
+	 	
+	 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+		<legend>{% trans "In what way do you want to achieve your goals?" %}</legend>
+	 		<tbody>
+		 		<tr><td width="375px">{{form.client_consultation.label}}</td><td class="td_add" style="text-align:left">{{form.client_consultation}}<span class="forget-errors">{{form.client_consultation.errors}}</span></td></tr>
+	 		</tbody>
+	 	</table>
+	 	</fieldset>	 
+   
+
+		{% if exist_feedback %}
+			<div>
+		    	<p style="color:green; font-family: Arial; margin: 0; margin-left:5px;">{% trans "Comments" %} : </p><br>
+				{% for feedback in exist_feedback %}
+					{% if feedback.created_by == request.user %}
+					<p style="color:blue;" class="feed">{% trans "me" %} : {{feedback.feedback }}</p><br>
+					{% else %}
+					<p style="color:brown;" class="feed">{{feedback.created_by.first_name}} ({{feedback.created_by}}) : {{feedback.feedback }}</p><br>
+					{% endif %}
+				{% endfor %}
+			</div><br>
+		{% endif %}
+
+		<div style="float:right;margin-top:0!important">
+			
+	  		<p class="left_content">{% trans "Feed Back" %}</p>
+		
+			<div style="margin-top:10px; width:100%;">
+			<form enctype="multipart/form-data" id="id_client_question_feedback" name="client_question_feedback" action="." method="post">{% csrf_token %}
+				<table width="771" cellpadding="5" align="center">
+					<tr><td class="goal">{{form1.client_treatment_agreement_form.label}}</td><td align="left" class="goal_box">{{form1.client_treatment_agreement_form}}</td></tr>
+					<tr><td class="td_client" align="center">{{ form1.feedback.label }}</td><td align="left">{{ form1.feedback }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form1.feedback.errors }}</span></td></tr>
+					<tr><td></td><td><div id="sav" ><a href="#" onclick="save_feedback()" ><p class="save" id="id_save">{% trans "Send" %}</p></a></div></td></tr>
+				</table>
+			</form>	
+			</div>
+		</div>	
+	
+	</div>
+ {% endblock %}

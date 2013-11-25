@@ -1,0 +1,205 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/diary.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/static/js/admin/basic.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery.simplemodal.js"></script>
+<script type="text/javascript">
+		$(document).ready(function(){
+			$(".first:even").css("background-color","#f7f7f7");
+			document.getElementById("tr_st").style.backgroundImage = 'url("/static/img/admin/hover_otp.png")';
+			document.getElementById("current3").style.color= "#fff";
+			$('#preview').hide();
+			$('#help_text').hide();
+			$("#id_add").click(function() {
+	       		alert("Add another Question")
+			});
+			$("#id_type_of_answer_1").click(function() {
+				$('#help_text').show();
+			});
+			$("#id_type_of_answer_2").click(function() {
+				$('#help_text').show();
+			});
+			$("#id_type_of_answer_0").click(function() {
+				$('#help_text').hide();
+			});
+			$("#id_type_of_answer_3").click(function() {
+				$('#help_text').hide();
+			});
+			if ( ("{{ key }}" != '{% trans "SEARCH" %}') && ("{{ key }}" != "None") ) {
+				$("#id_search_field").val("{{ key }}");
+			}
+			$('#page_number').val({{ question_list.number }}).change(function(){
+				var number = $(this).val();
+				window.location.href = '/admin_management/questions_list/?page=' + number
+			});
+		});
+		$(document).keypress(function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				var keyword = $("#id_search_field").val();
+				if ( keyword == '{% trans "SEARCH" %}') {
+					keyword = '';
+				}
+				if ((keyword != '')){
+					window.location.href = "/admin_management/questions_list/?key=" + keyword
+				}
+				window.location.href = "/admin_management/questions_list/?keyword=" + keyword
+				
+			}
+		});
+
+		function keyword(){
+			
+			var keyword = $("#id_search_field").val();
+			if ( keyword == '{% trans "SEARCH" %}') {
+				keyword = '';
+			}
+			if (keyword != ''){
+				window.location.href = "/admin_management/questions_list/?key=" + keyword
+			}
+			window.location.href = "/admin_management/questions_list/?keyword=" + keyword
+			
+		}
+function save_form(id)
+{
+	$('#id_questions_form').submit();
+}
+function reset()
+{
+	$('#id_title').val(' ');
+	$('#id_question').val(' ');
+	$('#id_help_text').val(' ');
+	$('#id_answers').val(' ');
+}
+function preview_show()
+{	
+	$('#answer').hide();
+	$('#text').hide();
+	$('#radio').hide();
+	$('#check').hide();
+	$('#slider').hide();
+	
+	if($('input[name=type_of_answer]:radio:checked').val()=='Text')
+		{
+			$('#answer').show();
+			$('#text').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Radio')
+		{
+			$('#answer').show();
+			$('#radio').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Checkbox')
+		{
+			$('#answer').show();
+			$('#check').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Slider')
+	{
+		$('#answer').show();
+		$('#slider').show();
+	}
+
+	$('#title').text($('#id_title').val());
+	$('#question').text($('#id_question').val());
+	$('#helptext').text($('#id_help_text').val());
+	$('#type_of_answer').text($('#id_type_of_answer').val());
+	$('#preview').show();
+}
+$(function() {
+    $( "#slider" ).slider();
+});
+</script>
+{% endblock %}
+
+
+{% block content%}
+	<div id="treat_content"><!--treat_content start-->
+		{% block treatleft %}
+			{{ block.super }}
+		{% endblock %}
+		<div id="right_treat_content"><!--right_treat_content start-->
+			{% block righttreat %}
+				{{ block.super }}
+			{% endblock %}
+			<div id="therapist_content" style="width:687px !important; margin:0px 0px 0px 6px; border-radius:0px 0px 10px 10px; padding: 1em 1.4em;"><!--therapist_content start-->
+				<div style="float:left; width:280px;">
+					<p class="left_content">{% trans "List of Questions" %}</p>
+				</div>
+				<div id="banner_right"><!--banner_right start-->  
+					<div id="search"><input type="text" name="place" placeholder='{% trans "SEARCH" %}' style="width:213px; height:30px; border-radius:10px; border:none; font-size:12px; color:#aeaeae; font-family:Arial;margin:0px 0px 0px 10px;" id="id_search_field"/></div>
+					<div class="searc">
+						<a href="#">
+							<img src="/static/img/admin/search.png" alt="searchbox" onClick="keyword();" />
+						</a>
+					</div>
+					<div id="add"><a href="/admin_management/create_questions/" style="text-decoration:none;">{% trans "Add Questions" %}</a></div>
+				</div><!--banner end-->
+				
+				<div class="clear"></div>
+				
+	        	<table class="features-table" height="auto" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+		            <thead>
+		            	<tr style="padding:3px;" cellpadding="15" id="heading" >
+			                <th class="numb" style="width:290px;border-left:1px solid #d0d0d0;">{% trans "Module Name" %}</th>
+			                <th class="numb" style="width:290px;border-left:1px solid #d0d0d0;">{% trans "Created At" %}</th>
+			        		<th class="numb" style="width:202px;border-left:1px solid #d0d0d0;">{% trans "Modified At" %}</th>
+		                </tr>
+		       		</thead> 
+		       		{% if question_list.object_list %}
+			       			{% for question in question_list.object_list %}
+								<tr class="first" style=" background:#F5F2F3;">
+						        	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{% if search %}<a href="/admin_management/questions_edit/{{question.id}}/">{% else %}<a href="/admin_management/questions_edit/{{question.id}}/">{% endif %}{{question.module}}</td>
+								    <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{question.created_at}}</td>
+						        	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{question.modified_at}}</td>
+						        </tr>
+				            {% endfor %}
+		            {% else %}
+		            	<tr class="first" style=" background:#f7f7f7;">
+			            	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;" colspan="3">{% trans "No Modules Found" %}</td>
+			            </tr>
+			        {% endif %}
+	            </table>
+	            
+			   	{% if question_list.object_list %}
+				   	<div class="pagination" align="center">
+		    			<table style="border: 0px; margin-top:15px;" width="15%">
+			    			<tbody>
+			    				<tr>
+			    					<td width="10%" align="left">
+							        	{% if question_list.has_previous %}
+							            	<a href="?page={{ question_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+							        	{% endif %}
+			    					</td>
+			    					<td width="80%" align="center">
+										<select id="page_number">
+											{% for each in num_pages %}
+												<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+											{% endfor %}
+										</select>
+			    					</td>
+			    					<td width="10%" align="right">
+							        	{% if question_list.has_next %}
+							            	<a href="?page={{ question_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+							        	{% endif %}
+			    					</td>
+			   					</tr>
+			    			</tbody>
+		    			</table>	
+					</div>  
+				{% endif %}             
+	        </div><!--therapist_content end-->
+		</div>
+	</div>     		
+{% endblock %}

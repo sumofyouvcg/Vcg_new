@@ -1,0 +1,107 @@
+{% extends 'caregiver/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel='stylesheet' type='text/css' href="/static/css/company/cupertino/theme.css" />
+<link rel='stylesheet' type='text/css' href="/static/css/company/fullcalendar.css"/>
+<link rel='stylesheet' type='text/css' href="/static/css/company/fullcalendar.print.css" media='print' />
+<style type="text/css">
+#calendar {
+		width: 500px;
+		margin: 0 auto;
+		}
+#newmessage_frm_test
+	{
+		width:730px;
+		height:580px;
+		overflow:auto;
+		float:right;
+		margin-top: 10px;
+		text-align: center;
+		font-size: 13px;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		border:1px solid #D0D0D0;
+		border-radius:10px;
+		-moz-border-radius:10px;
+		-webkit-border-radius:10px;
+		padding:20px;
+	}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}	
+#current3 a
+{
+color:#7CC744;
+}
+#test_list a
+{
+color:#25B513 !important;
+}
+
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+{% load util_custom_tags %}
+	 <div id="banner_left"><!--banner_left start-->
+	        <p class="left_content">{{selected_test|title}} {% trans "Details" %}</p>
+	 </div><!--banner_left end-->
+ 
+		
+	<div id="banner_right"  style="width:500px; margin: -35px 0 0 0;" ><!--banner_right start-->  
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url caregiver_client_test_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		{% if not analyst %}
+				<div class="newmessage"><!--newmessage start-->
+					<a href="{% url caregiver_client_test_edit domain_name client_id test_id %}" >{% trans "Edit Test" %}</a>
+				</div><!--newmessage end-->
+		{% endif %}
+	</div>
+		
+ <div id="newmessage_frm_test"><!--newmessage_frm start-->
+	<div id="banner_left"><!--banner_left start-->
+        <p class="left_content" align="left">{% trans "Test Questions" %}</p>
+ 	</div><!--banner_left end-->
+ 
+ 	<div class="clear"></div>	
+
+	<table id="tab" cellpadding="5" cellspacing="5" style="border-left:1px solid #d0d0d0;">
+		{% for question in test_questions %}
+			{% with 0 as answer_no %}
+				<tr >
+					<td class="td_add" style="text-align:left;" >{{forloop.counter}}.</td>
+					<td class="td_add" style="text-align:left;" ><p>{{ question.question }}</p></td>
+					<td></td>
+				</tr>
+				{% for each_answer in test_answers %}
+    				{% if each_answer.question.id == question.id %}
+	    				{% ++ answer_no %}
+						<tr>
+							<td class="td_add" style="text-align:left;" width="5%"></td>
+							<td class="td_add" style="text-align:left;" width="85%" >{{ answer_no }}.&nbsp;&nbsp;&nbsp;&nbsp;{{ each_answer.answer }}</td>
+							<td class="td_add" style="text-align:left;" width="5%" >{{ each_answer.score }}</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			{% endwith %}
+		{% endfor %}	
+	</table>
+		
+	<div id="banner_left"><!--banner_left start-->
+        <p class="left_content" align="left">{% trans "Test Result" %}</p>
+ 	</div><!--banner_left end-->
+ 
+ 	<div class="clear"></div>
+		<table id="tab" cellpadding="5" style="margin-left:20px">
+			{% for range in ranges %}
+				<tr><td class="td_add" style="text-align:left;"><p>{% trans "From" %}</p></td><td class="td_add" style="text-align:left;"><p>{{ range.from_value }}</p></td><td class="td_add" style="text-align:left;"><p>To</p></td><td class="td_add" style="text-align:left;"><p>{{ range.to_value }}</p></td><td class="td_add" style="text-align:left;"><p>{% trans "Means" %}</p></td><td class="td_add" style="text-align:left;"><p>{{ range.result }}</p></td></tr>
+			{% endfor %}			
+		</table>
+	 </div><!--newmessage_frm end-->
+	
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst2
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst2 a
+	{
+	color:#7CC744 !important;
+	}
+	
+	#mailboxmusic {
+   background: url("/static/img/client/image.png") no-repeat scroll left top transparent;
+   float: right;
+   height: auto;
+   margin: 10px 20px 0 0;
+   width: 290px;
+	}
+ .member
+ {
+ 	font-size: 12px;
+ 	margin: 8px 0 4px 15px;
+ 	text-align: left;
+ }
+   .mail-inner1 {
+   background: none repeat scroll 0 0 #EDEAEA;
+   border: 1px solid #CCCCCC;
+   border-radius: 0 10px 10px 10px;
+   height: auto;
+   margin: 0px 0 0;
+   width: 290px;
+   min-height: 50px;
+	}
+	.father {
+   color: #333333;
+   font-family: Arial,Helvetica,sans-serif;
+   font-size: 12px;
+   margin: 10px 0 7px 18px;
+   padding: 0;
+   width: 260px;
+   text-align:left;
+	}
+	
+</style>
+
+<link rel='stylesheet' type='text/css' href="/static/css/client/cupertino/theme.css" />
+<link rel='stylesheet' type='text/css' href="/static/css/client/fullcalendar.css"/>
+<link rel='stylesheet' type='text/css' href="/static/css/client/fullcalendar.print.css" media='print' />
+<style type="text/css">
+	#calendar {
+        width: 500px;
+        margin: 0 auto;
+        }         
+    #newmessage_frm_diary{
+        width:958px;
+        float:right;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 13px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        border:1px solid #D0D0D0;
+        border-radius:10px;
+        -moz-border-radius:10px;
+        -webkit-border-radius:10px;
+        padding-top:20px;
+       
+    }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<!--DIARY START-->
+<!--  hide for welcome popup
+<script type='text/javascript' src="/static/js/client/jquery-1.8.1.min.js"></script>
+ -->
+<script type='text/javascript' src="/static/js/client/jquery-ui-1.8.23.custom.min.js"></script>
+<script type='text/javascript' src="/static/js/client/fullcalendar.min.js"></script>
+<script type='text/javascript'>
+
+    $(document).ready(function() {
+   
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+       
+        $('#calendar').fullCalendar({
+            theme: true,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            editable: true,
+            events: [
+           
+           {{ client_events|safe }}
+           
+            ]
+        });
+       
+    });
+function call_feedback(date)
+{
+	var link = '{% url client_diary_view_details domain_name diary_id 'newid' %}';
+	link = link.replace('newid', date);
+	window.location.replace(link);
+}
+</script>
+<!--DIARY END-->
+ <!--SCRIPT END-->
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+
+ <div id="banner_left"><!--banner_left start-->
+        <p class="left_content">{% trans "Diary" %}</p>
+ </div><!--banner_left end-->
+<div style="float:right;margin: 15px 0 0;">
+	<div id="sav" ><a href="{% url client_diary_list domain_name %}" ><p class="save" id="id_save">{% trans "BACK" %}</p></a></div>
+</div>
+ <div id="newmessage_frm_diary"><!--newmessage_frm start-->
+    <div style="float:left;width:55%;margin-left:25px;margin-top:25px;">
+    	<div id='calendar'></div>
+    </div>
+    
+    <div style="float:right;width:35%;margin:10px;max-height:500px;overflow:auto;">
+	    {% for feedback in diary_feedbacks %}
+	    	<div id="mailboxmusic">
+	    		<p class="member" >{{feedback.created_at|escape}}</p>      
+	           	<div class="mail-inner1">
+	    			<p class="father">{{feedback.feedback}}</p>  
+	    			<input type="button" name="go" value="Go" id='{{feedback.date|escape}}' onclick="call_feedback(this.id)" style="margin-left:220px;margin-bottom:10px;">
+	      		</div>
+		   	</div>
+		{% endfor %}	  
+    </div>
+
+    <div class="clear"></div>
+    <br><br>
+    
+ </div><!--newmessage_frm end-->
+   
+{% endblock %}

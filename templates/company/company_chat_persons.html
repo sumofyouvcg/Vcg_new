@@ -1,0 +1,127 @@
+{% extends 'company.html' %}`
+{% load i18n %}	
+
+{% block extrahead %}
+<script type="text/javascript">
+
+$(function(){
+	$('#page_number').val({{ user_list.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '{% url company_chat_persons domain_name date %}?page=' + number
+	});
+
+	$("#id_details").hide();
+
+});
+function call_details(){
+	$("#id_details").show();
+
+}
+</script>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+#current2 a
+{
+color:#7CC744;
+}
+#current2
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#chat a
+{
+color:#25B513 !important;
+}
+.middle_content{
+ color: #25B513;
+ font-family: Arial;
+ font-size: 18px;
+ font-weight: bold;
+ margin: 0;
+ padding: 0px 0px 9px 0px;
+ text-align: center;
+}	
+</style>
+{% endblock %} 
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	<div id="banner_left"><!--banner_left start-->
+		<p class="left_content">{% trans "Messages" %}</p>
+	</div><!--banner_left end-->
+	 
+	<div id="new_banner_right" style="float:right;margin:15px 0px 0px 170px;"><!--banner_right start-->  
+		<div id="sav" style="float:right;margin:0px 0px 0px 1px;"><a href="{% url company_chat_details domain_name %}" class="save">{% trans "BACK" %}</a></div>
+ 	</div><!--banner_right end--> 
+
+	<div class="clear"></div>	 	
+	
+	<div class="common_banner"> <!--banner start-->  
+   		<div class="common_left"><!--common_left start-->
+			<ul><!--common_left ul start-->
+				{% if new_messages %}
+					<li id="messagess"><a href="{% url company_message domain_name %}">{% trans "Inbox" %}({{ new_messages|length }})</a></li>
+				{% else %}
+					<li id="messagess"><a href="{% url company_message domain_name %}">{% trans "Inbox" %}</a></li>
+				{% endif %}
+				<li id="send"><a href="{% url company_sent_message domain_name %}">{% trans "Sent Message" %}</a></li>
+				<li id="trash"><a href="{% url company_trash_message domain_name %}">{% trans "Trash" %}</a></li>
+				<li id="chat"><a href="{% url company_chat_details domain_name %}">{% trans "Chat History" %}</a></li>
+			</ul><!--common_left ul end-->
+			<div id="online_users">  </div>
+   		</div><!--common_left end-->
+	</div><!--banner end-->
+	    
+	<div id="newmessage_frm" style="float:right;margin-bottom:65px;margin-top:-25px; border:none;"><!--newmessage_frm start-->
+		<p class="middle_content"> {{date}} </p>
+		<table align="center" cell padding="5" width="748" style="border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+			<tbody>	
+	    		{% if user_list.object_list %}
+		    		{% for user in user_list.object_list %}
+		                <tr class="first" style="height:24px;">
+			                <td width="30%"height="44" class="name"><a href="{% url company_chat_history domain_name date user.id %}">{% trans "Chat with" %} {{user}}</a></td>
+			        	</tr>
+					{% endfor %}
+				{% else %}
+					<tr class="first" style="height:24px;">
+						<td colspan="2" width="30%"height="44" class="name">{% trans "No Chat history available" %}</td>
+					</tr>
+				{% endif %}
+	            </tbody>
+		</table>
+	
+    <div class="clear"></div>
+	
+		{% if user_list.object_list %}
+			<div class="pagination" align="center" style="margin: 0 auto;width: 46px;">
+		    	<table style="border: 0px; margin-top:15px;" width="15%">
+		    		<tbody>
+		    			<tr>
+		    				<td width="10%" align="left">
+						        {% if user_list.has_previous %}
+						            <a href="?page={{ user_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    				<td width="80%" align="center">
+								<select id="page_number">
+									{% for each in num_pages %}
+										<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+									{% endfor %}
+								</select>
+		    				</td>
+		    				<td width="10%" align="right">
+						        {% if user_list.has_next %}
+						            <a href="?page={{ user_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+			</div>
+		{% endif %}
+	</div>
+	{% endblock %}

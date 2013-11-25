@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/diary.css" />
+<style>
+	.fst1
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst1 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/admin/basic.js"></script>
+<script type="text/javascript" src="/static/js/admin/jquery.simplemodal.js"></script>
+
+<script type="text/javascript">
+		$(document).ready(function(){
+			$('#help_text').hide();
+			$("#id_add").click(function() {
+	       		alert("Add another Question")
+			});
+			$("#id_type_of_answer_1").click(function() {
+				$('#help_text').show();
+			});
+			$("#id_type_of_answer_2").click(function() {
+				$('#help_text').show();
+			});
+			$("#id_type_of_answer_0").click(function() {
+				$('#help_text').hide();
+			});
+			$("#id_type_of_answer_3").click(function() {
+				$('#help_text').hide();
+			});
+			
+			$(function() {
+		        $( "#slider" ).slider();
+		    });
+		});
+
+function save_form(id)
+{
+	document.diary_form.action ="/admin_management/diary_add/";
+	$('#id_diary_form').submit();
+}
+function reset()
+{
+	$('#id_title').val(' ');
+	$('#id_question').val(' ');
+	$('#id_help_text').val(' ');
+	$('#id_answers').val(' ');
+}
+function preview_show()
+{	
+	$('#answer').hide();
+	$('#text').hide();
+	$('#radio').hide();
+	$('#check').hide();
+	$('#slider').hide();
+	
+	if($('input[name=type_of_answer]:radio:checked').val()=='Text')
+		{
+			$('#answer').show();
+			$('#text').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Radio')
+		{
+			$('#answer').show();
+			$('#radio').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Checkbox')
+		{
+			$('#answer').show();
+			$('#check').show();
+		}
+	else if($('input[name=type_of_answer]:radio:checked').val()=='Slider')
+	{
+		$('#answer').show();
+		$('#slider').show();
+	}
+
+	$('#title').text($('#id_title').val());
+	$('#question').text($('#id_question').val());
+	$('#helptext').text($('#id_help_text').val());
+	$('#type_of_answer').text($('#id_type_of_answer').val());
+	$('#preview').show();
+}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<div id="add_heading"><p class="add_heading_content">{% trans "Add Diary" %}</p></div>
+	<form enctype="multipart/form-data" id="id_diary_form" name="diary_form" action="." method="post">{% csrf_token %}
+	    <div id="add_therapist"><!--add_caregiver start-->
+	       	<div class="tabl">
+	         	<table id="tab" cellpadding="5">
+	             <tbody>
+	                <tr><td class="td_add">{{ form.title.label }}</td><td>{{ form.title }}</td></tr>
+	                <tr><td></td><td><span class = "forget-errors">{{ form.title.errors }}</span></td></tr>
+	                <tr id="marg" style="margin-top:30px;"><td class="td_add" > {{ form.diary_number.label }}</td><td>{{ form.diary_number }}</td></tr>
+	                <tr><td></td><td><span class = "forget-errors">{{ form.diary_number.errors }}</span></td></tr>
+	                <tr><td class="td_add">{{ form.image.label }}</td><td>{{ form.image }}</td></tr>
+	                <tr><td></td><td><span class = "forget-errors"><i style="color:#5B5B5B;">{{form.image.help_text}}</i>{{ form.image.errors }}</span></td></tr>
+	                <tr><td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td></tr>
+	                <tr><td></td><td colspan="3" id="basic-modal_1">
+	                		<div id="sav" onclick = "reset()"><a href="/admin_management/diary_list/" class="save1">{% trans "Cancel" %}</a></div>
+	                		<div id="savcomp" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save & Next" %}</a></div>
+	               	</td></tr>
+	             </tbody>
+	         	</table>
+	      	</div>
+		</div><!--add_caregiver end-->
+	</form>
+{% endblock %}

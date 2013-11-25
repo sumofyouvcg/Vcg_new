@@ -1,0 +1,51 @@
+{% extends 'admin/communication.html' %}
+{% load i18n %}
+
+{% block extrahead %}
+<style type="text/css">
+	.fst3
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst3 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrastyle %}
+{% endblock %}
+
+{% block content %}
+<div id="content"><!--content start-->      
+	{% block left %}
+		{{ block.super }}
+	{% endblock %}
+	
+	{% block right %}
+		<div id="content_right"><!--content_left start-->
+			<div class="my_contact"	>
+				<table class="features-table" width="739px" height="120px" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+            <thead>
+            	<tr style="padding:3px; height:35px; background:#dcdcdc" cellpadding="15" id="heading" >
+                <th class="numb" style="width:191px;">{% trans "Settings" %}</th>              
+				<th class="numb" style="width:192px;border-left:1px solid #d0d0d0;">{% trans "Active" %}</th>          	 
+                </tr>
+       		</thead> 
+                
+                <tr class="first" style="height:24px;">
+                <td class="name"><a href="Therapistname.html">{% trans "Chat" %}</a></td>
+              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><input type="checkbox" /></td>
+                </tr>
+                
+                <tr class="first" style="height:24px;">
+                <td class="name"><a href="Therapistname.html">{% trans "Webcam" %}</a></td>
+              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><input type="checkbox" /></td>
+                </tr>
+            </table>
+			</div>
+		</div>
+	{% endblock %}		
+</div>
+{% endblock %}

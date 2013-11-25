@@ -1,0 +1,77 @@
+{% extends 'admin/treatment.html' %}
+{% load i18n %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="/static/jscripts/ckeditor/ckeditor.js" ></script>
+<script type="text/javascript">
+	function save_form(id)
+	{
+		$('#id_test_form').submit();
+	}
+    
+	function delete_form()
+    {
+		var confirmed = confirm('{% trans "Are you sure want to delete this Session?" %}');
+    	if(confirmed)
+    	{
+    		window.location = "/admin_management/session_delete/{{session_id}}/";
+    	}
+    	else
+    		{
+    		window.location = "/admin_management/session/{{session_id}}/";
+    		}
+    } 
+</script>
+<script type="text/javascript" src="ckeditor/adapters/jquery.js"></script>
+
+<script type="text/javascript">
+    $(document).ready( function() {
+    	$('#previewButton').click( function () {
+            $('#cke_11').click();
+        });
+    	'{% if session_view == "readonly" %}'
+        	$('#session').hide()
+        '{% endif %}'
+        $('#session{{session_id}} a').attr("style", "color:#42A194 !important");
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div id="treat_content"><!--treat_content start-->
+	
+	{% block treatleft %}
+		{{ block.super }}
+	{% endblock %}
+	
+	<div id="right_treat_content"><!--right_treat_content start-->
+	
+		{% block righttreat %}
+			
+		{% endblock %}
+		<div id ="session">
+			<form enctype='multipart/form-data' name='test_form' id='id_test_form' action='.' method='post'>{% csrf_token %}
+				<span class="td_add">Session Name:  {{form.name}}</span><br>
+				{{form.plaintext}}
+				<div style="display:none">{{form.module}}</div>
+			</form><br>
+			<div id="sav">
+				<a class="save" href="#" onclick = "save_form(this.id)">{% trans "Save" %}</a>
+			</div>
+			<div id="canc">
+				<a tabIndex="-1" title="Preview" class="cke_off cke_button_preview save1" id="cke_11" role="button" aria-labelledby="cke_11_label" hideFocus="true" onmouseup="CKEDITOR.tools.callFunction(15, this); return false;" onkeydown="return CKEDITOR.tools.callFunction(13, event);" onclick="return false;" onfocus="return CKEDITOR.tools.callFunction(14, event);" href="javascript:void('Preview')" ?="">{% trans "Preview" %}</a>
+			</div>
+			<div id="sav"><a href="#" class="save" id = '{{form.id}}' onclick = "delete_form()">{% trans "Delete" %}</a></div>
+
+		</div>
+		{% if session_view == "readonly" %}
+			<br><span class="td_add">{% trans "Session Name" %}:  {{selected_session.name}}</span><br>
+			<div id="view" style="border:1px solid #D0D0D0; max-height: 360px; overflow: auto; border-radius:10px;">
+				<div style="margin-left:10px; ">{{selected_session.plaintext|removetags:"b span"|safe}}</div>
+			</div>
+		{% endif %}
+	</div>
+	
+</div>
+{% endblock %}

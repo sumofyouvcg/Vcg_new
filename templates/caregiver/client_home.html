@@ -1,0 +1,638 @@
+{% extends 'caregiver.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+.common_left ul li.now a{
+	color:#25b513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+#current3 a
+{
+color:#7CC744;
+}
+</style>
+
+{% endblock %}
+ 
+{% block extrahead %}
+<script src="/static/js/jqery.js" type="text/javascript"></script>
+<script type="text/javascript">
+ddaccordion.init({
+    headerclass: "expandable", //Shared CSS class name of headers group that are expandable
+    contentclass: "categoryitems", //Shared CSS class name of contents group
+    revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+    mouseoverdelay: 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+    collapseprev: true, //Collapse previous content (so only one open at any time)? true/false 
+    defaultexpanded: [0], //index of content(s) open by default [index1, index2, etc]. [] denotes no content
+    onemustopen: false, //Specify whether at least one header should be open always (so never all headers closed)
+    animatedefault: false, //Should contents open by default be animated into view?
+    persiststate: true, //persist state of opened contents within browser session?
+    toggleclass: ["", "openheader"], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+    togglehtml: ["prefix", "", ""], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+    animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+    oninit:function(headers, expandedindices){ //custom code to run when headers have initalized
+            //do nothing
+    },
+    onopenclose:function(header, index, state, isuseractivated){ //custom code to run whenever a header is opened or closed
+            //do nothing
+    }
+})
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="common_banner"> <!--banner start-->  
+   <div class="common_left"><!--common_left start-->
+    	<div id="banner_contact">
+    	{% if client.client_image %}
+    		<img src="{{client.client_image.url}}" height="160px" width="140px"/>
+    	{% else %}
+        	<img src="/static/img/company/contact_img.jpg" />
+        {% endif %}
+        </div>
+		<ul><!--common_left ul start-->
+			<li class="now" style="margin-top:15px;"><a href="{% url caregiver_client_home domain_name client_id %}">{% trans "Contact History" %}</a></li>
+			<li id="send"><a href="{% url caregiver_client_send_message domain_name client_id %}">{% trans "Send Message" %}</a>	</li>
+			{% if new_messages %}
+				<li id="messagess"><a href="{% url caregiver_client_messages domain_name client_id %}">{% trans "Messages" %}({{ new_messages }})</a></li>
+			{% else %}
+				<li id="messagess"><a href="{% url caregiver_client_messages domain_name client_id %}">{% trans "Messages" %}</a></li>
+			{% endif %}
+			<li id="details"><a href="{% url caregiver_client_details domain_name client_id %}">{% trans "Details" %}</a></li>
+			<li id="caregivers"><a href="{% url caregiver_client_caregivers domain_name client_id %}">{% trans "Caregivers" %}</a></li>
+			<li id="diary_list"><a href="{% url caregiver_client_diary_list domain_name client_id %}">{% trans "Diary" %} </a></li>
+			<li id="test_list"><a href="{% url caregiver_client_test_list domain_name client_id %}">{% trans "Test" %} </a></li>
+			<li id="treatment_list"><a href="{% url caregiver_client_treatment_list domain_name client_id %}">{% trans "Treatment" %}</a></li>
+			<li id="plan_list"><a href="{% url caregiver_client_plan_list domain_name client_id %}">{% trans "Plan" %}</a></li>
+			<li id="Screening"><a href="{% url caregiver_client_assignment_list domain_name client_id %}">{% trans "Assignment" %} </a></li>
+			<li id="Animations"><a href="{% url caregiver_client_animation_list domain_name client_id %}">{% trans "Animations" %} </a></li>
+			<li id="Chat"><a href="{% url caregiver_client_chat_details domain_name client_id %}"> {% trans "Chat" %} </a></li>
+			<li id="Form"><a href="{% url caregiver_client_forms_list domain_name client_id %}"> {% trans "Form" %} </a></li>
+		<!-- 	<li id="Spoken"><a href="#"> Spoken    </a></li> -->
+		</ul><!--common_left ul end-->
+   </div><!--common_left end-->
+</div><!--banner end-->
+{% block clientcontact %}
+<div id="banner_left"><!--banner_left start-->
+    <p class="left_content">{% trans "Contact History" %}</p></div><!--banner_left end-->
+ <div class="contact_history" style="padding-bottom:0;"><!--contact history start-->
+	<div>
+		{% if post_treatment_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Treatment-Modules" %}({{ post_treatment_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Treatment-Modules" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+			{% if completed_treatment_modules %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in completed_treatment_modules %}       
+				        <tr>
+			     	    	<td width="562" height="5" align="center" ><font color="green">{{treat.module}}-{{treat.sessions}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_session domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+        	
+        	{% if opened_treatment_modules %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in opened_treatment_modules %}       
+				        <tr>
+			     	    	<td width="562" height="10" align="center" ><font color="orange">{{treat.module}}-{{treat.sessions}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_session domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+			
+			{% if activated_treatment_modules %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in activated_treatment_modules %}       
+				        <tr>
+			     	    	<td width="562" height="10" align="center" ><font color="blue">{{treat.module}}-{{treat.sessions}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_session domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+        	
+        	{% if none_modules %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Modules Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+         	{% endif %}           
+        </div>
+	</div>
+
+	<div>
+		{% if completed_treatment_read_questions %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Treatment-Questions" %}({{ completed_treatment_read_questions|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Treatment-Questions" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+			{% if completed_treatment_questions %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in completed_treatment_questions %}       
+				        <tr>
+			     	    	<td width="562" height="10" align="center" ><font color="green">{{treat.module}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_view domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+        	
+        	{% if opened_treatment_questions %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in opened_treatment_questions %}       
+				        <tr  style="margin:0;border:0;border-radius: none;">
+			     	    	<td width="562" height="10" align="center" ><font color="orange">{{treat.module}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_view domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+			
+			{% if activated_treatment_questions %}
+			<ul style="margin:5px;background-color:lavender;">
+		        <table style="margin:0;border:0;border-radius: none;">
+		        	{% for treat in activated_treatment_questions %}       
+				        <tr>
+			     	    	<td width="562" height="10" align="center" ><font color="blue">{{treat.module}}</font></td>
+			             	<td width="163" align="center">
+			             		<a href="{% url caregiver_client_treatment_view domain_name client_id treat.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+			                </td>
+			            </tr>
+		            {% endfor %}
+		         </table>
+		 	</ul>
+         	{% endif %}
+        	
+        	{% if none_questions %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Modules Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+         	{% endif %}           
+        	       
+		</div>
+   </div>
+
+	<div>
+	
+		{% if post_test_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Test" %}({{ post_test_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Test" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+        	{% if post_test_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_test in post_test_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_test }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_test_view domain_name client_id post_test.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_test_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for non_post_test in non_post_test_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_test }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_test_view domain_name client_id non_post_test.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        
+        	{% if new_test_list %}
+        	
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_test in new_test_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_test }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_test_view domain_name client_id new_test.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}
+
+        	
+        	{% if none_test %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Test Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}
+		</div>
+   </div>
+   
+	
+	<div>
+		{% if post_plan_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Plan" %}({{ post_plan_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Plan" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+
+        	{% if post_plan_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_plan in post_plan_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_plan }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_plan_view domain_name client_id post_plan.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_plan_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for non_post_plan in non_post_plan_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_plan }}</font></td>
+				             	<td width="163" align="center">
+				             	
+				             		<a href="{% url caregiver_client_plan_view domain_name client_id non_post_plan.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+
+        	{% if new_plan_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_plan in new_plan_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_plan }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_plan_view domain_name client_id new_plan.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}        
+            
+        	{% if none_plan %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Plan Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}            
+		</div>
+   </div>
+
+
+	<div>
+		{% if post_diary_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Diary" %}({{ post_diary_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Diary" %}</a></h3></div>
+		{% endif %}
+
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+        	{% if post_diary_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_diary in post_diary_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_diary }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_diary_show domain_name post_diary.client.id post_diary.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_diary_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for non_post_diary in non_post_diary_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_diary }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_diary_show domain_name non_post_diary.client.id non_post_diary.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        
+        	{% if new_diary_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_diary in new_diary_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_diary }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_diary_show domain_name new_diary.client.id new_diary.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}
+
+        	
+        	{% if none_diary %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Diary Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}
+		</div>
+   </div>
+   
+   
+	<div>
+		{% if post_assignment_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Assignment" %}({{ post_assignment_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Assignment" %}</a></h3></div>
+		{% endif %}
+
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+
+        	{% if post_assignment_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_assignment in post_assignment_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_assignment }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_assignment_details domain_name client_id post_assignment.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_assignment_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for  non_post_assignment in non_post_assignment_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_assignment }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_assignment_details domain_name client_id non_post_assignment.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+
+        	{% if new_assignment_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_assignment in new_assignment_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_assignment }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_assignment_details domain_name client_id new_assignment.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}        
+            
+        	{% if none_assignment %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Assignment Assigned" %} </font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}            
+		</div>
+    </div>
+
+	<div>
+		{% if post_animation_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Animation" %}({{ post_animation_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Animation" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+
+        	{% if post_animation_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_animation in post_animation_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_animation }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_animation_view domain_name client_id post_animation.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_animation_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for non_post_animation in non_post_animation_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_animation }}</font></td>
+				             	<td width="163" align="center">
+				             	
+				             		<a href="{% url caregiver_client_animation_view domain_name client_id non_post_animation.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+
+        	{% if new_animation_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_animation in new_animation_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_animation }}</font></td>
+				             	<td width="163" align="center">
+				             		<a href="{% url caregiver_client_animation_view domain_name client_id new_animation.id %}" style="text-decoration:none;"><input type="button"  value="Go" name="go" /></a>
+				                </td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}        
+            
+        	{% if none_animation %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Animation Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}            
+		</div>
+   	</div>
+   	
+   	<div>
+		{% if post_forms_read_list %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Forms" %}({{ post_forms_read_list|length }})</a></h3></div>
+		{% else %}
+		<div style="text-align:center;height:40px;background-color:#A7FA8F;border-radius: 10px 10px 10px 10px;border: 1px solid #D0D0D0;"><h3 class="menuheader expandable"  align="center"><a href ="#" style="text-decoration:none;color:#5B5B5B;">{% trans "Forms" %}</a></h3></div>
+		{% endif %}
+		<div class="categoryitems" style="max-height:500px;overflow:auto;border: 1px solid #D0D0D0;border-radius: 10px 10px 10px 10px;">
+
+        	{% if post_forms_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for post_forms in post_forms_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="green">{{ post_forms }}</font></td>
+				             	<td width="163" align="center">
+				             	{% if post_forms.form == 'Intake Form' %}
+			             			<a href="{% url caregiver_client_intake_form domain_name client_id post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}
+				             	{% if post_forms.form == 'Treatment Agreement Form' %}
+			             			<a href="{% url caregiver_client_treatment_agreement_form domain_name client_id post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}	
+				             	{% if post_forms.form == 'Treatment Form' %}
+			             			<a href="{% url caregiver_client_treatment_form domain_name client_id post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}			           
+				             	</td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+        	
+        	{% if non_post_forms_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for non_post_forms in non_post_forms_list %}
+					        <tr >
+				     	    	<td width="562" height="10" align="center" ><font color="orange">{{ non_post_forms }}</font></td>
+				             	<td width="163" align="center">
+				             	{% if non_post_forms.form == 'Intake Form' %}
+				             		<a href="{% url caregiver_client_intake_form domain_name client_id non_post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}
+				             	{% if non_post_forms.form == 'Treatment Agreement Form' %}
+				             		<a href="{% url caregiver_client_treatment_agreement_form domain_name client_id non_post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}	
+				             	{% if non_post_forms.form == 'Treatment Form' %}
+				             		<a href="{% url caregiver_client_treatment_form domain_name client_id non_post_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}			           
+				             	</td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>
+            {% endif %}
+
+        	{% if new_forms_list %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+			        	{% for new_forms in new_forms_list %}
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="blue">{{ new_forms }}</font></td>
+				             	<td width="163" align="center">
+				             	{% if new_forms.form == 'Intake Form' %}
+				             		<a href="{% url caregiver_client_intake_form domain_name client_id new_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}
+				             	{% if new_forms.form == 'Treatment Agreement Form' %}
+				             		<a href="{% url caregiver_client_treatment_agreement_form domain_name client_id new_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}	
+				             	{% if new_forms.form == 'Treatment Form' %}
+				             		<a href="{% url caregiver_client_treatment_form domain_name client_id new_forms.id %}" style="text-decoration:none;"><input type="button"  value='{% trans "Go" %}' name="go" /></a>
+				             	{% endif %}			           
+				             	</td>
+		            		</tr>
+	            		{% endfor %}
+					</table>
+				</ul>		
+            {% endif %}        
+            
+        	{% if none_forms %}
+        		<ul style="margin:5px;background-color:lavender;">
+        			<table style="margin:0;border:0;border-radius: none;">
+					        <tr>
+				     	    	<td width="562" height="10" align="center" ><font color="#F78181">{% trans "No Forms Assigned" %}</font></td>
+		            		</tr>
+					</table>
+				</ul>
+            {% endif %}            
+		</div>
+   	</div>
+   	
+ </div><!--contact_history end-->
+{% endblock %}
+
+{% endblock %}

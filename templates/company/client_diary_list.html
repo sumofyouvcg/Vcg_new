@@ -1,0 +1,135 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+
+#diary_list a
+{
+color:#25B513 !important;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}	
+#current3 a
+{
+color:#7CC744;
+}
+	
+</style>
+
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$('#page_number').val({{ diary_list.number }}).change(function(){
+		var number = $(this).val();
+		window.location.href = '{% url company_client_diary_list domain_name client_id %}?page=' + number
+	});
+	
+	$("#selectall").click(function () {
+		$('.case').attr('checked', this.checked);
+		});
+ 	
+	$(".case").click(function(){
+			if($(".case").length == $(".case:checked").length) {
+				$("#selectall").attr("checked", "checked");
+			}
+			else {
+				$("#selectall").removeAttr("checked");
+			}
+		
+		});		
+});
+
+function delete_form()
+{
+	
+	if($(".case:checked").length == 0)
+		{
+		alert('{% trans "Select atleast one record to delete" %}')
+		return
+		}
+	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+	if(confirmed)
+	{
+		document.client_diary_list.action ="{% url company_client_diary_delete domain_name client_id %}";
+    	$('#id_client_diary_list').submit()
+	}
+	else
+		{
+		window.location = "{% url company_client_diary_list domain_name client_id %}";
+		}
+} 
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<form name = "client_diary_list" id = "id_client_diary_list" action="." method="POST" >{% csrf_token %}		
+		<div style="float:right;height:auto;">
+		
+		<div id="banner_left"><!--banner_left start-->
+	    	<p class="left_content" style=" margin: 19px 0 11px 10px;"><input type="checkbox" name="master"  value="head" id="selectall" />&nbsp;&nbsp;{% trans "Diary" %}</p>
+		</div><!--banner_left end-->
+	
+		<div id="new_banner_right" ><!--banner_right start-->  
+			<div class="newmessage" style="float:left;margin:0px 0px 0px 170px;"><!--newmessage start-->
+				<a href="{% url company_client_diary_add domain_name client_id %}" >{% trans "Add Diary" %}</a>
+			</div><!--newmessage end-->
+			<div id="sav" onclick = "delete_form()" style="float:right;"><a href="#" class="save">{% trans "Delete" %}</a></div>
+		</div>    
+	
+	  	<div class="clear"></div>   
+	
+		<div class="diary_list" style="margin-bottom:0;"><!--diary_list start-->
+			<table class="features-table" width="771" height="auto" cellpadding="10" style="border:0;" >
+				{% if diary_list.object_list %} 
+					{% for diary in diary_list.object_list %}
+	  					<tr style="font-family: Arial,Helvetica,sans-serif;">
+	    					<td class="numb" style="text-align:left;width:5%;"><input type="checkbox" name="choices" value={{diary.id}} class="case"  /></td>
+	  						<td class="numb" style="text-align:left;width:290px;"><a href="{% url company_client_diary_show domain_name client_id diary.id %}" style="text-decoration:none;color:#5B5B5B;">{{diary.diary}}</a></td>
+	  					</tr>
+	  				{% endfor %}
+				{% else %}
+					<tr style="font-family: Arial,Helvetica,sans-serif;">
+						<td class="numb" style="text-align:left;width:290px;">{% trans "No Diary's found" %}</td>
+ 					</tr>
+				{% endif %} 	  				
+			</table>
+		</div> 
+		
+		<div class="clear"></div>
+	
+		{% if diary_list.object_list %}
+			<div class="pagination" align="center" style="margin: 0 auto;width: 46px;">
+		    	<table style="border: 0px; margin-top:15px;" width="15%">
+		    		<tbody>
+		    			<tr>
+		    				<td width="10%" align="left">
+						        {% if diary_list.has_previous %}
+						            <a href="?page={{ diary_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    				<td width="80%" align="center">
+								<select id="page_number">
+									{% for each in num_pages %}
+										<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+									{% endfor %}
+								</select>
+		    				</td>
+		    				<td width="10%" align="right">
+						        {% if diary_list.has_next %}
+						            <a href="?page={{ diary_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+			</div>
+		{% endif %}
+	</div>
+</form>	
+{% endblock %}

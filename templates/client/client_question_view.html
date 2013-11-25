@@ -1,0 +1,184 @@
+{% extends 'client.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	.fst4
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst4 a
+	{
+	color:#7CC744 !important;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	'{% for val in slider_val %}'
+		var slide = $('.slider{{val.ques_id}} input#foo').val()
+		if (slide){
+			$( ".slider{{val.ques_id}}" ).slider({
+				range: "min",
+				value: {{val.min_val}},
+				min: {{val.min_val}},
+				max: {{val.max_val}},
+				slide: function( event, ui ) {
+				$( "#amount{{val.ques_id}}" ).val(  ui.value );
+				}
+				});
+				$( "#amount{{val.ques_id}}" ).val(  $( ".slider{{val.ques_id}}" ).slider( "value" ) );
+		}
+	'{% endfor %}'
+	
+	'{% for answer in answer_list %}'
+		$('#text{{answer.question}}').val('{{answer.answer}}');
+		$('.radio{{answer.question}}#radio{{answer.answer}}').attr("checked", "checked");
+		var check_list = $(".checkbox{{answer.question}}").val();
+		if (check_list){
+			'{% for ans in answer.answer %}'
+				$('.checkbox{{answer.question}}#checkbox{{ans}}').attr("checked", "checked");
+			'{% endfor %}'
+		}
+		$( "#amount{{answer.question}}" ).val( '{{answer.answer}}' );
+		$('.slider{{answer.question}}').slider('value', '{{answer.answer}}');
+	'{% endfor %}'
+	
+});
+
+function save_form(){
+	'{% for val in slider_val %}'
+		var amount =$( "#amount{{val.ques_id}}" ).val()
+		$('.slider{{val.ques_id}} input#foo').val(amount)
+	'{% endfor %}'
+	var count = 0;
+	'{% for question in question_list %}'
+		var text = '#text{{question.id}}'
+		var checkbox = '.checkbox{{question.id}}'
+		var radio = '.radio{{question.id}}'
+		$('#error{{question.id}}').text(''); 
+		if (text){
+			var answer = $('#text{{question.id}}').val();
+			var text_val = $('#text{{question.id}}').attr('type')
+			if (text_val == 'text'){
+				if((jQuery.trim( answer )).length==0)
+				  {
+					$('#error{{question.id}}').text('Enter Valid Answer'); 
+					count++;
+				}
+			}
+			if (answer == ''){
+				$('#error{{question.id}}').text('This field is required'); 
+				count++;
+			}
+		}
+		if (checkbox){
+			var answer = $(".checkbox{{question.id}}").val();
+			if (answer){
+				if(! $('.checkbox{{question.id}}').is(':checked') ){
+					$('#error{{question.id}}').text('This field is required'); 
+					count++;
+				}
+			}
+		}
+		if (radio){
+			var answer = $('.radio{{question.id}}').val();
+			if (answer){
+				if(! $('.radio{{question.id}}').is(':checked') ){
+					$('#error{{question.id}}').text('This field is required'); 
+					count++;
+				}
+			}
+		}
+	'{% endfor %}'
+	if(count == 0)
+	{
+		var confirmed = confirm('{% trans "Are you sure to Submit?" %}');
+	 	if(confirmed)
+	 	{
+	 		$('#question').submit();
+	 	}		
+	
+	}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+	
+	<div id="banner_left"><!--banner_left start-->
+          <p class="left_content">{{question.module|title}} {% trans "Questions" %} </p>
+    </div><!--banner_left end-->
+     
+    <div style="float:right;margin: 11px 0 0;">
+		<div id="sav" ><a href="{% url client_questions_list domain_name %}" ><p class="save" id="id_save">{% trans "BACK" %}</p></a></div>
+	</div>
+	
+    <div class="clear"></div>  
+     
+    <div id="treatment_panic" onclick="save()"style="font-family: Arial,Helvetica,sans-serif;font-size: 15px;border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;"><!--treatment_panic start-->
+    		<form enctype="multipart/form-data"  id="question" name="question_form"  method="post">{% csrf_token %}
+	    	<table id="tab" cellpadding="8"  style="padding-right:12px;padding-left:12px;border:0;">
+			 		<tbody>
+			 		{% if all_ques %}
+			 			{% for ques in all_ques %}
+			                <tr><td>{{forloop.counter}}.</td><td>{{ques.question_text}}</td></tr>
+			                <tr><td></td><td class="td_add" style="text-align:left">({{ques.help_text}})</td></tr>
+			               	{% if ques.answer_type == '1' %}
+			               			<tr><td></td><td><input type="text" name ="text{{ques.id}}" id="text{{ques.id}}"  /><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			               	{% endif %}
+	
+			               	{% if ques.answer_type == '2' %} 
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="radio" name ="radio{{ques.id}}" id="radio{{ans}}" class="radio{{ques.id}}" value="{{ ans }}"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '3' %}
+			               		{% for choice in choice_val %}
+			               			{% if choice.ques_id == ques.id %}
+			               				{% for ans in choice.answer %}
+			               					<tr><td></td><td><input type="checkbox" name ="checkbox{{ques.id}}" id="checkbox{{ans}}" class="checkbox{{ques.id}}" value="{{ ans }}"/>{{ ans }}</td></tr>
+			                			{% endfor %}
+			                				<tr><td></td><td><div id="error{{ques.id}}" style="color:red;"></div></td></tr>
+			                		{% endif %}
+			               		{% endfor %}			
+			               	{% endif %}
+			               
+			               	{% if ques.answer_type == '4' %} 
+			               		<tr><td></td><td>
+			               		<p>
+									<label for="amount">{% trans "Range" %}:</label>
+									<input type="text" id="amount{{ques.id}}" style="border: 0; color: #f6931f; font-weight: bold;" />
+								</p>
+								<div class="slider{{ques.id}}" id="slider-range-min" ><input type="hidden" id="foo" name="slider{{ques.id}}" value="slider{{ques.id}}" /></div>
+								</td></tr>
+			               		{% for slider in slider_val %}
+			                		{% if slider.ques_id == ques.id %}
+			                			<tr><td></td><td width="100%"><div style="float:left;width:50%">{{slider.min_val}}</div><div style="float:right;width:50%;text-align:right">{{slider.max_val}}</div></td></tr>
+			                		{% endif %}
+	                	 		{% endfor %}
+			               	{% endif %}
+			                
+			            {% endfor %}    
+			            <tr><td></td><td><div id="treat_submit">
+     						<div id="sav_treat"  onclick = "save_form(this.id)" style="cursor:pointer;"><p class="save_treat">{% trans "submit" %}</p></div>
+     						</div>
+     					</td></tr>
+			       {% else %}
+			       		<p style="padding:15px;">{% trans "No questions for this module" %}</p>
+			       	{% endif %}
+			        </tbody>   
+			</table>
+			</form>
+	 </div><!--treatment_panic end-->
+	 <br><br><br><br>
+{% endblock %}

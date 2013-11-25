@@ -1,0 +1,86 @@
+{% extends 'company/client_home.html' %}
+
+{% block extrastyle %}
+<style>
+.tdclass
+{
+text-align:center;
+}
+
+#moniter_list a
+{
+color:#25B513 !important;
+}
+
+#current3 a
+{
+color:#7CC744;
+}
+#current3
+{
+background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}	
+</style>
+
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+<div id="banner_left">
+     <p class="left_content" style="margin-top:23px;">Monitoring</p>
+</div>
+<div id="banner_right_caregivers"><!--banner_right start-->  
+	<a href="{% url company_client_caregiver_video domain_name client_id %}">
+		<img src="/static/img/company/vedio.png" width="53" height="37" style="float:right;margin-right:10px;" />
+	</a>
+    <a href="{%url company_client_caregiver_chat domain_name client_id %}">
+		<img src="/static/img/company/chat_icon.png" width="53" height="37" style="float:right;margin-right:10px;"/>
+	</a>
+</div><!--banner_right end-->  
+<div class="common_right"><!--common_right start-->
+	<div id="paginationdemo" class="demo"><!--paginationdemo start-->
+    	<div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+            <div class="my_contact"	>
+    			<table class="features-table" width="771" height="137" cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+           			<thead>
+		            	<tr style="padding:3px; height:24px; background:#dcdcdc" cellpadding="15" id="heading" >
+			                <th class="numb">Treatment</th>              
+							<th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Caregivers</th>
+			                <th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Chat Histoty</th>              
+							<th class="numb" style="width:191px;border-left:1px solid #d0d0d0;">Webcam History</th>
+			  			</tr>
+       		 	   </thead> 
+             	   <tr class="first" style="height:24px;">
+		                <td class="name"><a href="#">Treatment</a></td>
+		              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Caregivers</td>
+		                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="{% url company_client_caregiver_chat domain_name client_id %}/"><img src="/static/img/company/chat_icon.png" /></a></span></td>
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><a href="{% url company_client_caregiver_video domain_name client_id %}"><img src="/static/img/company/vedio.png" width="39" height="28" /></a></td>
+		           </tr>
+	               <tr class="first" style="height:24px;">
+		                <td class="name"><a href="#">Treatment</a></td>
+		              	<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">Caregivers</td>
+		                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><span><a href="{% url company_client_caregiver_chat domain_name client_id %}"><img src="/static/img/company/chat_icon.png" /></a></span></td>
+						<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><a href="{% url company_client_caregiver_video domain_name client_id %}"><img src="/static/img/company/vedio.png" width="39" height="28" /></a></td>
+	               </tr>
+              </table>
+          </div><!--my_contact end-->
+    </div> <!--Page 1 END--> 
+    <div id="p2" class="pagedemo" style="display:none;"><!--Page 2 Start-->jjj</div><!--Page 2 end-->
+    <div id="p3" class="pagedemo" style="display:none;">Page 3</div>
+    <div id="p4" class="pagedemo" style="display:none;">Page 4</div>
+	<div id="p5" class="pagedemo" style="display:none;">Page 5</div>
+	<div id="p6" class="pagedemo" style="display:none;">Page 6</div>
+	<div id="p7" class="pagedemo" style="display:none;">Page 7</div>
+	<div id="p8" class="pagedemo" style="display:none;">Page 8</div>
+	<div id="p9" class="pagedemo" style="display:none;">Page 9</div>
+	<div id="p10" class="pagedemo" style="display:none;">Page 10</div>
+	<div id="demo5" style="margin-left:260px;"></div>
+  </div><!--paginationdemo end-->
+</div><!--common_right-->
+<div class="clear"></div>
+{% endblock %}

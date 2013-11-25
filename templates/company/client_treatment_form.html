@@ -1,0 +1,260 @@
+{% extends 'company/client_home.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style type="text/css">
+	#Webcam a
+	{
+	color:#25B513 !important;
+	}
+	.fst4
+	{
+	background: url("/static/img/client/f.png") repeat-x scroll left top transparent !important;
+	}
+	.fst4 a
+	{
+	color:#7CC744 !important;
+	}
+	legend{
+	color:green;
+	}
+	li{
+	list-style:None;
+	}
+	.td_add1 {
+    color: #5B5B5B;
+    font-family: 'myriad pro';
+    font-size: 15px;
+    padding: 0 10px 0 0;
+    text-align: right;
+	}
+	.td_add2 {
+    color: #5B5B5B;
+    font-family: 'myriad pro';
+    font-size: 15px;
+    padding: 0 10px 0 0;
+    text-align: right;
+	}
+	.td_add1 label{
+	padding:36px;
+	}
+	
+	.yes_domain ul{
+	width:414px;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{block.super}}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.online').hide();
+	$('.yes_domain').hide();
+	$('#id_client_name').val('{{client_name.name}}');
+	$('#id_dob').val('{{client_name.dob|date:"m/d/Y"}}');
+	$('#id_email').val('{{client_name.email}}');
+	$('#id_phone_number').val('{{client_name.phone_number}}');
+	$('#id_address').val('{{client_name.address}}');
+	$('#id_code_town').val('{{client_name.zip_code}},  {{client_name.place_name}}');
+	$('#id_bsn_number').val('{{client_name.bsn_number}}');
+	$("#id_dob").datepicker({"dateFormat": 'mm/dd/yy', changeMonth:true, changeYear:true, yearRange: "-65:-14", defaultDate: '+0m+0d-14y' });
+
+	$('#id_contents_sessions_0').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+	
+	$('#id_contents_sessions_1').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+	
+	$('#id_contents_sessions_2').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+
+	$('#id_contents_sessioYns_3').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+
+	$('#id_contents_sessions_3').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+
+	$('#id_contents_sessions_4').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').hide();
+	});
+	
+	$('#id_contents_sessions_5').click(function(){
+	    // if ($(this).is(':checked')) alert('is checked'); 
+		$('.online').show();
+	});
+	$('#id_treat_domains_0').click(function(){
+		$('.yes_domain').show();
+	});
+	$('#id_treat_domains_1').click(function(){
+		$('.yes_domain').hide();
+	});
+	if($('#id_contents_sessions_5').is(':checked')) {
+		$('.online').show();
+	}
+	if($('#id_treat_domains_0').is(':checked')) {
+		$('.yes_domain').show();
+	}
+});
+function save_form(){
+	if($('#id_contents_sessions_5').is(':checked')) {
+		var selected = $(".online input[type='radio']:checked");
+		if (selected.length == 0 ){
+			alert('{% trans "Choose 1 radio button in online therapy" %}');
+			return false;
+		}
+	}
+	else{
+		$(".online input[type='radio']:checked").attr("checked", false);
+	}
+	
+	if($('#id_treat_domains_0').is(':checked')) {
+		var selected1 = $('.yes_domain input[name="domains_yes"]:checked');
+		if(selected1.length == 0){
+		    alert('{% trans "Choose atleast 1 checkbox in treat domains" %}');
+		    return false;
+		}
+	}
+	else{
+		$('.yes_domain input[name="domains_yes"]:checked').attr("checked", false);
+	}
+	
+	$('#question').submit();
+
+}
+</script>
+{% endblock %}
+
+{% block content %}{{block.super}}{% block clientcontact %}{% endblock %}
+	
+	<div id="banner_left"><!--banner_left start-->
+          <p class="left_content">{{company_forms|title}}</p>
+    </div><!--banner_left end-->
+ 	<div id="banner_right" style="width:393px; margin: 11px -12px 0 0;"><!--banner_right start-->  
+ 		<div class="newmessage" style="padding-left:15px;"><!--newmessage start-->
+			<a href="{% url company_client_forms_list domain_name client_id %}" >{% trans "Back" %}</a>
+		</div>
+		<div class="newmessage"><!--newmessage start-->
+			<a href="{% url company_client_forms_edit domain_name client_id form_id %}" >{% trans "Edit Form" %}</a>
+		</div><!--newmessage end-->
+	</div> 	    
+    <div id="newmessage_frm" style="border:0;padding-top:0;margin-top:0px;"><!--newmessage_frm start--><!--FORM START-->
+    		<form enctype="multipart/form-data"  id="question" name="question_form"  method="post">{% csrf_token %}
+    		
+    		<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+	    	<table cellpadding="8"  style="padding-right:12px;padding-left:12px;border: 0px solid #D0D0D0"">
+	    		<legend>{% trans "Personal" %}</legend>
+		 		<tbody>
+		 		<tr><td width="375px">{{form.client_name.label}}</td><td class="td_add" style="text-align:left">{{form.client_name}}<span class="forget-errors">{{form.client_name.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.address.label}}</td><td class="td_add" style="text-align:left">{{form.address}}<span class="forget-errors">{{form.address.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.code_town.label}}</td><td class="td_add" style="text-align:left">{{form.code_town}}<span class="forget-errors">{{form.code_town.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.dob.label}}</td><td class="td_add" style="text-align:left">{{form.dob}}<span class="forget-errors">{{form.dob.errors}}</span></td></tr>
+		 		<tr><td width="375px">{{form.bsn_number.label}}</td><td class="td_add" style="text-align:left">{{form.bsn_number}}<span class="forget-errors">{{form.bsn_number.errors}}</span></td></tr>
+		        </tbody>
+			</table>
+			</fieldset>   
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table cellpadding="8"  style="padding-right:12px;padding-left:12px;border: 0px solid #D0D0D0"">
+				<legend>{% trans "Treatment Goal" %}</legend>
+		 		<tbody>
+			 		<tr><td width="375px">{{form.date_treatment_agreement.label}}</td><td class="td_add" style="text-align:left">{{form.date_treatment_agreement}}<span class="forget-errors">{{form.date_treatment_agreement.errors}}</span></td></tr>
+			 		<tr><td width="375px">{{form.treatment_goal.label}}</td><td class="td_add" style="text-align:left">{{form.treatment_goal}}<span class="forget-errors">{{form.treatment_goal.errors}}</span></td></tr>
+			 		<tr><td width="375px">{{form.notes.label}}</td><td class="td_add" style="text-align:left">{{form.notes}}<span class="forget-errors">{{form.notes.errors}}</span></td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+			
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table cellpadding="8"  style="padding-right:12px;padding-left:12px;border: 0px solid #D0D0D0"">
+				<legend>{% trans "Contents Sessions" %}</legend>
+		 		<tbody>
+			 		<tr><td width="375px">{{form.contents_sessions.label}}</td><td class="td_add" style="text-align:left">{{form.contents_sessions}}<span class="forget-errors">{{form.contents_sessions.errors}}</span></td></tr>
+			 		<tr><td width="375px"></td><td valign="top" class="td_add" style="text-align:left;margin-left:280px; padding: 0;"><p class="online" style="margin-left:47px;">{{form.online_therapy}}</p><span class="forget-errors">{{form.online_therapy.errors}}</span></td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+
+			<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table cellpadding="8"  style="padding-right:12px;padding-left:12px;border: 0px solid #D0D0D0">
+				<legend>{% trans "In what way do you want to achieve your goals?" %}</legend>
+		 		<tbody>
+			 		<tr><td width="375px">{{form.client_consultation.label}}</td><td class="td_add" style="text-align:left">{{form.client_consultation}}<span class="forget-errors">{{form.client_consultation.errors}}</span></td></tr>
+		        </tbody>   
+			</table>
+			</fieldset>   
+    					
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Which methods and techniques?" %}</legend>
+		 		<tbody>
+		 		<tr><td class="td_add" style="text-align:left">{{form.methods_techniques}}<span class="forget-errors">{{form.methods_techniques.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px;width: 683px;">
+			<legend>{% trans "Treat Domains" %}</legend>
+		 		<tbody>
+		 		<tr><td >{{form.treat_domains.label}}</td></tr><tr>
+		 		<tr><td class="td_add" style="text-align:left">{{form.treat_domains}}<span class="forget-errors">{{form.treat_domains.errors}}</span></td></tr>
+		 		<tr class="yes_domain"><td width="375px">{{form.domains_yes.label}}</td></tr>
+		 		<tr class="yes_domain"><td width="375px" class="td_add" style="text-align:left">{{form.domains_yes}}<span class="forget-errors">{{form.non_field_errors}}{{form.domains_yes.errors}}</span></td></tr>
+		 		<tr class="td_add2"><td>{{form.specific_beliefs.label}}</td></tr>
+		 		<tr><td style="text-align:left">{{form.specific_beliefs}}<span class="forget-errors">{{form.specific_beliefs.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "Timelines" %}</legend>
+		 		<tbody>
+		 		<tr><th width="375px">{{form.indicator_treatment.label}}</th><th width="375px" style="text-align:left;">{% trans 'Duration' %}</th><th width="375px">{% trans 'Extension(if required number of sessions fill that extended)' %}</th></tr>
+		 		<tr><td>
+			 			<table style="border:None;">
+			 				<tr><td class="td_add1" style="text-align:left">{{form.indicator_treatment}}<span class="forget-errors">{{form.indicator_treatment.errors}}</span></td></tr>
+			 			</table>
+		 			</td>
+		 			<td colspan="2">
+		 				<table style="border:None;">
+		 					<tr><td width="375px">{{form.one_three_sessions.label}}</td><td class="td_add" style="text-align:left">{{form.one_three_sessions}}<span class="forget-errors">{{form.one_three_sessions.errors}}</span></td></tr>
+					 		<tr><td width="375px">{{form.three_nine_sessions.label}}</td><td class="td_add" style="text-align:left">{{form.three_nine_sessions}}<span class="forget-errors">{{form.three_nine_sessions.errors}}</span></td></tr>
+					 		<tr><td width="375px">{{form.less_nine_sessions.label}}</td><td class="td_add" style="text-align:left">{{form.less_nine_sessions}}<span class="forget-errors">{{form.less_nine_sessions.errors}}</span></td></tr>
+		 				</table>
+		 			</td>
+		 		</tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<fieldset style="border: 1px solid #D0D0D0; border-radius: 10px 10px 10px 10px;margin-top: 15px;">
+			<table id="tab" cellpadding="5" style="margin-left:20px">
+			<legend>{% trans "After Care" %}</legend>
+		 		<tbody>
+		 			<tr><td >{{form.after_care_treatment.label}}</td></tr>
+		 			<tr><td class="td_add" style="text-align:left">{{form.after_care_treatment}}<span class="forget-errors">{{form.after_care_treatment.errors}}</span></td></tr>
+		 		</tbody>
+		 	</table>
+		 	</fieldset>
+		 	
+		 	<div id="treat_submit">
+				<div id="sav_treat"  onclick = "save_form(this.id)" style="cursor:pointer;"><p class="save_treat">{% trans "Submit" %}</p></div>
+			</div>
+			
+			</form>
+	 </div><!--treatment_panic end-->
+	 <br><br><br><br>
+{% endblock %}

@@ -1,0 +1,484 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* CSS Document */
+
+body
+
+{
+
+margin:0;
+
+padding:0;
+
+background:url(../images/backgr.jpg) #FFFFFF repeat-x !IMPORTANT;
+
+}
+
+#wrapper
+
+{
+
+width:960px;
+
+height:auto;
+
+margin:0 auto;
+
+}
+
+/*HEADER START*/
+
+#header
+
+{
+
+width:960px;
+
+height:42px;
+
+}
+#contact
+
+{
+
+width:200px;
+
+height:19px;
+
+float:right;
+
+}
+
+#header_bottom
+
+{
+
+width:960px;
+
+height:102px;
+
+}
+
+#logo
+
+{
+
+width:372px;
+
+height:74px;
+
+float:left;
+
+margin-top: 17px;
+
+}
+
+
+.menu1
+
+{
+
+width:185px;
+
+height:19px;
+
+padding: 0;
+
+margin:66px 0px 0px 0px;
+
+float:right;  
+
+}
+
+.menu1 li
+
+{
+
+	display:inline;
+
+}
+
+.menu1 li a
+
+{
+
+	text-decoration:none;
+
+	font-family:Arial;
+
+	font-size:13px;
+
+	color:#b8b8b8;
+
+	font-weight:bold;
+
+	xpadding: 8px 3px;
+
+}
+
+#txt
+
+{
+
+border:none;
+
+text-transform:uppercase;
+
+font-size:13px;
+
+font-family:Arial;
+
+width:119px;
+
+color:#9f9f9f;
+
+font-weight:bold;
+
+}
+#current
+
+{
+
+width:177px;
+
+float:left;
+
+margin: 16px 0 0 20px;
+
+}
+/*HEADER END*/
+
+/*MENU BAR START*/
+
+
+
+#navigation {
+
+	padding-right: 10px;
+
+	clear:both;
+
+	width:960px;
+
+	height:43px;
+
+	background:url(../images/vaiomenu.png) bottom center no-repeat;
+
+}
+
+ul.nav-main,
+
+ul.nav-main li {
+
+	list-style: none;
+
+	margin: 0;
+
+	padding: 0;
+	
+
+}
+
+ul.nav-main {
+
+	position: relative;
+
+	z-index: 597;
+
+}
+
+ul.nav-main li:hover > ul {
+
+	visibility: visible;
+
+}
+
+/*set the hover color*/
+
+ul.nav-main li.hover,
+
+ul.nav-main li:hover {
+
+	position: relative;
+
+	z-index: 599;
+
+	cursor: pointer;
+
+	background:url(../images/f.png) repeat-x left top;
+
+	/*xborder-top-left-radius:none;
+
+	xborder-top-right-radius:none;*/
+
+}
+
+ul.nav-main li.current
+
+{
+
+background:url(../images/f.png) repeat-x left top;
+
+/*xborder-top-left-radius:none !important;*/
+
+}
+
+ul.nav-main li.current a
+
+{
+
+xbackground:url(../images/f.png) repeat-x left top;
+
+color:#7cc744;
+
+/*xborder-top-left-radius:none !important;*/
+
+}
+ul.nav-main li {
+
+	float:left;
+
+	display:block;
+
+	height: 43px;;
+
+	color: #7c7c7c;
+
+	font-size:15px;
+
+	font-family: Arial;
+
+
+}
+
+ul.nav-main li a {
+
+	display:block;
+
+	padding:12px 0px 0 13px;
+
+	height: 25px;
+
+	color: #7c7c7c;
+
+	font-size: 16px;
+
+	font-family: 'MyriadPro-Semibold';
+
+	text-decoration:none;
+
+}
+
+ul.nav-main li a:hover {
+
+	xcolor:#7cc744;	
+
+}
+
+/*set the arrow img with seperator here*/
+
+ul.nav-main *.list {
+
+	padding-right: 5px;
+
+
+}
+
+ul.nav-sub {
+
+	visibility: hidden;
+
+	position: absolute;
+
+	padding:10px;
+
+	top: 35px;
+
+	left: 0;
+
+	z-index: 598 !important;
+
+	background: #92b227; /*list background color setting*/
+
+	border-right: 1px solid #739306;
+
+	border-bottom: 1px solid #739306;
+
+	border-left: 1px solid #739306;
+
+}
+
+
+
+
+
+ul.nav-sub li {
+
+	list-style:none;
+
+	display:block;
+
+	padding: 0;
+
+	height: 27px;
+
+	float: none;
+
+	width:145px;
+
+	border-bottom: 1px solid #739306;
+
+	background: none;	
+
+	z-index: 598 !important;
+
+	
+
+}
+
+
+
+ul.nav-sub li a {
+
+	list-style:none;
+
+	display:block;
+
+	padding: 6px 5px 6px 5px;
+
+	height: 15px;
+
+	float: none;
+
+	width:145px;
+
+	background: none;
+
+	font: 12px Arial, Helvetica, sans-serif;
+
+	z-index: 598 !important;	
+
+}
+
+.list7
+
+{
+
+width:200px;;
+
+}
+
+.list7 a
+
+{
+
+    margin:0px 0px 0px 25px;
+
+	/*padding-left:50px; !important;*/
+
+	padding-right:0 !important;
+
+}
+
+.list7:hover
+
+{
+
+	background:url(../images/menu_hover.jpg) repeat-x left top;
+
+	border-top-right-radius:10px !important;
+
+}
+
+.list1:hover
+
+{
+
+	background:url(../images/menu_hover.jpg) repeat-x left top;
+
+}
+
+#ma
+
+{
+
+padding:13px 0 0 27px !important;
+
+}
+
+.fst
+
+{
+
+width:92px;
+
+}
+
+.fst1
+
+{
+
+width:62px;
+
+}
+
+.fst2
+
+{
+
+width:52px;
+
+}
+
+.fst3
+
+{
+
+width:135px;
+
+}
+
+.fst4
+
+{
+
+width:95px;
+
+}
+
+.fst5
+
+{
+
+width:91px;
+
+}
+
+.list1
+
+{
+
+width:87px;
+
+}
+
+.list
+
+{
+
+width:65px;
+
+}
+
+.list6
+
+{
+
+width:75px;
+
+}
+
+
+
+/*MENU BAR END*/

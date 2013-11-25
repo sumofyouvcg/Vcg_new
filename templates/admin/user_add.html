@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load i18n %}	
+
+{% block extrastyle %}
+<style>
+	.list7
+	{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+	}
+	.list7 a
+	{
+	color:#7CC744 !important;
+	}
+	.list8 a
+	{
+	color:#FFFFFF !important;
+	}
+	#tabtable{
+ 	border:none !important;
+	}
+	#tabtable tr td
+	{
+	padding:10px;
+	font-size:15px;
+	font-family: 'myriad pro';
+	color:#5b5b5b;
+	}
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("tr td .case5").change(function () {
+		if ($(this).attr('checked')) {
+			$(this).parent().parent().find('td').find('input:checkbox').attr('checked', true).attr('disabled', true);
+			$(this).attr('disabled', false);
+		}else{
+			$(this).parent().parent().find('td').find('input:checkbox').attr('checked', false).attr('disabled', false);
+		}
+	});
+
+	'{% for per in names %}'
+	 var check_id = '#' + '{{per}}'
+	 if($(check_id).val() == '{{per}}')
+	 {
+		$(check_id).attr('checked','checked');
+	 }
+	'{% endfor %}'
+	
+	$('.case2').each(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().find('input:checkbox').attr({'checked' : true}).attr({'disabled' : true});
+		}
+	});
+
+	$('.case3').each(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().prev().find('input:checkbox').attr({'checked' : true}).attr({'disabled' : true});
+		}
+	});
+
+	$('.case4').each(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().prev().prev().find('input:checkbox').attr({'checked' : true}).attr({'disabled' : true});
+		}
+	});
+
+	$('.case5').each(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().parent().find('td').find('input:checkbox').attr({'checked' : true}).attr({'disabled' : true});
+			$(this).attr('disabled', false);
+		}
+	});
+
+	$('input[type=checkbox].case2').change(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().find('input:checkbox').attr({'checked' : true}).attr({'disabled' : true});
+		} else if ($(this).parent().next().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else if ($(this).parent().next().next().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		}else {
+			$(this).parent().prev().find('input:checkbox').attr('checked', false).attr({'disabled' : false});
+		}
+	});
+	$('input[type=checkbox].case3').change(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else if ($(this).parent().prev().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else if ($(this).parent().next().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else {
+			$(this).parent().prev().prev().find('input:checkbox').attr('checked', false).attr({'disabled' : false});
+		}
+	});
+	$('input[type=checkbox].case4').change(function(){
+		if ($(this).attr('checked')) {
+			$(this).parent().prev().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else if ($(this).parent().prev().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else if ($(this).parent().prev().prev().find('input:checkbox').attr('checked')) {
+			$(this).parent().prev().prev().prev().find('input:checkbox').attr('checked', true).attr({'disabled' : true});
+		} else {
+			$(this).parent().prev().prev().prev().find('input:checkbox').attr('checked', false).attr({'disabled' : false});
+		}
+	});
+
+	$('#company_check td input:checkbox, \
+	   #caregiver_check td input:checkbox, \
+	   #client_check td input:checkbox, \
+	   #diary_check td input:checkbox, \
+	   #plan_check td input:checkbox, \
+	   #animation_check td input:checkbox, \
+	   #test_check td input:checkbox, \
+	   #treatment_check td input:checkbox').change(function() {
+		var all_id = (this.id).replace(/\d+/g, '');
+		var count = 0;
+		var parent_id = $(this).parent().parent().attr('id');
+		$('#' + parent_id + ' td input:checkbox').each(function() {
+			if (this.id != all_id && $(this).attr('checked')) {
+				count++;
+				if (count == 4) {
+					$(this).parent().parent().find('td').find('input:checkbox').attr('checked', true).attr('disabled', true);
+					$('#' + all_id).attr('disabled', false);
+				}
+			}
+		});
+	});
+});
+function save_form(){
+	var selected = new Array();
+	$('#tabtable input:checked').each(function() {
+		if($(this).is(':disabled')){
+			$(this).attr({'disabled' : false });
+		}
+	    selected.push($(this).attr('value'));
+	});
+	document.user_form.action ="/admin_management/user_add/?query="+selected;
+	$('#id_user_form').submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="add_heading">
+	<p class="add_heading_content">{% trans "Add user" %}</p>
+</div>
+
+<form enctype='multipart/form-data' name='user_form' id='id_user_form' action='.' method='post'>{% csrf_token %}
+    <div id="add_therapist"><!--add_caregiver start-->
+    	<div class="tabl">
+          	<table id="tab" cellpadding="5">
+				<tbody>
+		 			<tr><td class="td_add">{{ form.first_name.label }}</td><td>{{ form.first_name }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.first_name.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.last_name.label }}</td><td>{{ form.last_name }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.last_name.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.email.label }}</td><td>{{ form.email }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.email.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.user_id.label }}</td><td>{{ form.user_id }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.user_id.errors }}</span></td></tr>
+					<tr><td class="td_add">{{ form.active.label }}</td><td>{{ form.active }}</td></tr>
+					<tr><td></td><td><span class = "forget-errors">{{ form.active.errors }}</span></td></tr>
+					<tr><td colspan="2">
+							<table id="tabtable" cellpadding="5">
+								<tr style="color:green;"><th>{% trans "Permissions" %}</th><th>{% trans "View" %}</th><th>{% trans "Create" %}</th><th>{% trans "Edit" %}</th><th>{% trans "Delete" %}</th><th>{% trans "All" %}</th></tr>
+								<tr id="company_check"><td>{% trans "COMPANY" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "COMP3" value = "COMP3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "COMP1" value = "COMP1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "COMP2" value = "COMP2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "COMP4" value = "COMP4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="COMP" value="COMP" /></td>
+								</tr>
+								<tr id="caregiver_check"><td>{% trans "CAREGIVER" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "CAR3" value = "CAR3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "CAR1" value = "CAR1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "CAR2" value = "CAR2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "CAR4" value = "CAR4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="CAR" value="CAR" /></td>
+								</tr>
+								<tr id="client_check"><td>{% trans "CLIENT" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "CLI3" value = "CLI3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "CLI1" value = "CLI1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "CLI2" value = "CLI2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "CLI4" value = "CLI4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="CLI" value="CLI" /></td>
+								</tr>
+								<tr id="diary_check"><td>{% trans "DIARY" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "DIA3" value = "DIA3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "DIA1" value = "DIA1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "DIA2" value = "DIA2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "DIA4" value = "DIA4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="DIA" value="DIA" /></td>
+								</tr>
+								<tr id="plan_check"><td>{% trans "PLAN" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "PLA3" value = "PLA3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "PLA1" value = "PLA1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "PLA2" value = "PLA2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "PLA4" value = "PLA4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="PLA" value="PLA" /></td>
+								</tr>
+								<tr id="animation_check"><td>{% trans "ANIMATION" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "ANI3" value = "ANI3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "ANI1" value = "ANI1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "ANI2" value = "ANI2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "ANI4" value = "ANI4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="ANI" value="ANI" /></td>
+								</tr>
+								<tr id="test_check"><td>{% trans "TEST" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "TEST3" value = "TEST3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "TEST1" value = "TEST1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "TEST2" value = "TEST2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "TEST4" value = "TEST4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="TEST" value="TEST" /></td>
+								</tr>
+								<tr id="treatment_check"><td>{% trans "TREATMENT" %}</td>
+									<td><input type = "checkbox" name = "choices" class="case1" id = "TREAT3" value = "TREAT3" ></td>
+									<td><input type = "checkbox" name = "choices" class="case2" id = "TREAT1" value = "TREAT1"></td>
+									<td><input type = "checkbox" name = "choices" class="case3" id = "TREAT2" value = "TREAT2"></td>
+									<td><input type = "checkbox" name = "choices" class="case4" id = "TREAT4" value = "TREAT4"></td>
+									<td><input type = "checkbox" name = "choices" class="case5" id="TREAT" value="TREAT" /></td>
+								</tr>
+								<tr><td></td><td colspan="3"><span class="forget-errors">{{module_error}}</span></td></tr>
+							</table></td>
+					</tr>
+					<tr><td></td><td><div id="sav" onclick = "save_form(this.id)"><a href="#" class="save">{% trans "Save" %}</a></div>
+		            	<div id="canc" onclick = "reset()"><a href="/admin_management/user_list/" class="save1">{% trans "Cancel" %}</a></div></td></tr>
+	            </tbody>
+	        </table>
+        </div>
+   </div><!--add_caregiver end-->
+</form>
+{% endblock %}

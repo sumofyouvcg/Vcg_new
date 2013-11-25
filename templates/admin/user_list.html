@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extrastyle %}
+
+<style type="text/css">
+.list7
+{
+	background: url("/static/img/admin/f.png") repeat-x scroll left top transparent !important;
+}
+.list7 a
+{
+	color:#7CC744 !important;
+}
+.list8 a
+{
+	color:#FFFFFF !important;
+}
+#nav 
+{
+	width:960px;
+	height:73px;
+	clear:both;
+	margin:0px;
+}
+#nav li 
+{
+	width:192px;
+	height:73px;
+ 	float: left;
+  	margin:0px; 
+  	padding:0px;
+    list-style: none ;
+}
+#nav .active
+{
+   color:#FFFFFF;
+}
+#nav a 
+{ 
+padding: 0px; 
+display: block; 
+border: none;
+text-transform:uppercase;
+float:left ;
+font-size:11px;
+font-family:Arial;
+font-weight:bold;
+color:#000000;
+}
+#nav li.activeSlide a { background: #88f;  }
+#nav a:focus { outline: none; }
+#nav img { border: none; display: block }
+</style>
+{% endblock %} 
+
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+	var currentImage;
+    var currentIndex = -1;
+    var interval;
+    function showImage(index){
+        if(index < $('#s2 li').length){
+        	var indexImage = $('#s2 li')[index]
+            if(currentImage){   
+            	if(currentImage != indexImage ){
+                    $(currentImage).css('z-index',2);
+                    clearTimeout(myTimer);
+                    $(currentImage).fadeOut(450, function() {
+					    myTimer = setTimeout("showNext()", 3000);
+					    $(this).css({'display':'none','z-index':1})
+					});
+                }
+            }
+            $(indexImage).css({'display':'block', 'opacity':1});
+            currentImage = indexImage;
+            currentIndex = index;
+            $('.query_below li').removeClass('active');
+            $($('.query_below li')[index]).addClass('active');
+        }
+    }
+    
+    function showNext(){
+        var len = $('#s2 li').length;
+        var next = currentIndex < (len-1) ? currentIndex + 1 : 0;
+        showImage(next);
+    }
+    
+    var myTimer;
+    
+    $(document).ready(function() {
+    	$(".first:even").css("background-color","#f7f7f7");
+
+    	$('#page_number').val({{ admin_user_list.number }}).change(function(){
+			var number = $(this).val();
+			window.location.href = '/admin_management/user_list/?page=' + number
+		});
+    	
+    	if ( ("{{ key }}" != '{% trans "SEARCH" %}') && ("{{ key }}" != "None") ) {
+    		$("#id_search_field").val("{{ key }}");
+    	}
+	    myTimer = setTimeout("showNext()", 3000);
+		showNext(); //loads first image
+        $('.query_below li').bind('click',function(e){
+        	var count = $(this).attr('rel');
+        	showImage(parseInt(count)-1);
+        });
+		
+		$("#selectall").click(function () {
+			$('.case').attr('checked', this.checked);
+  		});
+     	
+		$(".case").click(function(){
+  			if($(".case").length == $(".case:checked").length) {
+  				$("#selectall").attr("checked", "checked");
+  			}
+  			else {
+  				$("#selectall").removeAttr("checked");
+  			}
+  		
+  		});			
+	});
+    $(document).keypress(function(event){
+    	var keycode = (event.keyCode ? event.keyCode : event.which);
+    	if(keycode == '13'){
+    		var keyword = $("#id_search_field").val();
+    		if ( keyword == '{% trans "SEARCH" %}') {
+    			keyword = '';
+    		}
+    		if ((keyword != '')){
+    			window.location.href = "/admin_management/user_list/?key=" + keyword
+    		}
+    		window.location.href = "/admin_management/user_list/?keyword=" + keyword
+    		
+    	}
+    });
+
+    function keyword(){
+    	
+    	var keyword = $("#id_search_field").val();
+    	if ( keyword == '{% trans "SEARCH" %}') {
+    		keyword = '';
+    	}
+    	if (keyword != ''){
+    		window.location.href = "/admin_management/user_list/?key=" + keyword
+    	}
+    	window.location.href = "/admin_management/user_list/?keyword=" + keyword
+    	
+    }
+    function delete_form()
+    {
+    	if($(".case:checked").length == 0)
+    	{
+    	alert("Select atleast one record to delete")
+    	return
+    	}
+    	var confirmed = confirm('{% trans "Are you sure want to delete?" %}');
+    	if(confirmed)
+    	{
+    		document.user_list.action ="/admin_management/user_delete/";
+        	$('#id_user_list').submit()
+    	}
+    	else
+    		{
+    		window.location = "/admin_management/user_list/";
+    		}
+    }      
+</script>	
+{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+<form name = "user_list" id = "id_user_list" action="." method="POST" >{% csrf_token %}
+	<div id="banner_left">
+    	<p class="left_content">{% trans "Admin User" %}</p>
+    </div>
+
+    <div id="new_banner_right"><!--banner_right start-->  
+    	<div id="search"><input type="text" name="place" placeholder='{% trans "SEARCH" %}' style="width:205px; height:30px; border-radius:10px; border:none; font-size:12px; color:#aeaeae; font-family:Arial; margin:0 0 0 10px;" id="id_search_field"/></div>
+		<div class="searc">
+			<a href="#"><img src="/static/img/admin/search.png" alt="searchbox"  onClick="keyword();"/></a>
+		</div>
+    	<div id="add1"><a href="/admin_management/user_add/" style="text-decoration:none;">{% trans "Add Admin User" %}</a></div>
+    	<div id="sav" onclick = "delete_form()"><a href="#" class="save">{% trans "Delete" %}</a></div>
+    </div><!--banner end--> 
+    <div class="clear"></div>
+        
+	
+    	<div id="p1" class="pagedemo _current" style=""><!--Page 1 start-->
+        	<div class="my_contact"	>
+    			<table class="features-table" width="960px"  cellpadding="10" style="border-left:1px solid #d0d0d0;" >
+	            	<thead>
+	            	<tr style="border-bottom:1px solid #d0d0d0; border-top:1px solid #d0d0d0; padding:3px;" cellpadding="15" id="heading" >
+		                <th class="numb" style="width:100px;"><a href="#"><input type="checkbox" name="master"  value="head" id="selectall" /> </th>
+		                <th class="numb" style="width:269px;border-left:1px solid #d0d0d0; ">{% trans "Name" %}</th>
+		                <th class="numb" style="width:200px;border-left:1px solid #d0d0d0;">{% trans "User-ID" %}</th>
+		                <th class="numb" style="width:200px;border-left:1px solid #d0d0d0;">{% trans "Email" %}</th>
+		                <th class="numb" style="width:200px;border-left:1px solid #d0d0d0;">{% trans "Created At" %}</th>
+		                <th class="numb" style="width:269px;border-left:1px solid #d0d0d0;">{% trans "Last Login" %}</th>
+		                <th class="numb" style="width:269px;border-left:1px solid #d0d0d0;">{% trans "Status" %}</th>
+				    </tr>
+	            	</thead>
+	                {% if admin_user_list.object_list %} 
+       					{% for admin_user in admin_user_list.object_list %}
+       						<tr class="first" style="border-left:1px solid #d0d0d0; background:#F5F2F3;">
+								<td class="numb" style="text-align:center;"><input type="checkbox" name="choices" value={{admin_user.id}} class="case"  /></td>
+				                <td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;"><a href="/admin_management/user_edit/{{admin_user.id}}/">{{admin_user.first_name}}</a></td>
+				                <td class="numb" style="text-align:center;text-align:center;border-left:1px solid #d0d0d0;">{{admin_user.user_id}}</td>
+				                <td class="numb" style="text-align:center;text-align:center;border-left:1px solid #d0d0d0;">{{admin_user.email}}</td>
+								<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{admin_user.created_at}}</td>
+								{% for admin in admin_login %}
+									{% if admin.email == admin_user.email %}
+										<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{admin.last_login}}</td>
+									{% endif %}
+								{% endfor %}
+								<td class="numb" style="text-align:center;border-left:1px solid #d0d0d0;">{{admin_user.active|active_status}}</td>
+				            </tr>
+            			{% endfor %}
+        			{% else %}
+			        	<tr class="first" style=" background:#f7f7f7;">
+			        		<td colspan="6" align="center" height="50px" class="numb" >{% trans "No Admin User found" %}</td>
+			        	</tr>
+        			{% endif %} 
+            	</table>
+    		</div> 
+		</div> <!--Page 1 END-->
+	   	
+	   	{% if admin_user_list.object_list %} 
+		   	<div class="pagination" align="center">
+		    	<table style="border: 0px; margin-top:15px;" width="15%">
+		    		<tbody>
+		    			<tr>
+		    				<td width="10%" align="left">
+						        {% if admin_user_list.has_previous %}
+						            <a href="?page={{ admin_user_list.previous_page_number }}"><img src="/static/img/admin/left1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    				<td width="80%" align="center">
+								<select id="page_number">
+									{% for each in num_pages %}
+										<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+									{% endfor %}
+								</select>
+		    				</td>
+		    				<td width="10%" align="right">
+						        {% if admin_user_list.has_next %}
+						            <a href="?page={{ admin_user_list.next_page_number }}"><img src="/static/img/admin/rr1.png" /></a>
+						        {% endif %}
+		    				</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+			</div> 	
+		{% endif %} 	
+</form>		
+{% endblock %}
